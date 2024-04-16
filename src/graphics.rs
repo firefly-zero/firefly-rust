@@ -6,7 +6,7 @@ pub struct Point {
 }
 
 pub struct Size {
-    pub width: i32,
+    pub width:  i32,
     pub height: i32,
 }
 
@@ -17,7 +17,7 @@ pub struct RGB {
 }
 
 pub struct Style {
-    pub fill_color: u8,
+    pub fill_color:   u8,
     pub stroke_color: Color,
     pub stroke_width: i32,
 }
@@ -25,11 +25,11 @@ pub struct Style {
 pub struct Color(u8);
 
 impl Color {
-    pub const NONE: Color = Color(0);
-    pub const DARK: Color = Color(1);
     pub const ACCENT: Color = Color(2);
-    pub const SECONDARY: Color = Color(3);
+    pub const DARK: Color = Color(1);
     pub const LIGHT: Color = Color(4);
+    pub const NONE: Color = Color(0);
+    pub const SECONDARY: Color = Color(3);
 }
 
 impl From<u8> for Color {
@@ -56,7 +56,7 @@ pub fn draw_triangle(a: Point, b: Point, c: Point, s: Style) {
             c.y,
             s.fill_color.into(),
             s.stroke_color.into(),
-            s.stroke_width as i32,
+            s.stroke_width,
         )
     }
 }
