@@ -1,7 +1,8 @@
-// extern crate firefly_rust;
+#![no_main]
 use firefly_rust as ff;
 
-fn main() {
+#[no_mangle]
+extern "C" fn boot() {
     ff::draw_triangle(
         ff::Point { x: 60, y: 10 },
         ff::Point { x: 40, y: 40 },
