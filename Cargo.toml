@@ -6,4 +6,4 @@ edition = "2021"
 [dependencies]
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "lib"]

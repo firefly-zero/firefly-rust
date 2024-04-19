@@ -17,7 +17,7 @@ pub struct RGB {
 }
 
 pub struct Style {
-    pub fill_color:   u8,
+    pub fill_color:   Color,
     pub stroke_color: Color,
     pub stroke_width: i32,
 }

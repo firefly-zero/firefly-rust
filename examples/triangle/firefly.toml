@@ -1,0 +1,4 @@
+author_id = "demo"
+app_id = "rust-triangle"
+author_name = "Demo"
+app_name = "Triangle Demo (Rust)"
