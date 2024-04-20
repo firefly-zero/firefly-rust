@@ -35,7 +35,6 @@ extern {
         stroke_color: i32,
         stroke_width: i32,
     );
-    // Draw a rectangle with rounded corners.
     pub(crate) fn draw_rounded_rect(
         x: i32,
         y: i32,
