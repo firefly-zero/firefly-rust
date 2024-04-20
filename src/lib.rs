@@ -1,7 +1,9 @@
 #![no_std]
 mod bindings;
+mod fs;
 mod graphics;
 
+pub use fs::*;
 pub use graphics::*;
 
 #[cfg(all(not(test), target_family = "wasm"))]
