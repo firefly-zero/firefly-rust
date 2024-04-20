@@ -1,5 +1,5 @@
 #[link(wasm_import_module = "graphics")]
-extern "C" {
+extern {
     pub(crate) fn draw_triangle(
         p1x: i32,
         p1y: i32,

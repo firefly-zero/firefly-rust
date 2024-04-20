@@ -3,7 +3,7 @@
 use firefly_rust as ff;
 
 #[no_mangle]
-extern "C" fn boot() {
+extern fn boot() {
     ff::draw_triangle(
         ff::Point { x: 60, y: 10 },
         ff::Point { x: 40, y: 40 },
