@@ -1,3 +1,4 @@
+#![no_std]
 #![no_main]
 use firefly_rust as ff;
 
