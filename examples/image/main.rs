@@ -14,7 +14,7 @@ static mut IMAGE: OnceCell<ff::FileBuf> = OnceCell::new();
 
 #[no_mangle]
 extern fn boot() {
-    let file = ff::FileBuf::load("img");
+    let file = ff::rom::load_buf("img");
     unsafe {
         IMAGE.set(file).ok().unwrap();
     }

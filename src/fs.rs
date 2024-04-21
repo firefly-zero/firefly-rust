@@ -9,16 +9,6 @@ pub struct FileBuf {
     raw: Vec<u8>,
 }
 
-#[cfg(feature = "alloc")]
-impl FileBuf {
-    pub fn load(name: &str) -> Self {
-        let size = rom::get_size(name);
-        let mut buf = vec![0; size];
-        rom::load(name, &mut buf);
-        Self { raw: buf }
-    }
-}
-
 pub struct File<'a> {
     raw: &'a [u8],
 }
@@ -47,6 +37,49 @@ pub mod rom {
             );
         }
         File { raw: buf }
+    }
+
+    #[cfg(feature = "alloc")]
+    pub fn load_buf(name: &str) -> FileBuf {
+        let size = rom::get_size(name);
+        let mut buf = vec![0; size];
+        rom::load(name, &mut buf);
+        FileBuf { raw: buf }
+    }
+}
+
+/// Functions for accessing files in the app data dir.
+pub mod data {
+    use super::*;
+    use crate::bindings as b;
+
+    #[must_use]
+    pub fn get_size(name: &str) -> usize {
+        let path_ptr = name.as_ptr();
+        let size = unsafe { b::get_file_size(path_ptr as u32, name.len() as u32) };
+        size as usize
+    }
+
+    pub fn load<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
+        let path_ptr = name.as_ptr();
+        let buf_ptr = buf.as_mut_ptr();
+        unsafe {
+            b::load_file(
+                path_ptr as u32,
+                name.len() as u32,
+                buf_ptr as u32,
+                buf.len() as u32,
+            );
+        }
+        File { raw: buf }
+    }
+
+    #[cfg(feature = "alloc")]
+    pub fn load_buf(name: &str) -> FileBuf {
+        let size = data::get_size(name);
+        let mut buf = vec![0; size];
+        data::load(name, &mut buf);
+        FileBuf { raw: buf }
     }
 }
 
