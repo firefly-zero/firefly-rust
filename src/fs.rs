@@ -1,16 +1,22 @@
 use crate::graphics::{Point, Size};
+use alloc::vec;
+#[cfg(feature = "alloc")]
+use alloc::vec::Vec;
 
-// pub struct FileBuf {
-//     raw: [u8],
-// }
+#[cfg(feature = "alloc")]
+pub struct FileBuf {
+    raw: Vec<u8>,
+}
 
-// impl FileBuf {
-//     pub fn load(name: &str) -> Self {
-//         let size = File::get_size(name);
-//         let mut buf: [u8] = todo!();
-//         Self { buf }
-//     }
-// }
+#[cfg(feature = "alloc")]
+impl FileBuf {
+    pub fn load(name: &str) -> Self {
+        let size = rom::get_size(name);
+        let mut buf = vec![0; size];
+        rom::load(name, &mut buf);
+        Self { raw: buf }
+    }
+}
 
 pub struct File<'a> {
     raw: &'a [u8],
@@ -52,6 +58,13 @@ impl<'a> From<File<'a>> for Font<'a> {
     }
 }
 
+#[cfg(feature = "alloc")]
+impl<'a> From<&'a FileBuf> for Font<'a> {
+    fn from(value: &'a FileBuf) -> Self {
+        Self { raw: &value.raw }
+    }
+}
+
 pub struct Image<'a> {
     pub(crate) raw: &'a [u8],
 }
@@ -59,6 +72,13 @@ pub struct Image<'a> {
 impl<'a> From<File<'a>> for Image<'a> {
     fn from(value: File<'a>) -> Self {
         Self { raw: value.raw }
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<'a> From<&'a FileBuf> for Image<'a> {
+    fn from(value: &'a FileBuf) -> Self {
+        Self { raw: &value.raw }
     }
 }
 

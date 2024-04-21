@@ -1,0 +1,8 @@
+author_id = "demo"
+app_id = "rust-image"
+author_name = "Demo"
+app_name = "Image Demo (Rust)"
+compile_args = ["--features", "std,alloc"]
+
+[files]
+img = { path = "image.png" }
