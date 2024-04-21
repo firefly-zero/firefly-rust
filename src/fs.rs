@@ -81,6 +81,26 @@ pub mod data {
         data::load(name, &mut buf);
         FileBuf { raw: buf }
     }
+
+    pub fn dump(name: &str, buf: &[u8]) {
+        let path_ptr = name.as_ptr();
+        let buf_ptr = buf.as_ptr();
+        unsafe {
+            b::dump_file(
+                path_ptr as u32,
+                name.len() as u32,
+                buf_ptr as u32,
+                buf.len() as u32,
+            );
+        }
+    }
+
+    pub fn remove(name: &str) {
+        let path_ptr = name.as_ptr();
+        unsafe {
+            b::remove_file(path_ptr as u32, name.len() as u32);
+        }
+    }
 }
 
 pub struct Font<'a> {
