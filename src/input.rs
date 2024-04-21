@@ -60,8 +60,8 @@ pub fn read_pad() -> Option<Pad> {
         None
     } else {
         Some(Pad {
-            x: (raw >> 16) as u16 as i32,
-            y: raw as u16 as i32,
+            x: (raw >> 16) as i16 as i32,
+            y: raw as i16 as i32,
         })
     }
 }

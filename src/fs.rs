@@ -1,4 +1,5 @@
 use crate::graphics::{Point, Size};
+#[cfg(feature = "alloc")]
 use alloc::vec;
 #[cfg(feature = "alloc")]
 use alloc::vec::Vec;
