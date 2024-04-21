@@ -27,6 +27,7 @@ pub mod rom {
     use super::*;
     use crate::bindings as b;
 
+    #[must_use]
     pub fn get_size(name: &str) -> usize {
         let path_ptr = name.as_ptr();
         let size = unsafe { b::get_rom_file_size(path_ptr as u32, name.len() as u32) };

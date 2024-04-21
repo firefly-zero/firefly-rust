@@ -41,6 +41,7 @@ impl From<Style> for LineStyle {
 
 pub struct Color(u8);
 
+// The formatter reorders constants alphabetically, which doesn't make sense in this case.
 #[rustfmt::skip]
 impl Color {
     /// The first color in the palette. Typically, the darkest color.

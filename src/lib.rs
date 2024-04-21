@@ -2,9 +2,11 @@
 mod bindings;
 mod fs;
 mod graphics;
+mod input;
 
 pub use fs::*;
 pub use graphics::*;
+pub use input::*;
 
 #[cfg(feature = "alloc")]
 extern crate alloc;

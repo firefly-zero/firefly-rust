@@ -138,3 +138,9 @@ extern {
     // pub(crate) fn dump_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
     // pub(crate) fn remove_file(path_ptr: u32, path_len: u32);
 }
+
+#[link(wasm_import_module = "input")]
+extern {
+    pub(crate) fn read_pad() -> u32;
+    pub(crate) fn read_buttons() -> u32;
+}
