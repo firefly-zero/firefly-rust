@@ -1,4 +1,5 @@
 use crate::bindings as b;
+use crate::fs::{Font, Image, SubImage};
 
 pub struct Point {
     pub x: i32,
@@ -40,12 +41,22 @@ impl From<Style> for LineStyle {
 
 pub struct Color(u8);
 
+#[rustfmt::skip]
 impl Color {
-    pub const ACCENT: Color = Color(2);
+    /// The first color in the palette. Typically, the darkest color.
     pub const DARK: Color = Color(1);
-    pub const LIGHT: Color = Color(4);
-    pub const NONE: Color = Color(0);
+
+    /// The second color in the palette.
+    pub const ACCENT: Color = Color(2);
+
+    /// The third color in the palette.
     pub const SECONDARY: Color = Color(3);
+
+    /// The last color in the palette. Typically, the brightest, almost white, color.
+    pub const LIGHT: Color = Color(4);
+
+    /// No color (100% transparency).
+    pub const NONE: Color = Color(0);
 }
 
 impl From<u8> for Color {
@@ -58,6 +69,24 @@ impl From<u8> for Color {
 impl From<Color> for i32 {
     fn from(value: Color) -> Self {
         value.0 as i32
+    }
+}
+
+pub struct ImageColors {
+    a: Color,
+    b: Color,
+    c: Color,
+    d: Color,
+}
+
+impl Default for ImageColors {
+    fn default() -> Self {
+        Self {
+            a: Color::DARK,
+            b: Color::ACCENT,
+            c: Color::SECONDARY,
+            d: Color::LIGHT,
+        }
     }
 }
 
@@ -211,6 +240,62 @@ pub fn draw_sector(p: Point, d: i32, angle_start: i32, angle_sweep: i32, s: Styl
             s.fill_color.into(),
             s.stroke_color.into(),
             s.stroke_width,
+        );
+    }
+}
+
+pub fn draw_text(t: &str, f: Font, p: Point, c: Color) {
+    let text_ptr = t.as_ptr();
+    let text_len = t.len();
+    let font_ptr = f.raw.as_ptr();
+    let font_len = f.raw.len();
+    unsafe {
+        b::draw_text(
+            text_ptr as i32,
+            text_len as i32,
+            font_ptr as i32,
+            font_len as i32,
+            p.x,
+            p.y,
+            c.into(),
+        );
+    }
+}
+
+pub fn draw_image(i: Image, p: Point, c: ImageColors) {
+    let ptr = i.raw.as_ptr();
+    let len = i.raw.len();
+    unsafe {
+        b::draw_image(
+            ptr as i32,
+            len as i32,
+            p.x,
+            p.y,
+            c.a.into(),
+            c.b.into(),
+            c.c.into(),
+            c.d.into(),
+        );
+    }
+}
+
+pub fn draw_sub_image(i: SubImage, p: Point, c: ImageColors) {
+    let ptr = i.raw.as_ptr();
+    let len = i.raw.len();
+    unsafe {
+        b::draw_sub_image(
+            ptr as i32,
+            len as i32,
+            p.x,
+            p.y,
+            i.point.x,
+            i.point.y,
+            i.size.width,
+            i.size.height,
+            c.a.into(),
+            c.b.into(),
+            c.c.into(),
+            c.d.into(),
         );
     }
 }

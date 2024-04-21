@@ -129,12 +129,12 @@ extern {
     );
 }
 
-#[link(wasm_import_module = "graphics")]
+#[link(wasm_import_module = "fs")]
 extern {
     pub(crate) fn get_rom_file_size(path_ptr: u32, path_len: u32) -> u32;
-    pub(crate) fn get_file_size(path_ptr: u32, path_len: u32) -> u32;
+    // pub(crate) fn get_file_size(path_ptr: u32, path_len: u32) -> u32;
     pub(crate) fn load_rom_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
-    pub(crate) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
-    pub(crate) fn dump_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
-    pub(crate) fn remove_file(path_ptr: u32, path_len: u32);
+    // pub(crate) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
+    // pub(crate) fn dump_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
+    // pub(crate) fn remove_file(path_ptr: u32, path_len: u32);
 }
