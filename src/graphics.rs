@@ -245,7 +245,7 @@ pub fn draw_sector(p: Point, d: i32, angle_start: i32, angle_sweep: i32, s: Styl
     }
 }
 
-pub fn draw_text(t: &str, f: Font, p: Point, c: Color) {
+pub fn draw_text(t: &str, f: &Font, p: Point, c: Color) {
     let text_ptr = t.as_ptr();
     let text_len = t.len();
     let font_ptr = f.raw.as_ptr();
