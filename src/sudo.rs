@@ -1,4 +1,5 @@
 use crate::bindings::sudo as b;
+use crate::fs::{File, FileBuf};
 #[cfg(feature = "alloc")]
 use alloc::vec;
 #[cfg(feature = "alloc")]
@@ -81,4 +82,37 @@ pub fn run_app(author_id: &str, app_id: &str) {
     unsafe {
         b::run_app(author_ptr, author_len, app_ptr, app_len);
     }
+}
+
+#[must_use]
+pub fn get_file_size(path: &str) -> usize {
+    let path_ptr = path.as_ptr() as u32;
+    let path_len = path.len() as u32;
+    let size = unsafe { b::get_file_size(path_ptr, path_len) };
+    size as usize
+}
+
+pub fn load_file<'a>(path: &str, buf: &'a mut [u8]) -> File<'a> {
+    let path_ptr = path.as_ptr() as u32;
+    let path_len = path.len() as u32;
+    let buf_ptr = buf.as_mut_ptr() as u32;
+    let buf_len = buf.len() as u32;
+    unsafe {
+        b::load_file(path_ptr, path_len, buf_ptr, buf_len);
+    }
+    File { raw: buf }
+}
+
+#[cfg(feature = "alloc")]
+pub fn load_file_buf(path: &str) -> FileBuf {
+    let size = get_file_size(path);
+    let mut buf = vec![0; size];
+    let path_ptr = path.as_ptr() as u32;
+    let path_len = path.len() as u32;
+    let buf_ptr = buf.as_mut_ptr() as u32;
+    let buf_len = buf.len() as u32;
+    unsafe {
+        b::load_file(path_ptr, path_len, buf_ptr, buf_len);
+    }
+    FileBuf { raw: buf }
 }

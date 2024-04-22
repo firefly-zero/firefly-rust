@@ -6,11 +6,23 @@ use alloc::vec::Vec;
 
 #[cfg(feature = "alloc")]
 pub struct FileBuf {
-    raw: Vec<u8>,
+    pub(crate) raw: Vec<u8>,
+}
+
+impl FileBuf {
+    pub fn data(&self) -> &[u8] {
+        &self.raw
+    }
 }
 
 pub struct File<'a> {
-    raw: &'a [u8],
+    pub(crate) raw: &'a [u8],
+}
+
+impl<'a> File<'a> {
+    pub fn data(&self) -> &[u8] {
+        self.raw
+    }
 }
 
 /// Functions for accessing files in the app ROM.
