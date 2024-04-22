@@ -3,6 +3,7 @@ mod bindings;
 mod fs;
 mod graphics;
 mod input;
+pub mod sudo;
 
 pub use fs::*;
 pub use graphics::*;
