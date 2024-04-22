@@ -1,10 +1,12 @@
 use crate::bindings as b;
 
+#[derive(Default)]
 pub struct Pad {
     pub x: i32,
     pub y: i32,
 }
 
+#[derive(Default)]
 pub struct Buttons {
     pub a:    bool,
     pub b:    bool,
@@ -20,7 +22,7 @@ impl Buttons {
     }
 
     /// Given the old state, get buttons that were not pressed but are pressed now.
-    pub fn just_pressed(&self, old: Buttons) -> Buttons {
+    pub fn just_pressed(&self, old: &Buttons) -> Buttons {
         Buttons {
             a:    self.a && !old.a,
             b:    self.b && !old.b,
@@ -31,7 +33,7 @@ impl Buttons {
     }
 
     /// Given the old state, get buttons that were pressed but aren't pressed now.
-    pub fn just_released(&self, old: Buttons) -> Buttons {
+    pub fn just_released(&self, old: &Buttons) -> Buttons {
         Buttons {
             a:    !self.a && old.a,
             b:    !self.b && old.b,
@@ -42,7 +44,7 @@ impl Buttons {
     }
 
     /// Given the old state, get buttons that were pressed but are still pressed now.
-    pub fn held(&self, old: Buttons) -> Buttons {
+    pub fn held(&self, old: &Buttons) -> Buttons {
         Buttons {
             a:    self.a && old.a,
             b:    self.b && old.b,

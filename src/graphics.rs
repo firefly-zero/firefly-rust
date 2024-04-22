@@ -25,6 +25,16 @@ pub struct Style {
     pub stroke_width: i32,
 }
 
+impl Default for Style {
+    fn default() -> Self {
+        Self {
+            fill_color:   Color::NONE,
+            stroke_color: Color::NONE,
+            stroke_width: 1,
+        }
+    }
+}
+
 pub struct LineStyle {
     pub color: Color,
     pub width: i32,
