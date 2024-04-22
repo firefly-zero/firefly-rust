@@ -3,6 +3,7 @@ mod bindings;
 mod fs;
 mod graphics;
 mod input;
+#[cfg(feature = "sudo")]
 pub mod sudo;
 
 pub use fs::*;
