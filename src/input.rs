@@ -1,9 +1,35 @@
 use crate::bindings as b;
 
+const DPAD_THRESHOLD: i32 = 100;
+
 #[derive(Default)]
 pub struct Pad {
     pub x: i32,
     pub y: i32,
+}
+
+impl Pad {
+    pub fn as_dpad(&self) -> DPad {
+        DPad {
+            left:  self.x <= -DPAD_THRESHOLD,
+            right: self.x >= DPAD_THRESHOLD,
+            down:  self.y <= -DPAD_THRESHOLD,
+            up:    self.y >= DPAD_THRESHOLD,
+        }
+    }
+}
+
+pub struct DPad {
+    pub left:  bool,
+    pub right: bool,
+    pub up:    bool,
+    pub down:  bool,
+}
+
+impl From<Pad> for DPad {
+    fn from(value: Pad) -> Self {
+        value.as_dpad()
+    }
 }
 
 #[derive(Default)]
