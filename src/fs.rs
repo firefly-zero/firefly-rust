@@ -9,6 +9,7 @@ pub struct FileBuf {
     pub(crate) raw: Vec<u8>,
 }
 
+#[cfg(feature = "alloc")]
 impl FileBuf {
     pub fn data(&self) -> &[u8] {
         &self.raw

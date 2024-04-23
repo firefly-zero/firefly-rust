@@ -62,10 +62,10 @@ pub enum Color {
     Light,
 }
 
-impl TryFrom<u8> for Color {
+impl TryFrom<usize> for Color {
     type Error = ();
 
-    fn try_from(value: u8) -> Result<Self, Self::Error> {
+    fn try_from(value: usize) -> Result<Self, Self::Error> {
         match value {
             0 => Ok(Color::None),
             1 => Ok(Color::Dark),

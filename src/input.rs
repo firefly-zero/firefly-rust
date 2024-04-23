@@ -1,4 +1,5 @@
 use crate::bindings as b;
+use crate::net::Player;
 
 const DPAD_THRESHOLD: i32 = 100;
 
@@ -82,8 +83,8 @@ impl Buttons {
 }
 
 #[must_use]
-pub fn read_pad() -> Option<Pad> {
-    let raw = unsafe { b::read_pad() };
+pub fn read_pad(player: Player) -> Option<Pad> {
+    let raw = unsafe { b::read_pad(player.into()) };
     if raw == 0xffff {
         None
     } else {
@@ -95,8 +96,8 @@ pub fn read_pad() -> Option<Pad> {
 }
 
 #[must_use]
-pub fn read_buttons() -> Buttons {
-    let raw = unsafe { b::read_buttons() };
+pub fn read_buttons(player: Player) -> Buttons {
+    let raw = unsafe { b::read_buttons(player.into()) };
     Buttons {
         a:    has_bit_set(raw, 0),
         b:    has_bit_set(raw, 1),

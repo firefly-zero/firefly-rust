@@ -141,8 +141,8 @@ extern {
 
 #[link(wasm_import_module = "input")]
 extern {
-    pub(crate) fn read_pad() -> u32;
-    pub(crate) fn read_buttons() -> u32;
+    pub(crate) fn read_pad(player: u32) -> u32;
+    pub(crate) fn read_buttons(player: u32) -> u32;
 }
 
 pub(crate) mod sudo {
