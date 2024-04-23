@@ -9,8 +9,8 @@ extern fn boot() {
         ff::Point { x: 40, y: 40 },
         ff::Point { x: 80, y: 40 },
         ff::Style {
-            fill_color:   ff::Color::ACCENT,
-            stroke_color: ff::Color::SECONDARY,
+            fill_color:   ff::Color::Accent,
+            stroke_color: ff::Color::Secondary,
             stroke_width: 1,
         },
     );

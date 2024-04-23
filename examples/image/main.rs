@@ -22,7 +22,7 @@ extern fn boot() {
 
 #[no_mangle]
 extern fn update() {
-    ff::clear_screen(ff::Color::LIGHT);
+    ff::clear_screen(ff::Color::Light);
     let image = unsafe { IMAGE.get().unwrap() };
     let image: ff::Image = (image).into();
     let colors = ff::ImageColors::default();

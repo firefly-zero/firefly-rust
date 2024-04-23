@@ -28,8 +28,8 @@ pub struct Style {
 impl Default for Style {
     fn default() -> Self {
         Self {
-            fill_color:   Color::NONE,
-            stroke_color: Color::NONE,
+            fill_color:   Color::None,
+            stroke_color: Color::None,
             stroke_width: 1,
         }
     }
@@ -49,37 +49,43 @@ impl From<Style> for LineStyle {
     }
 }
 
-pub struct Color(u8);
-
-// The formatter reorders constants alphabetically, which doesn't make sense in this case.
-#[rustfmt::skip]
-impl Color {
-    /// The first color in the palette. Typically, the darkest color.
-    pub const DARK: Color = Color(1);
-
-    /// The second color in the palette.
-    pub const ACCENT: Color = Color(2);
-
-    /// The third color in the palette.
-    pub const SECONDARY: Color = Color(3);
-
-    /// The last color in the palette. Typically, the brightest, almost white, color.
-    pub const LIGHT: Color = Color(4);
-
+pub enum Color {
     /// No color (100% transparency).
-    pub const NONE: Color = Color(0);
+    None,
+    /// The first color in the palette. Typically, the darkest color.
+    Dark,
+    /// The second color in the palette.
+    Accent,
+    /// The third color in the palette.
+    Secondary,
+    /// The last color in the palette. Typically, the brightest, almost white, color.
+    Light,
 }
 
-impl From<u8> for Color {
-    fn from(value: u8) -> Self {
-        debug_assert!(value <= 4);
-        Self(value)
+impl TryFrom<u8> for Color {
+    type Error = ();
+
+    fn try_from(value: u8) -> Result<Self, Self::Error> {
+        match value {
+            0 => Ok(Color::None),
+            1 => Ok(Color::Dark),
+            2 => Ok(Color::Accent),
+            3 => Ok(Color::Secondary),
+            4 => Ok(Color::Light),
+            _ => Err(()),
+        }
     }
 }
 
 impl From<Color> for i32 {
     fn from(value: Color) -> Self {
-        value.0 as i32
+        match value {
+            Color::None => 0,
+            Color::Dark => 1,
+            Color::Accent => 2,
+            Color::Secondary => 3,
+            Color::Light => 4,
+        }
     }
 }
 
@@ -93,10 +99,10 @@ pub struct ImageColors {
 impl Default for ImageColors {
     fn default() -> Self {
         Self {
-            a: Color::DARK,
-            b: Color::ACCENT,
-            c: Color::SECONDARY,
-            d: Color::LIGHT,
+            a: Color::Dark,
+            b: Color::Accent,
+            c: Color::Secondary,
+            d: Color::Light,
         }
     }
 }
