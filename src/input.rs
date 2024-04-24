@@ -3,6 +3,10 @@ use crate::net::Player;
 
 const DPAD_THRESHOLD: i32 = 100;
 
+/// A finger position on the touch pad.
+///
+/// Both x and y are somewhere the range between -1000 and 1000 (both ends included).
+/// The 1000 x is on the right, the 1000 y is on the top.
 #[derive(Default)]
 pub struct Pad {
     pub x: i32,
@@ -10,6 +14,16 @@ pub struct Pad {
 }
 
 impl Pad {
+    /// The right-most value of x.
+    pub const MAX_X: i32 = 1000;
+    /// The top-most value of y.
+    pub const MAX_Y: i32 = 1000;
+    /// The left-most value of x.
+    pub const MIN_X: i32 = -1000;
+    /// The bottom-most value of y.
+    pub const MIN_Y: i32 = -1000;
+
+    /// Represent the pad values as a directional pad.
     pub fn as_dpad(&self) -> DPad {
         DPad {
             left:  self.x <= -DPAD_THRESHOLD,
@@ -20,6 +34,15 @@ impl Pad {
     }
 }
 
+/// DPad-like representation of the [Pad].
+///
+/// Constructed with [Pad::as_dpad]. Useful for simple games and ports.
+/// The middle of the pad is a "dead zone" pressing which will not activate any direction.
+///
+/// Invariant: it's not possible for opposite directions (left and right, or down and up)
+/// to be active at the same time. However, it's possible for heighboring directions
+/// (like up and right) to be active at the same time if the player presses a diagonal.
+#[derive(Default)]
 pub struct DPad {
     pub left:  bool,
     pub right: bool,
@@ -30,6 +53,38 @@ pub struct DPad {
 impl From<Pad> for DPad {
     fn from(value: Pad) -> Self {
         value.as_dpad()
+    }
+}
+
+impl DPad {
+    /// Given the old state, get directions that were not pressed but are pressed now.
+    pub fn just_pressed(&self, old: &Self) -> Self {
+        Self {
+            left:  self.left && !old.left,
+            right: self.right && !old.right,
+            up:    self.up && !old.up,
+            down:  self.down && !old.down,
+        }
+    }
+
+    /// Given the old state, get directions that were pressed but aren't pressed now.
+    pub fn just_released(&self, old: &Self) -> Self {
+        Self {
+            left:  !self.left && old.left,
+            right: !self.right && old.right,
+            up:    !self.up && old.up,
+            down:  !self.down && old.down,
+        }
+    }
+
+    /// Given the old state, get directions that were pressed but are still pressed now.
+    pub fn held(&self, old: &Self) -> Self {
+        Self {
+            left:  self.left && old.left,
+            right: self.right && old.right,
+            up:    self.up && old.up,
+            down:  self.down && old.down,
+        }
     }
 }
 
@@ -49,8 +104,8 @@ impl Buttons {
     }
 
     /// Given the old state, get buttons that were not pressed but are pressed now.
-    pub fn just_pressed(&self, old: &Buttons) -> Buttons {
-        Buttons {
+    pub fn just_pressed(&self, old: &Self) -> Self {
+        Self {
             a:    self.a && !old.a,
             b:    self.b && !old.b,
             x:    self.x && !old.x,
@@ -60,8 +115,8 @@ impl Buttons {
     }
 
     /// Given the old state, get buttons that were pressed but aren't pressed now.
-    pub fn just_released(&self, old: &Buttons) -> Buttons {
-        Buttons {
+    pub fn just_released(&self, old: &Self) -> Self {
+        Self {
             a:    !self.a && old.a,
             b:    !self.b && old.b,
             x:    !self.x && old.x,
@@ -71,8 +126,8 @@ impl Buttons {
     }
 
     /// Given the old state, get buttons that were pressed but are still pressed now.
-    pub fn held(&self, old: &Buttons) -> Buttons {
-        Buttons {
+    pub fn held(&self, old: &Self) -> Self {
+        Self {
             a:    self.a && old.a,
             b:    self.b && old.b,
             x:    self.x && old.x,
