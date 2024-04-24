@@ -14,6 +14,14 @@ impl FileBuf {
     pub fn data(&self) -> &[u8] {
         &self.raw
     }
+
+    pub fn as_font(&self) -> Font {
+        Font { raw: &self.raw }
+    }
+
+    pub fn as_image(&self) -> Image {
+        Image { raw: &self.raw }
+    }
 }
 
 pub struct File<'a> {
