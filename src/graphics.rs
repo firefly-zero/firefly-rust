@@ -1,12 +1,17 @@
 use crate::bindings as b;
 use crate::fs::{Font, Image, SubImage};
 
+/// A point on the screen.
+///
+/// Typically, the upper-left corner of a bounding box of a shape.
 pub struct Point {
     pub x: i32,
     pub y: i32,
 }
 
 /// Size of a bounding box for a shape.
+///
+/// The width and height must be positive.
 pub struct Size {
     pub width:  i32,
     pub height: i32,
@@ -35,6 +40,16 @@ impl Default for Style {
     }
 }
 
+impl Style {
+    #[must_use]
+    pub fn as_line_style(&self) -> LineStyle {
+        LineStyle {
+            color: self.stroke_color,
+            width: self.stroke_width,
+        }
+    }
+}
+
 pub struct LineStyle {
     pub color: Color,
     pub width: i32,
@@ -49,6 +64,7 @@ impl From<Style> for LineStyle {
     }
 }
 
+#[derive(Copy, Clone)]
 pub enum Color {
     /// No color (100% transparency).
     None,
@@ -115,18 +131,21 @@ pub fn get_screen_size() -> Size {
     }
 }
 
+/// Fill the whole frame with the given color.
 pub fn clear_screen(c: Color) {
     unsafe {
         b::clear_screen(c.into());
     }
 }
 
+/// Set a color value in the palette.
 pub fn set_color(c: Color, v: RGB) {
     unsafe {
         b::set_color(c.into(), v.r.into(), v.g.into(), v.b.into());
     }
 }
 
+/// Set the color palette for the current frame.
 pub fn set_colors(dark: RGB, accent: RGB, secondary: RGB, light: RGB) {
     unsafe {
         b::set_colors(
@@ -146,12 +165,14 @@ pub fn set_colors(dark: RGB, accent: RGB, secondary: RGB, light: RGB) {
     }
 }
 
+/// Set a single point (1 pixel is scaling is 1) on the frame.
 pub fn draw_point(p: Point, c: Color) {
     unsafe {
         b::draw_point(p.x, p.y, c.into());
     }
 }
 
+// Draw a direct line from point a to point b.
 pub fn draw_line(a: Point, b: Point, s: LineStyle) {
     unsafe {
         b::draw_line(a.x, a.y, b.x, b.y, s.color.into(), s.width);

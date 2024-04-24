@@ -12,6 +12,7 @@ pub struct DirBuf {
 
 #[cfg(feature = "alloc")]
 impl DirBuf {
+    /// List all subdirectories in the given directory.
     pub fn list_dirs(name: &str) -> Self {
         let size = Dir::list_dirs_buf_size(name);
         let mut buf = vec![0; size];
@@ -19,6 +20,7 @@ impl DirBuf {
         Self { raw: buf }
     }
 
+    /// Iterate over all loaded entries in the directory.
     pub fn iter(&self) -> DirIter<'_> {
         DirIter { raw: &self.raw }
     }
@@ -49,6 +51,7 @@ impl<'a> Dir<'a> {
         Self { raw: buf }
     }
 
+    /// Iterate over all loaded entries in the directory.
     pub fn iter(&self) -> DirIter<'a> {
         DirIter { raw: self.raw }
     }
@@ -74,6 +77,10 @@ impl<'a> Iterator for DirIter<'a> {
     }
 }
 
+/// Tell runtime to exit the current app and replace it with the given one.
+///
+/// The exit will be executed after the current frame is rendered.
+/// Calling this function does not interrup the current app execution.
 pub fn run_app(author_id: &str, app_id: &str) {
     let author_ptr = author_id.as_ptr() as u32;
     let app_ptr = app_id.as_ptr() as u32;
