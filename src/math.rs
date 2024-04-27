@@ -1,4 +1,4 @@
-use core::f32::consts::{FRAC_1_PI, PI};
+use core::f32::consts::{FRAC_1_PI, FRAC_PI_2, PI};
 
 const SIGN_MASK: u32 = 0b1000_0000_0000_0000_0000_0000_0000_0000;
 
@@ -53,4 +53,30 @@ pub(crate) fn rem_euclid(lhs: f32, rhs: f32) -> f32 {
     } else {
         r
     }
+}
+
+/// Approximates `atan(x)` approximation in radians with a maximum error of
+/// `0.002`.
+///
+/// Returns [`Self::NAN`] if the number is [`Self::NAN`].
+pub fn atan(x: f32) -> f32 {
+    FRAC_PI_2 * atan_norm(x)
+}
+
+/// Approximates `atan(x)` normalized to the `[−1,1]` range with a maximum
+/// error of `0.1620` degrees.
+pub fn atan_norm(x: f32) -> f32 {
+    const SIGN_MASK: u32 = 0x8000_0000;
+    const B: f32 = 0.596_227;
+
+    // Extract the sign bit
+    let ux_s = SIGN_MASK & x.to_bits();
+
+    // Calculate the arctangent in the first quadrant
+    let bx_a = abs(B * x);
+    let n = bx_a + x * x;
+    let atan_1q = n / (1.0 + bx_a + n);
+
+    // Restore the sign bit and convert to float
+    f32::from_bits(ux_s | atan_1q.to_bits())
 }

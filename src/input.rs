@@ -1,5 +1,4 @@
-use crate::bindings as b;
-use crate::net::Player;
+use crate::{bindings as b, *};
 
 const DPAD_THRESHOLD: i32 = 100;
 
@@ -7,21 +6,15 @@ const DPAD_THRESHOLD: i32 = 100;
 ///
 /// Both x and y are somewhere the range between -1000 and 1000 (both ends included).
 /// The 1000 x is on the right, the 1000 y is on the top.
-#[derive(Default)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Pad {
     pub x: i32,
     pub y: i32,
 }
 
 impl Pad {
-    /// The right-most value of x.
-    pub const MAX_X: i32 = 1000;
-    /// The top-most value of y.
-    pub const MAX_Y: i32 = 1000;
-    /// The left-most value of x.
-    pub const MIN_X: i32 = -1000;
-    /// The bottom-most value of y.
-    pub const MIN_Y: i32 = -1000;
+    pub const MAX: Pad = Pad { x: 1000, y: 1000 };
+    pub const MIN: Pad = Pad { x: -1000, y: -1000 };
 
     /// Represent the pad values as a directional pad.
     pub fn as_dpad(&self) -> DPad {
@@ -30,6 +23,56 @@ impl Pad {
             right: self.x >= DPAD_THRESHOLD,
             down:  self.y <= -DPAD_THRESHOLD,
             up:    self.y >= DPAD_THRESHOLD,
+        }
+    }
+
+    /// The distance from the pad center to the touch point.
+    pub fn radius(self) -> f32 {
+        let r = self.x * self.x + self.y * self.y;
+        math::sqrt(r as f32)
+    }
+
+    /// The angle of the [polar coordinate] of the touch point.
+    ///
+    /// [polar coordinate]: https://en.wikipedia.org/wiki/Polar_coordinate_system
+    pub fn azimuth(self) -> Angle {
+        let r = math::atan(self.y as f32 / self.x as f32);
+        Angle::from_radians(r)
+    }
+}
+
+impl From<Pad> for Point {
+    fn from(value: Pad) -> Self {
+        Self {
+            x: value.x,
+            y: value.y,
+        }
+    }
+}
+
+impl From<Point> for Pad {
+    fn from(value: Point) -> Self {
+        Self {
+            x: value.x,
+            y: value.y,
+        }
+    }
+}
+
+impl From<Pad> for Size {
+    fn from(value: Pad) -> Self {
+        Self {
+            width:  value.x,
+            height: value.y,
+        }
+    }
+}
+
+impl From<Size> for Pad {
+    fn from(value: Size) -> Self {
+        Self {
+            x: value.width,
+            y: value.height,
         }
     }
 }
@@ -42,7 +85,7 @@ impl Pad {
 /// Invariant: it's not possible for opposite directions (left and right, or down and up)
 /// to be active at the same time. However, it's possible for heighboring directions
 /// (like up and right) to be active at the same time if the player presses a diagonal.
-#[derive(Default)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct DPad {
     pub left:  bool,
     pub right: bool,
