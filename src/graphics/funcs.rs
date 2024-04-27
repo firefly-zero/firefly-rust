@@ -1,14 +1,6 @@
 use super::{bindings as b, *};
 use crate::fs::{Font, Image, SubImage};
 
-pub fn get_screen_size() -> Size {
-    let raw = unsafe { b::get_screen_size() };
-    Size {
-        width:  (raw >> 16) & 0xffff,
-        height: raw & 0xffff,
-    }
-}
-
 /// Fill the whole frame with the given color.
 pub fn clear_screen(c: Color) {
     unsafe {

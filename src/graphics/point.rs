@@ -1,4 +1,4 @@
-use super::Size;
+use super::*;
 use core::num::TryFromIntError;
 use core::ops::*;
 
@@ -12,7 +12,15 @@ pub struct Point {
 }
 
 impl Point {
-    pub fn abs(&self) -> Self {
+    /// The coordinate of the bottom-right corner on the screen.
+    pub const MAX: Point = Point {
+        x: WIDTH,
+        y: HEIGHT,
+    };
+    /// The coordinate of the top-left corner on the screen.
+    pub const MIN: Point = Point { x: 0, y: 0 };
+
+    pub fn abs(self) -> Self {
         Self {
             x: self.x.abs(),
             y: self.y.abs(),

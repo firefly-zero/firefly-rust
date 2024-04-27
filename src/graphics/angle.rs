@@ -6,9 +6,13 @@ use core::ops::*;
 pub struct Angle(pub(crate) f32);
 
 impl Angle {
+    /// The 360° angle.
     pub const FULL_CIRCLE: Angle = Angle(TAU);
+    /// The 180° angle.
     pub const HALF_CIRCLE: Angle = Angle(PI);
+    /// The 90° angle.
     pub const QUARTER_CIRCLE: Angle = Angle(FRAC_PI_2);
+    /// The 0° angle.
     pub const ZERO: Angle = Angle(0.);
 
     pub fn from_degrees(d: f32) -> Self {

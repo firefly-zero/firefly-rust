@@ -1,6 +1,5 @@
 #[link(wasm_import_module = "graphics")]
 extern {
-    pub(crate) fn get_screen_size() -> i32;
     pub(crate) fn clear_screen(color: i32);
     pub(crate) fn set_color(index: i32, r: i32, g: i32, b: i32);
     pub(crate) fn set_colors(

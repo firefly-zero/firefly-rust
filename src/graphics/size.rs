@@ -1,6 +1,9 @@
 use super::Point;
 use core::ops::*;
 
+pub const WIDTH: i32 = 240;
+pub const HEIGHT: i32 = 160;
+
 /// Size of a bounding box for a shape.
 ///
 /// The width and height must be positive.
@@ -11,6 +14,12 @@ pub struct Size {
 }
 
 impl Size {
+    /// The screen size.
+    pub const MAX: Size = Size {
+        width:  WIDTH,
+        height: HEIGHT,
+    };
+
     pub fn abs(&self) -> Self {
         Self {
             width:  self.width.abs(),
