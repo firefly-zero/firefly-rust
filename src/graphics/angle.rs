@@ -1,11 +1,16 @@
-use crate::math::rem_euclid;
-use core::f32::consts::PI;
+use crate::math;
+use core::f32::consts::{FRAC_PI_2, PI, TAU};
 use core::ops::*;
 
 #[derive(Copy, Clone, PartialEq, PartialOrd, Debug, Default)]
 pub struct Angle(pub(crate) f32);
 
 impl Angle {
+    pub const FULL_CIRCLE: Angle = Angle(TAU);
+    pub const HALF_CIRCLE: Angle = Angle(PI);
+    pub const QUARTER_CIRCLE: Angle = Angle(FRAC_PI_2);
+    pub const ZERO: Angle = Angle(0.);
+
     pub fn from_degrees(d: f32) -> Self {
         Self(d * PI / 180.0)
     }
@@ -14,25 +19,33 @@ impl Angle {
         Self(r)
     }
 
-    /// Normalize the angle to less than one full rotation (ie. in the range 0..360).
+    pub fn abs(self) -> Self {
+        Self(math::abs(self.0))
+    }
+
+    /// Normalize the angle to less than one full rotation (in the range 0..360 degrees).
     pub fn normalize(self) -> Self {
-        Self(rem_euclid(self.0, 2.0 * PI))
+        Self(math::rem_euclid(self.0, 2.0 * PI))
     }
 
-    pub fn as_degrees(&self) -> f32 {
+    pub fn to_degrees(self) -> f32 {
         180. * self.0 / PI
     }
 
-    pub fn as_radians(&self) -> f32 {
+    pub fn to_radians(self) -> f32 {
         self.0
     }
 
-    pub fn into_degrees(self) -> f32 {
-        180. * self.0 / PI
+    pub fn sin(&self) -> f32 {
+        math::sin(self.0)
     }
 
-    pub fn into_radians(self) -> f32 {
-        self.0
+    pub fn cos(&self) -> f32 {
+        math::cos(self.0)
+    }
+
+    pub fn tan(&self) -> f32 {
+        math::tan(self.0)
     }
 }
 
