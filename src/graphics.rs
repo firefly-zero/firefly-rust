@@ -1,5 +1,7 @@
 use crate::bindings as b;
 use crate::fs::{Font, Image, SubImage};
+use core::f32::consts::PI;
+use core::ops::Add;
 
 /// A point on the screen.
 ///
@@ -9,12 +11,36 @@ pub struct Point {
     pub y: i32,
 }
 
+impl Add<Point> for Point {
+    type Output = Point;
+
+    fn add(self, rhs: Point) -> Self::Output {
+        Self {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
+    }
+}
+
 /// Size of a bounding box for a shape.
 ///
 /// The width and height must be positive.
 pub struct Size {
     pub width:  i32,
     pub height: i32,
+}
+
+pub struct Angle(i32);
+
+impl Angle {
+    pub fn from_degrees(d: i32) -> Self {
+        Self(d)
+    }
+
+    pub fn from_radians(r: f32) -> Self {
+        let d = r * 180. / PI;
+        Self(d as i32)
+    }
 }
 
 /// The RGB value of a color in the palette.
@@ -252,14 +278,14 @@ pub fn draw_triangle(a: Point, b: Point, c: Point, s: Style) {
     }
 }
 
-pub fn draw_arc(p: Point, d: i32, angle_start: i32, angle_sweep: i32, s: Style) {
+pub fn draw_arc(p: Point, d: i32, start: Angle, sweep: Angle, s: Style) {
     unsafe {
         b::draw_arc(
             p.x,
             p.y,
             d,
-            angle_start,
-            angle_sweep,
+            start.0,
+            sweep.0,
             s.fill_color.into(),
             s.stroke_color.into(),
             s.stroke_width,
@@ -267,14 +293,14 @@ pub fn draw_arc(p: Point, d: i32, angle_start: i32, angle_sweep: i32, s: Style) 
     }
 }
 
-pub fn draw_sector(p: Point, d: i32, angle_start: i32, angle_sweep: i32, s: Style) {
+pub fn draw_sector(p: Point, d: i32, start: Angle, sweep: Angle, s: Style) {
     unsafe {
         b::draw_sector(
             p.x,
             p.y,
             d,
-            angle_start,
-            angle_sweep,
+            start.0,
+            sweep.0,
             s.fill_color.into(),
             s.stroke_color.into(),
             s.stroke_width,
