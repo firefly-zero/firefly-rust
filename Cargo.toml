@@ -4,9 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [features]
-default = ["alloc", "sudo"]
+default = ["alloc", "sudo", "nalgebra_support"]
 std = []
 alloc = []
 sudo = []
+nalgebra_support = ["nalgebra"]
 
 [dependencies]
+nalgebra = { version = "0.32.5", optional = true, default-features = false }

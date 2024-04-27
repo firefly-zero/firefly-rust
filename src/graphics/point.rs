@@ -1,6 +1,8 @@
 use super::*;
 use core::num::TryFromIntError;
 use core::ops::*;
+#[cfg(feature = "nalgebra_support")]
+use nalgebra::{base::Scalar, Vector2};
 
 /// A point on the screen.
 ///
@@ -273,5 +275,31 @@ impl TryFrom<&[u32; 2]> for Point {
         let y = point[1].try_into()?;
 
         Ok(Self { x, y })
+    }
+}
+
+#[cfg(feature = "nalgebra_support")]
+impl<N> From<Vector2<N>> for Point
+where
+    N: Into<i32> + Scalar + Copy,
+{
+    fn from(other: Vector2<N>) -> Self {
+        Self {
+            x: other[0].into(),
+            y: other[1].into(),
+        }
+    }
+}
+
+#[cfg(feature = "nalgebra_support")]
+impl<N> From<&Vector2<N>> for Point
+where
+    N: Into<i32> + Scalar + Copy,
+{
+    fn from(other: &Vector2<N>) -> Self {
+        Self {
+            x: other[0].into(),
+            y: other[1].into(),
+        }
     }
 }

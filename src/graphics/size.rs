@@ -1,5 +1,7 @@
 use super::Point;
 use core::ops::*;
+#[cfg(feature = "nalgebra_support")]
+use nalgebra::{base::Scalar, Vector2};
 
 pub const WIDTH: i32 = 240;
 pub const HEIGHT: i32 = 160;
@@ -187,5 +189,31 @@ impl From<Size> for [i32; 2] {
 impl From<&Size> for (i32, i32) {
     fn from(other: &Size) -> (i32, i32) {
         (other.width, other.height)
+    }
+}
+
+#[cfg(feature = "nalgebra_support")]
+impl<N> From<Vector2<N>> for Size
+where
+    N: Into<i32> + Scalar + Copy,
+{
+    fn from(other: Vector2<N>) -> Self {
+        Self {
+            width:  other[0].into(),
+            height: other[1].into(),
+        }
+    }
+}
+
+#[cfg(feature = "nalgebra_support")]
+impl<N> From<&Vector2<N>> for Size
+where
+    N: Into<i32> + Scalar + Copy,
+{
+    fn from(other: &Vector2<N>) -> Self {
+        Self {
+            width:  other[0].into(),
+            height: other[1].into(),
+        }
     }
 }
