@@ -1,4 +1,4 @@
-use super::*;
+use super::Size;
 use core::num::TryFromIntError;
 use core::ops::*;
 
