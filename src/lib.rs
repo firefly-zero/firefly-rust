@@ -3,6 +3,7 @@ mod bindings;
 mod fs;
 mod graphics;
 mod input;
+pub mod math;
 mod net;
 #[cfg(feature = "sudo")]
 pub mod sudo;
