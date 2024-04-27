@@ -1,26 +1,12 @@
-use core::f32::consts::PI;
-
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct Angle(pub(crate) i32);
-
-impl Angle {
-    pub fn from_degrees(d: i32) -> Self {
-        Self(d)
-    }
-
-    pub fn from_radians(r: f32) -> Self {
-        let d = r * 180. / PI;
-        Self(d as i32)
-    }
-}
-
 /// The RGB value of a color in the palette.
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct RGB {
     pub r: u8,
     pub g: u8,
     pub b: u8,
 }
 
+#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Style {
     pub fill_color:   Color,
     pub stroke_color: Color,
@@ -47,6 +33,7 @@ impl Style {
     }
 }
 
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LineStyle {
     pub color: Color,
     pub width: i32,
@@ -61,7 +48,7 @@ impl From<Style> for LineStyle {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Color {
     /// No color (100% transparency).
     None,
@@ -73,6 +60,12 @@ pub enum Color {
     Secondary,
     /// The last color in the palette. Typically, the brightest, almost white, color.
     Light,
+}
+
+impl Default for Color {
+    fn default() -> Self {
+        Self::None
+    }
 }
 
 impl TryFrom<usize> for Color {
