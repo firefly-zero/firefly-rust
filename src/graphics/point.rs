@@ -1,5 +1,5 @@
 use super::*;
-use core::ops::{Add, AddAssign, Sub};
+use core::ops::*;
 
 /// A point on the screen.
 ///
@@ -18,13 +18,13 @@ impl Point {
     }
 }
 
-impl Add<Point> for Point {
+impl Add for Point {
     type Output = Point;
 
-    fn add(self, rhs: Point) -> Self::Output {
+    fn add(self, other: Point) -> Self {
         Self {
-            x: self.x + rhs.x,
-            y: self.y + rhs.y,
+            x: self.x + other.x,
+            y: self.y + other.y,
         }
     }
 }
@@ -32,15 +32,15 @@ impl Add<Point> for Point {
 impl Add<Size> for Point {
     type Output = Point;
 
-    fn add(self, rhs: Size) -> Self::Output {
+    fn add(self, other: Size) -> Self {
         Self {
-            x: self.x + rhs.width,
-            y: self.y + rhs.height,
+            x: self.x + other.width,
+            y: self.y + other.height,
         }
     }
 }
 
-impl AddAssign<Point> for Point {
+impl AddAssign for Point {
     fn add_assign(&mut self, other: Point) {
         self.x += other.x;
         self.y += other.y;
@@ -54,13 +54,13 @@ impl AddAssign<Size> for Point {
     }
 }
 
-impl Sub<Point> for Point {
+impl Sub for Point {
     type Output = Point;
 
-    fn sub(self, rhs: Point) -> Self::Output {
+    fn sub(self, other: Point) -> Self {
         Self {
-            x: self.x - rhs.x,
-            y: self.y - rhs.y,
+            x: self.x - other.x,
+            y: self.y - other.y,
         }
     }
 }
@@ -68,10 +68,177 @@ impl Sub<Point> for Point {
 impl Sub<Size> for Point {
     type Output = Point;
 
-    fn sub(self, rhs: Size) -> Self::Output {
+    fn sub(self, other: Size) -> Self {
         Self {
-            x: self.x - rhs.width,
-            y: self.y - rhs.height,
+            x: self.x - other.width,
+            y: self.y - other.height,
         }
+    }
+}
+
+impl SubAssign for Point {
+    fn sub_assign(&mut self, other: Point) {
+        self.x -= other.x;
+        self.y -= other.y;
+    }
+}
+
+impl SubAssign<Size> for Point {
+    fn sub_assign(&mut self, other: Size) {
+        self.x -= other.width;
+        self.y -= other.height;
+    }
+}
+
+impl Mul<i32> for Point {
+    type Output = Point;
+
+    fn mul(self, rhs: i32) -> Self {
+        Self {
+            x: self.x * rhs,
+            y: self.y * rhs,
+        }
+    }
+}
+
+impl MulAssign<i32> for Point {
+    fn mul_assign(&mut self, rhs: i32) {
+        self.x *= rhs;
+        self.y *= rhs;
+    }
+}
+
+impl Div<i32> for Point {
+    type Output = Point;
+
+    fn div(self, rhs: i32) -> Self {
+        Self {
+            x: self.x / rhs,
+            y: self.y / rhs,
+        }
+    }
+}
+
+impl DivAssign<i32> for Point {
+    fn div_assign(&mut self, rhs: i32) {
+        self.x /= rhs;
+        self.y /= rhs;
+    }
+}
+
+impl Index<usize> for Point {
+    type Output = i32;
+
+    fn index(&self, idx: usize) -> &i32 {
+        match idx {
+            0 => &self.x,
+            1 => &self.y,
+            _ => panic!("index out of bounds: the len is 2 but the index is {}", idx),
+        }
+    }
+}
+
+impl Neg for Point {
+    type Output = Point;
+
+    fn neg(self) -> Self::Output {
+        Self {
+            x: -self.x,
+            y: -self.y,
+        }
+    }
+}
+
+impl From<(i32, i32)> for Point {
+    fn from(other: (i32, i32)) -> Self {
+        Self {
+            x: other.0,
+            y: other.1,
+        }
+    }
+}
+
+impl From<[i32; 2]> for Point {
+    fn from(other: [i32; 2]) -> Self {
+        Self {
+            x: other[0],
+            y: other[1],
+        }
+    }
+}
+
+impl From<&[i32; 2]> for Point {
+    fn from(other: &[i32; 2]) -> Self {
+        Self {
+            x: other[0],
+            y: other[1],
+        }
+    }
+}
+
+impl From<Point> for (i32, i32) {
+    fn from(other: Point) -> (i32, i32) {
+        (other.x, other.y)
+    }
+}
+
+impl From<Point> for [i32; 2] {
+    fn from(other: Point) -> [i32; 2] {
+        [other.x, other.y]
+    }
+}
+
+impl From<&Point> for (i32, i32) {
+    fn from(other: &Point) -> (i32, i32) {
+        (other.x, other.y)
+    }
+}
+
+impl TryFrom<Point> for (u32, u32) {
+    type Error = core::num::TryFromIntError;
+
+    fn try_from(point: Point) -> Result<Self, Self::Error> {
+        Ok((point.x.try_into()?, point.y.try_into()?))
+    }
+}
+
+impl TryFrom<(u32, u32)> for Point {
+    type Error = core::num::TryFromIntError;
+
+    fn try_from(point: (u32, u32)) -> Result<Self, Self::Error> {
+        let x = point.0.try_into()?;
+        let y = point.1.try_into()?;
+
+        Ok(Self { x, y })
+    }
+}
+
+impl TryFrom<Point> for [u32; 2] {
+    type Error = core::num::TryFromIntError;
+
+    fn try_from(point: Point) -> Result<Self, Self::Error> {
+        Ok([point.x.try_into()?, point.y.try_into()?])
+    }
+}
+
+impl TryFrom<[u32; 2]> for Point {
+    type Error = core::num::TryFromIntError;
+
+    fn try_from(point: [u32; 2]) -> Result<Self, Self::Error> {
+        let x = point[0].try_into()?;
+        let y = point[1].try_into()?;
+
+        Ok(Self { x, y })
+    }
+}
+
+impl TryFrom<&[u32; 2]> for Point {
+    type Error = core::num::TryFromIntError;
+
+    fn try_from(point: &[u32; 2]) -> Result<Self, Self::Error> {
+        let x = point[0].try_into()?;
+        let y = point[1].try_into()?;
+
+        Ok(Self { x, y })
     }
 }
