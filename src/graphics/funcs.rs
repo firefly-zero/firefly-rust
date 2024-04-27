@@ -42,13 +42,14 @@ pub fn draw_point(p: Point, c: Color) {
     }
 }
 
-// Draw a direct line from point a to point b.
+/// Draw a direct line from point a to point b.
 pub fn draw_line(a: Point, b: Point, s: LineStyle) {
     unsafe {
         b::draw_line(a.x, a.y, b.x, b.y, s.color.into(), s.width);
     }
 }
 
+/// Draw a rectangle filling the given bounding box.
 pub fn draw_rect(p: Point, b: Size, s: Style) {
     unsafe {
         b::draw_rect(
@@ -63,6 +64,7 @@ pub fn draw_rect(p: Point, b: Size, s: Style) {
     }
 }
 
+/// Draw a rectangle with rounded corners.
 pub fn draw_rounded_rect(p: Point, b: Size, corner: Size, s: Style) {
     unsafe {
         b::draw_rounded_rect(
@@ -79,6 +81,7 @@ pub fn draw_rounded_rect(p: Point, b: Size, corner: Size, s: Style) {
     }
 }
 
+/// Draw a circle with the given diameter.
 pub fn draw_circle(p: Point, d: i32, s: Style) {
     unsafe {
         b::draw_circle(
@@ -92,6 +95,7 @@ pub fn draw_circle(p: Point, d: i32, s: Style) {
     }
 }
 
+/// Draw an ellipse (oval).
 pub fn draw_ellipse(p: Point, b: Size, s: Style) {
     unsafe {
         b::draw_ellipse(
@@ -106,6 +110,9 @@ pub fn draw_ellipse(p: Point, b: Size, s: Style) {
     }
 }
 
+/// Draw a triangle.
+///
+/// The order of points doesn't matter.
 pub fn draw_triangle(a: Point, b: Point, c: Point, s: Style) {
     unsafe {
         b::draw_triangle(
@@ -122,6 +129,7 @@ pub fn draw_triangle(a: Point, b: Point, c: Point, s: Style) {
     }
 }
 
+/// Draw an arc.
 pub fn draw_arc(p: Point, d: i32, start: Angle, sweep: Angle, s: Style) {
     unsafe {
         b::draw_arc(
@@ -137,6 +145,7 @@ pub fn draw_arc(p: Point, d: i32, start: Angle, sweep: Angle, s: Style) {
     }
 }
 
+/// Draw a sector.
 pub fn draw_sector(p: Point, d: i32, start: Angle, sweep: Angle, s: Style) {
     unsafe {
         b::draw_sector(
@@ -152,6 +161,7 @@ pub fn draw_sector(p: Point, d: i32, start: Angle, sweep: Angle, s: Style) {
     }
 }
 
+/// Render text using the given font.
 pub fn draw_text(t: &str, f: &Font, p: Point, c: Color) {
     let text_ptr = t.as_ptr();
     let text_len = t.len();
@@ -170,6 +180,7 @@ pub fn draw_text(t: &str, f: &Font, p: Point, c: Color) {
     }
 }
 
+/// Render an image using the given colors.
 pub fn draw_image(i: Image, p: Point, c: ImageColors) {
     let ptr = i.raw.as_ptr();
     let len = i.raw.len();
@@ -187,6 +198,9 @@ pub fn draw_image(i: Image, p: Point, c: ImageColors) {
     }
 }
 
+/// Draw a subregion of an image.
+///
+/// Most often used to draw a sprite from a sprite atlas.
 pub fn draw_sub_image(i: SubImage, p: Point, c: ImageColors) {
     let ptr = i.raw.as_ptr();
     let len = i.raw.len();

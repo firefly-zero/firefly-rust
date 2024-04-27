@@ -22,6 +22,7 @@ impl Point {
     /// The coordinate of the top-left corner on the screen.
     pub const MIN: Point = Point { x: 0, y: 0 };
 
+    /// Set x and y to their absolute (non-negative) value.
     pub fn abs(self) -> Self {
         Self {
             x: self.x.abs(),
@@ -29,6 +30,7 @@ impl Point {
         }
     }
 
+    /// Set both x and y to their minimum in the two given points.
     pub fn component_min(self, other: Self) -> Self {
         Self {
             x: self.x.min(other.x),
@@ -36,6 +38,7 @@ impl Point {
         }
     }
 
+    /// Set both x and y to their maximum in the two given points.
     pub fn component_max(self, other: Self) -> Self {
         Self {
             x: self.x.max(other.x),
@@ -45,7 +48,7 @@ impl Point {
 }
 
 impl Add for Point {
-    type Output = Point;
+    type Output = Self;
 
     fn add(self, other: Point) -> Self {
         Self {
@@ -56,7 +59,7 @@ impl Add for Point {
 }
 
 impl Add<Size> for Point {
-    type Output = Point;
+    type Output = Self;
 
     fn add(self, other: Size) -> Self {
         Self {
@@ -81,7 +84,7 @@ impl AddAssign<Size> for Point {
 }
 
 impl Sub for Point {
-    type Output = Point;
+    type Output = Self;
 
     fn sub(self, other: Point) -> Self {
         Self {
@@ -92,7 +95,7 @@ impl Sub for Point {
 }
 
 impl Sub<Size> for Point {
-    type Output = Point;
+    type Output = Self;
 
     fn sub(self, other: Size) -> Self {
         Self {
@@ -117,7 +120,7 @@ impl SubAssign<Size> for Point {
 }
 
 impl Mul<i32> for Point {
-    type Output = Point;
+    type Output = Self;
 
     fn mul(self, rhs: i32) -> Self {
         Self {
@@ -135,7 +138,7 @@ impl MulAssign<i32> for Point {
 }
 
 impl Div<i32> for Point {
-    type Output = Point;
+    type Output = Self;
 
     fn div(self, rhs: i32) -> Self {
         Self {
@@ -165,7 +168,7 @@ impl Index<usize> for Point {
 }
 
 impl Neg for Point {
-    type Output = Point;
+    type Output = Self;
 
     fn neg(self) -> Self {
         Self {

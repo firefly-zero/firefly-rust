@@ -6,10 +6,18 @@ pub struct RGB {
     pub b: u8,
 }
 
+/// Style of the shape.
 #[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Style {
-    pub fill_color:   Color,
+    /// The color to use to fill the shape.
+    pub fill_color: Color,
+
+    /// The color to use for the shape stroke.
     pub stroke_color: Color,
+
+    /// The width of the shape stroke.
+    ///
+    /// If zero, a solid shape without a stroke will be drawn.
     pub stroke_width: i32,
 }
 
@@ -24,6 +32,9 @@ impl Default for Style {
 }
 
 impl Style {
+    /// Convert the style to a line style.
+    ///
+    /// [LineStyle] is the same as [Style] except it doesn't have a fill color.
     #[must_use]
     pub fn as_line_style(&self) -> LineStyle {
         LineStyle {
@@ -33,6 +44,7 @@ impl Style {
     }
 }
 
+/// The same as [Style] but without a fill color (only stroke color and width).
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LineStyle {
     pub color: Color,
@@ -48,6 +60,7 @@ impl From<Style> for LineStyle {
     }
 }
 
+/// A pointer to a color in the color palette.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Color {
     /// No color (100% transparency).
@@ -95,6 +108,8 @@ impl From<Color> for i32 {
     }
 }
 
+/// A mapping of colors in the image to the color palette.
+#[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct ImageColors {
     pub a: Color,
     pub b: Color,
@@ -109,6 +124,28 @@ impl Default for ImageColors {
             b: Color::Accent,
             c: Color::Secondary,
             d: Color::Light,
+        }
+    }
+}
+
+impl From<[Color; 4]> for ImageColors {
+    fn from(value: [Color; 4]) -> Self {
+        Self {
+            a: value[0],
+            b: value[1],
+            c: value[2],
+            d: value[3],
+        }
+    }
+}
+
+impl From<&[Color; 4]> for ImageColors {
+    fn from(value: &[Color; 4]) -> Self {
+        Self {
+            a: value[0],
+            b: value[1],
+            c: value[2],
+            d: value[3],
         }
     }
 }

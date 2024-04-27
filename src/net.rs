@@ -1,3 +1,4 @@
+/// The player ID.
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub enum Player {
     P0,

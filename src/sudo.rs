@@ -1,3 +1,5 @@
+//! Functions available only to privileged apps.
+
 use crate::bindings::sudo as b;
 use crate::fs::{File, FileBuf};
 #[cfg(feature = "alloc")]

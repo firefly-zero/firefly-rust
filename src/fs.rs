@@ -1,3 +1,5 @@
+//! Access file system: the game ROM files and the data dir.
+
 use crate::graphics::{Point, Size};
 #[cfg(feature = "alloc")]
 use alloc::vec;
@@ -16,14 +18,17 @@ pub struct FileBuf {
 
 #[cfg(feature = "alloc")]
 impl FileBuf {
+    /// Access the raw data in the file.
     pub fn data(&self) -> &[u8] {
         &self.raw
     }
 
+    /// Interpret the file as a font.
     pub fn as_font(&self) -> Font {
         Font { raw: &self.raw }
     }
 
+    /// Interpret the file as an image.
     pub fn as_image(&self) -> Image {
         Image { raw: &self.raw }
     }
@@ -86,6 +91,9 @@ pub mod rom {
         File { raw: buf }
     }
 
+    /// Read the whole file with the given name from ROM.
+    ///
+    /// If you have a pre-allocated buffer of the right size, use [load] instead.
     #[cfg(feature = "alloc")]
     pub fn load_buf(name: &str) -> FileBuf {
         let size = rom::get_size(name);
@@ -100,6 +108,9 @@ pub mod data {
     use super::*;
     use crate::bindings as b;
 
+    /// Get a file size in the data dir.
+    ///
+    /// If the file does not exist, 0 is returned.
     #[must_use]
     pub fn get_size(name: &str) -> usize {
         let path_ptr = name.as_ptr();
@@ -107,6 +118,10 @@ pub mod data {
         size as usize
     }
 
+    /// Read the whole file with the given name into the given buffer.
+    ///
+    /// If the file size is not known in advance (and so the buffer has to be allocated
+    /// dynamically), consider using [load_buf] instead.
     pub fn load<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
         let path_ptr = name.as_ptr();
         let buf_ptr = buf.as_mut_ptr();
@@ -121,6 +136,9 @@ pub mod data {
         File { raw: buf }
     }
 
+    /// Read the whole file with the given name from the data dir.
+    ///
+    /// If you have a pre-allocated buffer of the right size, use [load] instead.
     #[cfg(feature = "alloc")]
     pub fn load_buf(name: &str) -> FileBuf {
         let size = data::get_size(name);
@@ -129,6 +147,10 @@ pub mod data {
         FileBuf { raw: buf }
     }
 
+    /// Write the buffer into the given file in the data dir.
+    ///
+    /// If the file exists, it will be overwritten.
+    /// If it doesn't exist, it will be created.
     pub fn dump(name: &str, buf: &[u8]) {
         let path_ptr = name.as_ptr();
         let buf_ptr = buf.as_ptr();
@@ -151,6 +173,10 @@ pub mod data {
     }
 }
 
+/// A loaded font file.
+///
+/// Can be loaded as [FileBuf] from ROM with [rom::load_buf]
+/// and then cast using [Into].
 pub struct Font<'a> {
     pub(crate) raw: &'a [u8],
 }
@@ -168,6 +194,10 @@ impl<'a> From<&'a FileBuf> for Font<'a> {
     }
 }
 
+/// A loaded image file.
+///
+/// Can be loaded as [FileBuf] from ROM with [rom::load_buf]
+/// and then cast using [Into].
 pub struct Image<'a> {
     pub(crate) raw: &'a [u8],
 }
@@ -196,7 +226,7 @@ impl<'a> Image<'a> {
     }
 }
 
-/// A subregion of an image. Constructed by [Image::sub].
+/// A subregion of an image. Constructed using [Image::sub].
 pub struct SubImage<'a> {
     pub(crate) point: Point,
     pub(crate) size:  Size,

@@ -12,3 +12,6 @@ nalgebra_support = ["nalgebra"]
 
 [dependencies]
 nalgebra = { version = "0.32.5", optional = true, default-features = false }
+
+[target.wasm32-unknown-unknown]
+runner = "wasmtime"

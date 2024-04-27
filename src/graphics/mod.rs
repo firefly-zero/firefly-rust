@@ -1,3 +1,5 @@
+//! Draw shapes, images, and text on the screen.
+
 mod angle;
 mod bindings;
 mod funcs;

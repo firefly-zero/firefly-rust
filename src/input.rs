@@ -1,3 +1,5 @@
+//! Read inputs: touch pad, buttons, accelerometer.
+
 use crate::{bindings as b, *};
 
 const DPAD_THRESHOLD: i32 = 100;
@@ -131,12 +133,20 @@ impl DPad {
     }
 }
 
+/// State of the buttons.
 #[derive(Default)]
 pub struct Buttons {
+    /// If `a` button is pressed.
     pub a:    bool,
+    /// If `b` button is pressed.
     pub b:    bool,
+    /// If `x` button is pressed.
     pub x:    bool,
+    /// If `y` button is pressed.
     pub y:    bool,
+    /// If `menu` button is pressed.
+    ///
+    /// For singleplayer games, the button press is always intercepted by the runtime.
     pub menu: bool,
 }
 
@@ -180,6 +190,9 @@ impl Buttons {
     }
 }
 
+/// Get the current touch pad state.
+///
+/// In singleplayer game, the player ID doesn't matter.
 #[must_use]
 pub fn read_pad(player: Player) -> Option<Pad> {
     let raw = unsafe { b::read_pad(player.into()) };
@@ -193,6 +206,9 @@ pub fn read_pad(player: Player) -> Option<Pad> {
     }
 }
 
+/// Get the currently pressed buttons.
+///
+/// In singleplayer game, the player ID doesn't matter.
 #[must_use]
 pub fn read_buttons(player: Player) -> Buttons {
     let raw = unsafe { b::read_buttons(player.into()) };
@@ -205,6 +221,7 @@ pub fn read_buttons(player: Player) -> Buttons {
     }
 }
 
+/// Check if the given i32 value has the given bit set.
 #[inline]
 fn has_bit_set(val: u32, bit: usize) -> bool {
     (val >> bit) & 0b1 != 0

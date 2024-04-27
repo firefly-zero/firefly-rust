@@ -3,7 +3,10 @@ use core::ops::*;
 #[cfg(feature = "nalgebra_support")]
 use nalgebra::{base::Scalar, Vector2};
 
+/// The screen width in pixels.
 pub const WIDTH: i32 = 240;
+
+/// The screen height in pixels.
 pub const HEIGHT: i32 = 160;
 
 /// Size of a bounding box for a shape.
@@ -22,6 +25,7 @@ impl Size {
         height: HEIGHT,
     };
 
+    /// Set both width and height to their absolute (non-negative) value.
     pub fn abs(&self) -> Self {
         Self {
             width:  self.width.abs(),
@@ -29,6 +33,7 @@ impl Size {
         }
     }
 
+    /// Set both width and height to their minimum in the two given points.
     pub fn component_min(self, other: Self) -> Self {
         Self {
             width:  self.width.min(other.width),
@@ -36,6 +41,7 @@ impl Size {
         }
     }
 
+    /// Set both width and height to their maximum in the two given points.
     pub fn component_max(self, other: Self) -> Self {
         Self {
             width:  self.width.max(other.width),

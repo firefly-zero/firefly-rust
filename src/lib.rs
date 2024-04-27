@@ -1,7 +1,7 @@
 #![no_std]
 mod bindings;
 mod fs;
-mod graphics;
+pub mod graphics;
 mod input;
 pub mod math;
 mod net;
