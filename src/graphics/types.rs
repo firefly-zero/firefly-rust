@@ -3,11 +3,13 @@ use core::f32::consts::PI;
 /// Size of a bounding box for a shape.
 ///
 /// The width and height must be positive.
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Size {
     pub width:  i32,
     pub height: i32,
 }
 
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Angle(pub(crate) i32);
 
 impl Angle {

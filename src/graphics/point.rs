@@ -1,9 +1,11 @@
 use super::*;
+use core::num::TryFromIntError;
 use core::ops::*;
 
 /// A point on the screen.
 ///
 /// Typically, the upper-left corner of a bounding box of a shape.
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Point {
     pub x: i32,
     pub y: i32,
@@ -14,6 +16,20 @@ impl Point {
         Self {
             x: self.x.abs(),
             y: self.y.abs(),
+        }
+    }
+
+    pub fn component_min(self, other: Self) -> Self {
+        Self {
+            x: self.x.min(other.x),
+            y: self.y.min(other.y),
+        }
+    }
+
+    pub fn component_max(self, other: Self) -> Self {
+        Self {
+            x: self.x.max(other.x),
+            y: self.y.max(other.y),
         }
     }
 }
@@ -141,10 +157,19 @@ impl Index<usize> for Point {
 impl Neg for Point {
     type Output = Point;
 
-    fn neg(self) -> Self::Output {
+    fn neg(self) -> Self {
         Self {
             x: -self.x,
             y: -self.y,
+        }
+    }
+}
+
+impl From<Size> for Point {
+    fn from(value: Size) -> Self {
+        Self {
+            x: value.width,
+            y: value.height,
         }
     }
 }
@@ -195,7 +220,7 @@ impl From<&Point> for (i32, i32) {
 }
 
 impl TryFrom<Point> for (u32, u32) {
-    type Error = core::num::TryFromIntError;
+    type Error = TryFromIntError;
 
     fn try_from(point: Point) -> Result<Self, Self::Error> {
         Ok((point.x.try_into()?, point.y.try_into()?))
@@ -203,7 +228,7 @@ impl TryFrom<Point> for (u32, u32) {
 }
 
 impl TryFrom<(u32, u32)> for Point {
-    type Error = core::num::TryFromIntError;
+    type Error = TryFromIntError;
 
     fn try_from(point: (u32, u32)) -> Result<Self, Self::Error> {
         let x = point.0.try_into()?;
@@ -214,7 +239,7 @@ impl TryFrom<(u32, u32)> for Point {
 }
 
 impl TryFrom<Point> for [u32; 2] {
-    type Error = core::num::TryFromIntError;
+    type Error = TryFromIntError;
 
     fn try_from(point: Point) -> Result<Self, Self::Error> {
         Ok([point.x.try_into()?, point.y.try_into()?])
@@ -222,7 +247,7 @@ impl TryFrom<Point> for [u32; 2] {
 }
 
 impl TryFrom<[u32; 2]> for Point {
-    type Error = core::num::TryFromIntError;
+    type Error = TryFromIntError;
 
     fn try_from(point: [u32; 2]) -> Result<Self, Self::Error> {
         let x = point[0].try_into()?;
@@ -233,7 +258,7 @@ impl TryFrom<[u32; 2]> for Point {
 }
 
 impl TryFrom<&[u32; 2]> for Point {
-    type Error = core::num::TryFromIntError;
+    type Error = TryFromIntError;
 
     fn try_from(point: &[u32; 2]) -> Result<Self, Self::Error> {
         let x = point[0].try_into()?;
