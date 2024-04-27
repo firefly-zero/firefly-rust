@@ -44,3 +44,13 @@ pub fn sqrt(x: f32) -> f32 {
         f32::NAN
     }
 }
+
+// Calculates the least nonnegative remainder of lhs (mod rhs).
+pub(crate) fn rem_euclid(lhs: f32, rhs: f32) -> f32 {
+    let r = lhs % rhs;
+    if r < 0.0 {
+        r + abs(rhs)
+    } else {
+        r
+    }
+}

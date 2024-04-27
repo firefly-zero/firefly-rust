@@ -1,30 +1,38 @@
+use crate::math::rem_euclid;
 use core::f32::consts::PI;
 use core::ops::*;
 
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct Angle(pub(crate) i32);
+#[derive(Copy, Clone, PartialEq, PartialOrd, Debug, Default)]
+pub struct Angle(pub(crate) f32);
 
 impl Angle {
-    pub fn from_degrees(d: i32) -> Self {
-        Self(d)
+    pub fn from_degrees(d: f32) -> Self {
+        Self(d * PI / 180.0)
     }
 
     pub fn from_radians(r: f32) -> Self {
-        let d = r * 180. / PI;
-        Self(d as i32)
+        Self(r)
     }
 
     /// Normalize the angle to less than one full rotation (ie. in the range 0..360).
     pub fn normalize(self) -> Self {
-        Self(self.0.rem_euclid(360))
+        Self(rem_euclid(self.0, 2.0 * PI))
     }
 
-    pub fn as_degrees(&self) -> i32 {
-        self.0
+    pub fn as_degrees(&self) -> f32 {
+        180. * self.0 / PI
     }
 
     pub fn as_radians(&self) -> f32 {
-        self.0 as f32 * PI / 180.
+        self.0
+    }
+
+    pub fn into_degrees(self) -> f32 {
+        180. * self.0 / PI
+    }
+
+    pub fn into_radians(self) -> f32 {
+        self.0
     }
 }
 
