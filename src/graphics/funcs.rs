@@ -162,6 +162,9 @@ pub fn draw_sector(p: Point, d: i32, start: Angle, sweep: Angle, s: Style) {
 }
 
 /// Render text using the given font.
+///
+/// Unlike in the other drawing functions, here [Point] points not to the top-left corner
+/// but to the baseline start position.
 pub fn draw_text(t: &str, f: &Font, p: Point, c: Color) {
     let text_ptr = t.as_ptr();
     let text_len = t.len();

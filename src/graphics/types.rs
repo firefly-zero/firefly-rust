@@ -7,7 +7,7 @@ pub struct RGB {
 }
 
 /// Style of the shape.
-#[derive(Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Style {
     /// The color to use to fill the shape.
     pub fill_color: Color,

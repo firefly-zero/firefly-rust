@@ -5,6 +5,7 @@ pub mod graphics;
 mod input;
 pub mod math;
 mod net;
+pub mod shapes;
 #[cfg(feature = "sudo")]
 pub mod sudo;
 
