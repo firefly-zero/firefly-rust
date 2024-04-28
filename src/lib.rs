@@ -4,6 +4,7 @@ mod fs;
 pub mod graphics;
 mod input;
 pub mod math;
+mod misc;
 mod net;
 pub mod shapes;
 #[cfg(feature = "sudo")]
@@ -12,6 +13,7 @@ pub mod sudo;
 pub use fs::*;
 pub use graphics::*;
 pub use input::*;
+pub use misc::*;
 pub use net::*;
 
 #[cfg(feature = "alloc")]

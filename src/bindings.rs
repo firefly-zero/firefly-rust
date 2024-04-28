@@ -14,6 +14,14 @@ extern {
     pub(crate) fn read_buttons(player: u32) -> u32;
 }
 
+#[link(wasm_import_module = "misc")]
+extern {
+    pub(crate) fn log_debug(ptr: u32, len: u32);
+    pub(crate) fn log_error(ptr: u32, len: u32);
+    pub(crate) fn set_seed(seed: u32);
+    pub(crate) fn get_random() -> u32;
+}
+
 pub(crate) mod sudo {
     #[link(wasm_import_module = "sudo")]
     extern {
