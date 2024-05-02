@@ -7,6 +7,7 @@ tasks:
     cmds:
       - test {{.CLI_ARGS}}
       - grep -F '"{{.CLI_ARGS}}"' Cargo.toml
+      - cargo publish
       - git tag {{.CLI_ARGS}}
       - git push
       - git push --tags
