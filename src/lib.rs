@@ -1,4 +1,6 @@
+#![doc = include_str!("../README.md")]
 #![cfg_attr(not(feature = "std"), no_std)]
+
 mod bindings;
 mod fs;
 pub mod graphics;
