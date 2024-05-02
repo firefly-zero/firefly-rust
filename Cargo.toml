@@ -2,6 +2,12 @@
 name = "firefly-rust"
 version = "0.1.0"
 edition = "2021"
+authors = ["Firefly Zero team"]
+description = "Rust SDK for making Firefly Zero games"
+repository = "https://github.com/firefly-zero/firefly-rust"
+license = "MIT"
+keywords = ["gamedev", "firefly-zero"]
+categories = ["game-development", "no-std", "rendering", "api-bindings", "wasm"]
 
 [features]
 default = ["alloc", "sudo", "nalgebra_support"]
