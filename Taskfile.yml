@@ -1,0 +1,34 @@
+# https://taskfile.dev
+version: '3'
+
+tasks:
+  format:
+    desc: "run code formatters"
+    cmds:
+      - cargo fmt
+  test:
+    desc: "run tests"
+    cmds:
+      - cargo test --all-features --lib
+      - >
+        cargo build
+        --example   triangle
+        --target    wasm32-unknown-unknown
+        --no-default-features
+      - >
+        cargo build
+        --example   image
+        --target    wasm32-unknown-unknown
+        --features  alloc,std
+        --no-default-features
+  lint:
+    desc: "run linters"
+    cmds:
+      - cargo clippy
+  all:
+    cmds:
+      - task: format
+      - task: lint
+      - task: test
+  default:
+    - task: all
