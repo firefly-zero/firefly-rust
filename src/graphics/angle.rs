@@ -99,3 +99,43 @@ impl Neg for Angle {
         Angle(-self.0)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_from_degrees() {
+        let d = Angle::from_degrees;
+        let r = Angle::from_radians;
+        assert_eq!(d(0.), r(0.));
+        assert_eq!(d(180.), r(PI));
+        assert_eq!(d(360.), r(TAU));
+        assert_eq!(d(90.), r(PI / 2.));
+    }
+
+    #[test]
+    fn test_abs() {
+        let a = Angle::from_degrees;
+        assert_eq!(a(90.), a(90.));
+        assert_ne!(a(-90.), a(90.));
+        assert_eq!(a(-90.).abs(), a(90.));
+    }
+
+    #[test]
+    fn test_normalize() {
+        let a = Angle::from_degrees;
+        assert_eq!(a(90.).normalize(), a(90.));
+        assert_eq!(a(360.).normalize(), a(0.));
+        assert_eq!(a(-90.).normalize(), a(270.));
+    }
+
+    #[test]
+    fn test_to_degrees() {
+        let a = Angle::from_degrees;
+        assert_eq!(a(47.).to_degrees(), 47.);
+        assert_eq!(a(0.).to_degrees(), 0.);
+        assert_eq!(a(90.).to_degrees(), 90.);
+        assert_eq!(a(370.).to_degrees(), 370.);
+    }
+}
