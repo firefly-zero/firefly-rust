@@ -15,7 +15,7 @@ pub fn set_color(c: Color, v: RGB) {
     }
 }
 
-/// Set the color palette for the current frame.
+/// Set the color palette.
 pub fn set_colors(dark: RGB, accent: RGB, secondary: RGB, light: RGB) {
     unsafe {
         b::set_colors(
@@ -42,7 +42,7 @@ pub fn draw_point(p: Point, c: Color) {
     }
 }
 
-/// Draw a direct line from point a to point b.
+/// Draw a straight line from point a to point b.
 pub fn draw_line(a: Point, b: Point, s: LineStyle) {
     unsafe {
         b::draw_line(a.x, a.y, b.x, b.y, s.color.into(), s.width);
