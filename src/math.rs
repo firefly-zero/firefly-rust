@@ -37,6 +37,7 @@ pub fn cos(x: f32) -> f32 {
 #[must_use]
 pub fn floor(x: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/floor.rs
+    #[allow(clippy::cast_precision_loss)]
     let mut res = (x as i32) as f32;
     if x < res {
         res -= 1.0;
@@ -109,6 +110,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn test_sqrt() {
         assert_eq!(sqrt(4.), 2.);
         assert_eq!(sqrt(9.), 3.125);

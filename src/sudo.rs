@@ -72,7 +72,7 @@ impl<'a> Iterator for DirIter<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let len = self.raw.first()?;
         let len = *len as usize;
-        let raw_name = self.raw.get(1..(len + 1))?;
+        let raw_name = self.raw.get(1..=len)?;
         // Security: do NOT return None on invalid string. Otherwise,
         // adding an invalid name into the directory would hide all files
         // that go after that.

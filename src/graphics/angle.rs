@@ -140,6 +140,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::float_cmp)]
     fn test_to_degrees() {
         let a = Angle::from_degrees;
         assert_eq!(a(47.).to_degrees(), 47.);

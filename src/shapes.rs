@@ -19,7 +19,7 @@ pub struct Line {
 
 impl Shape for Line {
     fn draw(&self) {
-        draw_line(self.a, self.b, self.style)
+        draw_line(self.a, self.b, self.style);
     }
 }
 
@@ -33,7 +33,7 @@ pub struct Rect {
 
 impl Shape for Rect {
     fn draw(&self) {
-        draw_rect(self.point, self.size, self.style)
+        draw_rect(self.point, self.size, self.style);
     }
 }
 
@@ -58,7 +58,7 @@ pub struct RoundedRect {
 
 impl Shape for RoundedRect {
     fn draw(&self) {
-        draw_rounded_rect(self.point, self.size, self.corner, self.style)
+        draw_rounded_rect(self.point, self.size, self.corner, self.style);
     }
 }
 
@@ -86,7 +86,7 @@ pub struct Circle {
 
 impl Shape for Circle {
     fn draw(&self) {
-        draw_circle(self.point, self.diameter, self.style)
+        draw_circle(self.point, self.diameter, self.style);
     }
 }
 
@@ -100,7 +100,7 @@ pub struct Ellipse {
 
 impl Shape for Ellipse {
     fn draw(&self) {
-        draw_ellipse(self.point, self.size, self.style)
+        draw_ellipse(self.point, self.size, self.style);
     }
 }
 
@@ -128,7 +128,7 @@ pub struct Triangle {
 
 impl Shape for Triangle {
     fn draw(&self) {
-        draw_triangle(self.a, self.b, self.c, self.style)
+        draw_triangle(self.a, self.b, self.c, self.style);
     }
 }
 
@@ -150,7 +150,7 @@ impl Shape for Arc {
             self.start,
             self.sweep,
             self.style,
-        )
+        );
     }
 }
 
@@ -184,7 +184,7 @@ impl Shape for Sector {
             self.start,
             self.sweep,
             self.style,
-        )
+        );
     }
 }
 
