@@ -30,3 +30,8 @@ pub fn set_seed(seed: u32) {
 pub fn get_random() -> u32 {
     unsafe { b::get_random() }
 }
+
+/// Exit the app after the current update is finished.
+pub fn quit() {
+    unsafe { b::quit() }
+}

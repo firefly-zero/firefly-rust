@@ -84,7 +84,7 @@ impl From<Size> for Pad {
     }
 }
 
-/// DPad-like representation of the [Pad].
+/// DPad-like representation of the [`Pad`].
 ///
 /// Constructed with [`Pad::as_dpad`]. Useful for simple games and ports.
 /// The middle of the pad is a "dead zone" pressing which will not activate any direction.
@@ -129,7 +129,7 @@ impl DPad {
         }
     }
 
-    /// Given the old state, get directions that were pressed but are still pressed now.
+    /// Given the old state, get directions that were pressed and are still pressed now.
     #[must_use]
     pub fn held(&self, old: &Self) -> Self {
         Self {

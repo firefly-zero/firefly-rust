@@ -20,4 +20,5 @@ extern {
     pub(crate) fn log_error(ptr: u32, len: u32);
     pub(crate) fn set_seed(seed: u32);
     pub(crate) fn get_random() -> u32;
+    pub(crate) fn quit();
 }
