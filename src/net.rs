@@ -12,14 +12,14 @@ impl Player {
     #[inline]
     #[must_use]
     pub fn all() -> [Player; 4] {
-        use Player::*;
+        use Player::{P0, P1, P2, P3};
         [P0, P1, P2, P3]
     }
 
     /// Get all players except this one.
     #[must_use]
     pub fn others(&self) -> [Player; 3] {
-        use Player::*;
+        use Player::{P0, P1, P2, P3};
         match self {
             P0 => [P1, P2, P3],
             P1 => [P0, P2, P3],

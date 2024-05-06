@@ -4,7 +4,6 @@
 #![allow(clippy::wildcard_imports)]
 #![allow(clippy::struct_excessive_bools)]
 #![allow(clippy::cast_possible_truncation)]
-#![allow(clippy::enum_glob_use)]
 #![allow(clippy::iter_without_into_iter)]
 
 mod bindings;
