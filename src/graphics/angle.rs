@@ -19,46 +19,55 @@ impl Angle {
     pub const ZERO: Angle = Angle(0.);
 
     /// An angle in degrees where 360.0 is the full circle.
+    #[must_use]
     pub fn from_degrees(d: f32) -> Self {
         Self(d * PI / 180.0)
     }
 
     /// An angle in radians where [TAU] (doubled [PI]) is the full circle.
+    #[must_use]
     pub fn from_radians(r: f32) -> Self {
         Self(r)
     }
 
     /// Convert the angle to an absolute (non-negative) value.
+    #[must_use]
     pub fn abs(self) -> Self {
         Self(math::abs(self.0))
     }
 
     /// Normalize the angle to less than one full rotation (in the range 0°..360°).
+    #[must_use]
     pub fn normalize(self) -> Self {
-        Self(math::rem_euclid(self.0, 2.0 * PI))
+        Self(math::rem_euclid(self.0, TAU))
     }
 
     /// Get the angle value in degrees where 360.0 is the full circle..
+    #[must_use]
     pub fn to_degrees(self) -> f32 {
         180. * self.0 / PI
     }
 
     /// Get the angle value in radians where [TAU] (doubled [PI]) is the full circle.
+    #[must_use]
     pub fn to_radians(self) -> f32 {
         self.0
     }
 
     /// Approximates `sin(x)` of the angle with a maximum error of `0.002`.
+    #[must_use]
     pub fn sin(&self) -> f32 {
         math::sin(self.0)
     }
 
     /// Approximates `cos(x)` of the angle with a maximum error of `0.002`.
+    #[must_use]
     pub fn cos(&self) -> f32 {
         math::cos(self.0)
     }
 
     /// Approximates `tan(x)` of the angle with a maximum error of `0.6`.
+    #[must_use]
     pub fn tan(&self) -> f32 {
         math::tan(self.0)
     }

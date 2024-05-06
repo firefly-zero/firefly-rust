@@ -10,12 +10,14 @@ pub enum Player {
 impl Player {
     /// Get all players.
     #[inline]
+    #[must_use]
     pub fn all() -> [Player; 4] {
         use Player::*;
         [P0, P1, P2, P3]
     }
 
     /// Get all players except this one.
+    #[must_use]
     pub fn others(&self) -> [Player; 3] {
         use Player::*;
         match self {

@@ -19,6 +19,7 @@ impl Pad {
     pub const MIN: Pad = Pad { x: -1000, y: -1000 };
 
     /// Represent the pad values as a directional pad.
+    #[must_use]
     pub fn as_dpad(&self) -> DPad {
         DPad {
             left:  self.x <= -DPAD_THRESHOLD,
@@ -29,6 +30,7 @@ impl Pad {
     }
 
     /// The distance from the pad center to the touch point.
+    #[must_use]
     pub fn radius(self) -> f32 {
         let r = self.x * self.x + self.y * self.y;
         math::sqrt(r as f32)
@@ -37,6 +39,7 @@ impl Pad {
     /// The angle of the [polar coordinate] of the touch point.
     ///
     /// [polar coordinate]: https://en.wikipedia.org/wiki/Polar_coordinate_system
+    #[must_use]
     pub fn azimuth(self) -> Angle {
         let r = math::atan(self.y as f32 / self.x as f32);
         Angle::from_radians(r)
@@ -103,6 +106,7 @@ impl From<Pad> for DPad {
 
 impl DPad {
     /// Given the old state, get directions that were not pressed but are pressed now.
+    #[must_use]
     pub fn just_pressed(&self, old: &Self) -> Self {
         Self {
             left:  self.left && !old.left,
@@ -113,6 +117,7 @@ impl DPad {
     }
 
     /// Given the old state, get directions that were pressed but aren't pressed now.
+    #[must_use]
     pub fn just_released(&self, old: &Self) -> Self {
         Self {
             left:  !self.left && old.left,
@@ -123,6 +128,7 @@ impl DPad {
     }
 
     /// Given the old state, get directions that were pressed but are still pressed now.
+    #[must_use]
     pub fn held(&self, old: &Self) -> Self {
         Self {
             left:  self.left && old.left,
@@ -152,11 +158,13 @@ pub struct Buttons {
 
 impl Buttons {
     /// Check if any button is pressed.
+    #[must_use]
     pub fn any(&self) -> bool {
         self.a || self.b || self.x || self.y || self.menu
     }
 
     /// Given the old state, get buttons that were not pressed but are pressed now.
+    #[must_use]
     pub fn just_pressed(&self, old: &Self) -> Self {
         Self {
             a:    self.a && !old.a,
@@ -168,6 +176,7 @@ impl Buttons {
     }
 
     /// Given the old state, get buttons that were pressed but aren't pressed now.
+    #[must_use]
     pub fn just_released(&self, old: &Self) -> Self {
         Self {
             a:    !self.a && old.a,
@@ -179,6 +188,7 @@ impl Buttons {
     }
 
     /// Given the old state, get buttons that were pressed but are still pressed now.
+    #[must_use]
     pub fn held(&self, old: &Self) -> Self {
         Self {
             a:    self.a && old.a,

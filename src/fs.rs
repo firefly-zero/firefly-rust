@@ -19,16 +19,19 @@ pub struct FileBuf {
 #[cfg(feature = "alloc")]
 impl FileBuf {
     /// Access the raw data in the file.
+    #[must_use]
     pub fn data(&self) -> &[u8] {
         &self.raw
     }
 
     /// Interpret the file as a font.
+    #[must_use]
     pub fn as_font(&self) -> Font {
         Font { raw: &self.raw }
     }
 
     /// Interpret the file as an image.
+    #[must_use]
     pub fn as_image(&self) -> Image {
         Image { raw: &self.raw }
     }
@@ -45,14 +48,17 @@ pub struct File<'a> {
 }
 
 impl<'a> File<'a> {
+    #[must_use]
     pub fn data(&self) -> &[u8] {
         self.raw
     }
 
+    #[must_use]
     pub fn as_font(&self) -> Font {
         Font { raw: self.raw }
     }
 
+    #[must_use]
     pub fn as_image(&self) -> Image {
         Image { raw: self.raw }
     }
@@ -95,6 +101,7 @@ pub mod rom {
     ///
     /// If you have a pre-allocated buffer of the right size, use [load] instead.
     #[cfg(feature = "alloc")]
+    #[must_use]
     pub fn load_buf(name: &str) -> FileBuf {
         let size = rom::get_size(name);
         let mut buf = vec![0; size];
@@ -140,6 +147,7 @@ pub mod data {
     ///
     /// If you have a pre-allocated buffer of the right size, use [load] instead.
     #[cfg(feature = "alloc")]
+    #[must_use]
     pub fn load_buf(name: &str) -> FileBuf {
         let size = data::get_size(name);
         let mut buf = vec![0; size];
@@ -217,6 +225,7 @@ impl<'a> From<&'a FileBuf> for Image<'a> {
 
 impl<'a> Image<'a> {
     /// Get a rectangle subregion of the image.
+    #[must_use]
     pub fn sub(&self, p: Point, s: Size) -> SubImage<'a> {
         SubImage {
             point: p,

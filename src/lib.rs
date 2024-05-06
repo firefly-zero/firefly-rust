@@ -1,5 +1,8 @@
 #![doc = include_str!("../README.md")]
 #![cfg_attr(not(feature = "std"), no_std)]
+// #![warn(clippy::pedantic)]
+#![warn(clippy::must_use_candidate)]
+#![allow(clippy::cast_possible_truncation)]
 
 mod bindings;
 mod fs;

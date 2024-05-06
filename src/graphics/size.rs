@@ -26,7 +26,8 @@ impl Size {
     };
 
     /// Set both width and height to their absolute (non-negative) value.
-    pub fn abs(&self) -> Self {
+    #[must_use]
+    pub fn abs(self) -> Self {
         Self {
             width:  self.width.abs(),
             height: self.height.abs(),
@@ -34,6 +35,7 @@ impl Size {
     }
 
     /// Set both width and height to their minimum in the two given points.
+    #[must_use]
     pub fn component_min(self, other: Self) -> Self {
         Self {
             width:  self.width.min(other.width),
@@ -42,6 +44,7 @@ impl Size {
     }
 
     /// Set both width and height to their maximum in the two given points.
+    #[must_use]
     pub fn component_max(self, other: Self) -> Self {
         Self {
             width:  self.width.max(other.width),
