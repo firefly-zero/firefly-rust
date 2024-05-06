@@ -9,7 +9,7 @@ pub trait Shape {
     fn draw(&self);
 }
 
-/// A wrapper for [draw_line].
+/// A wrapper for [`draw_line`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Line {
     pub a:     Point,
@@ -23,7 +23,7 @@ impl Shape for Line {
     }
 }
 
-/// A wrapper for [draw_rect].
+/// A wrapper for [`draw_rect`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Rect {
     pub point: Point,
@@ -47,7 +47,7 @@ impl From<RoundedRect> for Rect {
     }
 }
 
-/// A wrapper for [draw_rounded_rect].
+/// A wrapper for [`draw_rounded_rect`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct RoundedRect {
     pub point:  Point,
@@ -76,7 +76,7 @@ impl From<Rect> for RoundedRect {
     }
 }
 
-/// A wrapper for [draw_circle].
+/// A wrapper for [`draw_circle`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Circle {
     pub point:    Point,
@@ -90,7 +90,7 @@ impl Shape for Circle {
     }
 }
 
-/// A wrapper for [draw_ellipse].
+/// A wrapper for [`draw_ellipse`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Ellipse {
     pub point: Point,
@@ -117,7 +117,7 @@ impl From<Circle> for Ellipse {
     }
 }
 
-/// A wrapper for [draw_triangle].
+/// A wrapper for [`draw_triangle`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Triangle {
     pub a:     Point,
@@ -132,7 +132,7 @@ impl Shape for Triangle {
     }
 }
 
-/// A wrapper for [draw_arc].
+/// A wrapper for [`draw_arc`].
 #[derive(Clone, Debug)]
 pub struct Arc {
     pub point:    Point,
@@ -166,7 +166,7 @@ impl From<Sector> for Arc {
     }
 }
 
-/// A wrapper for [draw_sector].
+/// A wrapper for [`draw_sector`].
 #[derive(Clone, Debug)]
 pub struct Sector {
     pub point:    Point,

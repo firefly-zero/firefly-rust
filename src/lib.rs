@@ -2,6 +2,8 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 // #![warn(clippy::pedantic)]
 #![warn(clippy::must_use_candidate)]
+#![warn(clippy::doc_markdown)]
+#![allow(clippy::wildcard_imports)]
 #![allow(clippy::cast_possible_truncation)]
 
 mod bindings;

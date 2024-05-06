@@ -8,9 +8,9 @@ use alloc::vec::Vec;
 
 /// Like [File] but owns the buffer.
 ///
-/// Returned by [rom::load_buf] and [data::load_buf]. Requires a global allocator.
-/// For a file of statically-known size, you might want to use [rom::load]
-/// and [data::load] instead.
+/// Returned by [`rom::load_buf`] and [`data::load_buf`]. Requires a global allocator.
+/// For a file of statically-known size, you might want to use [`rom::load`]
+/// and [`data::load`] instead.
 #[cfg(feature = "alloc")]
 pub struct FileBuf {
     pub(crate) raw: Vec<u8>,
@@ -39,9 +39,9 @@ impl FileBuf {
 
 /// A file loaded from ROM or data dir into the memory.
 ///
-/// Returned by [rom::load] and [data::load] which requires a pre-allocated buffer
+/// Returned by [`rom::load`] and [`data::load`] which requires a pre-allocated buffer
 /// of the right size. If the file size is deterimed dynamically,
-/// you might want to use [rom::load_buf] and [data::load_buf] instead
+/// you might want to use [`rom::load_buf`] and [`data::load_buf`] instead
 /// (which will take care of the dynamic allocation).
 pub struct File<'a> {
     pub(crate) raw: &'a [u8],
@@ -82,7 +82,7 @@ pub mod rom {
     /// Read the whole file with the given name into the given buffer.
     ///
     /// If the file size is not known in advance (and so the buffer has to be allocated
-    /// dynamically), consider using [load_buf] instead.
+    /// dynamically), consider using [`load_buf`] instead.
     pub fn load<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
         let path_ptr = name.as_ptr();
         let buf_ptr = buf.as_mut_ptr();
@@ -128,7 +128,7 @@ pub mod data {
     /// Read the whole file with the given name into the given buffer.
     ///
     /// If the file size is not known in advance (and so the buffer has to be allocated
-    /// dynamically), consider using [load_buf] instead.
+    /// dynamically), consider using [`load_buf`] instead.
     pub fn load<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
         let path_ptr = name.as_ptr();
         let buf_ptr = buf.as_mut_ptr();
@@ -183,7 +183,7 @@ pub mod data {
 
 /// A loaded font file.
 ///
-/// Can be loaded as [FileBuf] from ROM with [rom::load_buf]
+/// Can be loaded as [`FileBuf`] from ROM with [`rom::load_buf`]
 /// and then cast using [Into].
 pub struct Font<'a> {
     pub(crate) raw: &'a [u8],
@@ -204,7 +204,7 @@ impl<'a> From<&'a FileBuf> for Font<'a> {
 
 /// A loaded image file.
 ///
-/// Can be loaded as [FileBuf] from ROM with [rom::load_buf]
+/// Can be loaded as [`FileBuf`] from ROM with [`rom::load_buf`]
 /// and then cast using [Into].
 pub struct Image<'a> {
     pub(crate) raw: &'a [u8],
@@ -235,7 +235,7 @@ impl<'a> Image<'a> {
     }
 }
 
-/// A subregion of an image. Constructed using [Image::sub].
+/// A subregion of an image. Constructed using [`Image::sub`].
 pub struct SubImage<'a> {
     pub(crate) point: Point,
     pub(crate) size:  Size,

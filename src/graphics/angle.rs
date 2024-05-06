@@ -4,7 +4,7 @@ use core::ops::*;
 
 /// An angle between two vectors.
 ///
-/// Used by [draw_arc] and [draw_sector].
+/// Used by [`draw_arc`] and [`draw_sector`].
 #[derive(Copy, Clone, PartialEq, PartialOrd, Debug, Default)]
 pub struct Angle(pub(crate) f32);
 

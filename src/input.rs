@@ -84,7 +84,7 @@ impl From<Size> for Pad {
 
 /// DPad-like representation of the [Pad].
 ///
-/// Constructed with [Pad::as_dpad]. Useful for simple games and ports.
+/// Constructed with [`Pad::as_dpad`]. Useful for simple games and ports.
 /// The middle of the pad is a "dead zone" pressing which will not activate any direction.
 ///
 /// Invariant: it's not possible for opposite directions (left and right, or down and up)
