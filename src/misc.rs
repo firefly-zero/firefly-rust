@@ -26,6 +26,7 @@ pub fn set_seed(seed: u32) {
 }
 
 /// Get a random value.
+#[must_use]
 pub fn get_random() -> u32 {
     unsafe { b::get_random() }
 }

@@ -9,7 +9,7 @@ pub trait Shape {
     fn draw(&self);
 }
 
-/// A wrapper for [draw_line].
+/// A wrapper for [`draw_line`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Line {
     pub a:     Point,
@@ -19,11 +19,11 @@ pub struct Line {
 
 impl Shape for Line {
     fn draw(&self) {
-        draw_line(self.a, self.b, self.style)
+        draw_line(self.a, self.b, self.style);
     }
 }
 
-/// A wrapper for [draw_rect].
+/// A wrapper for [`draw_rect`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Rect {
     pub point: Point,
@@ -33,7 +33,7 @@ pub struct Rect {
 
 impl Shape for Rect {
     fn draw(&self) {
-        draw_rect(self.point, self.size, self.style)
+        draw_rect(self.point, self.size, self.style);
     }
 }
 
@@ -47,7 +47,7 @@ impl From<RoundedRect> for Rect {
     }
 }
 
-/// A wrapper for [draw_rounded_rect].
+/// A wrapper for [`draw_rounded_rect`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct RoundedRect {
     pub point:  Point,
@@ -58,7 +58,7 @@ pub struct RoundedRect {
 
 impl Shape for RoundedRect {
     fn draw(&self) {
-        draw_rounded_rect(self.point, self.size, self.corner, self.style)
+        draw_rounded_rect(self.point, self.size, self.corner, self.style);
     }
 }
 
@@ -76,7 +76,7 @@ impl From<Rect> for RoundedRect {
     }
 }
 
-/// A wrapper for [draw_circle].
+/// A wrapper for [`draw_circle`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Circle {
     pub point:    Point,
@@ -86,11 +86,11 @@ pub struct Circle {
 
 impl Shape for Circle {
     fn draw(&self) {
-        draw_circle(self.point, self.diameter, self.style)
+        draw_circle(self.point, self.diameter, self.style);
     }
 }
 
-/// A wrapper for [draw_ellipse].
+/// A wrapper for [`draw_ellipse`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Ellipse {
     pub point: Point,
@@ -100,7 +100,7 @@ pub struct Ellipse {
 
 impl Shape for Ellipse {
     fn draw(&self) {
-        draw_ellipse(self.point, self.size, self.style)
+        draw_ellipse(self.point, self.size, self.style);
     }
 }
 
@@ -117,7 +117,7 @@ impl From<Circle> for Ellipse {
     }
 }
 
-/// A wrapper for [draw_triangle].
+/// A wrapper for [`draw_triangle`].
 #[derive(Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Triangle {
     pub a:     Point,
@@ -128,11 +128,11 @@ pub struct Triangle {
 
 impl Shape for Triangle {
     fn draw(&self) {
-        draw_triangle(self.a, self.b, self.c, self.style)
+        draw_triangle(self.a, self.b, self.c, self.style);
     }
 }
 
-/// A wrapper for [draw_arc].
+/// A wrapper for [`draw_arc`].
 #[derive(Clone, Debug)]
 pub struct Arc {
     pub point:    Point,
@@ -150,7 +150,7 @@ impl Shape for Arc {
             self.start,
             self.sweep,
             self.style,
-        )
+        );
     }
 }
 
@@ -166,7 +166,7 @@ impl From<Sector> for Arc {
     }
 }
 
-/// A wrapper for [draw_sector].
+/// A wrapper for [`draw_sector`].
 #[derive(Clone, Debug)]
 pub struct Sector {
     pub point:    Point,
@@ -184,7 +184,7 @@ impl Shape for Sector {
             self.start,
             self.sweep,
             self.style,
-        )
+        );
     }
 }
 

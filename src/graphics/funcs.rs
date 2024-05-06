@@ -31,7 +31,7 @@ pub fn set_colors(dark: RGB, accent: RGB, secondary: RGB, light: RGB) {
             light.r.into(),
             light.g.into(),
             light.b.into(),
-        )
+        );
     }
 }
 
@@ -172,10 +172,10 @@ pub fn draw_text(t: &str, f: &Font, p: Point, c: Color) {
     let font_len = f.raw.len();
     unsafe {
         b::draw_text(
-            text_ptr as i32,
-            text_len as i32,
-            font_ptr as i32,
-            font_len as i32,
+            text_ptr as u32,
+            text_len as u32,
+            font_ptr as u32,
+            font_len as u32,
             p.x,
             p.y,
             c.into(),
@@ -184,13 +184,13 @@ pub fn draw_text(t: &str, f: &Font, p: Point, c: Color) {
 }
 
 /// Render an image using the given colors.
-pub fn draw_image(i: Image, p: Point, c: ImageColors) {
+pub fn draw_image(i: &Image, p: Point, c: &ImageColors) {
     let ptr = i.raw.as_ptr();
     let len = i.raw.len();
     unsafe {
         b::draw_image(
-            ptr as i32,
-            len as i32,
+            ptr as u32,
+            len as u32,
             p.x,
             p.y,
             c.a.into(),
@@ -204,13 +204,13 @@ pub fn draw_image(i: Image, p: Point, c: ImageColors) {
 /// Draw a subregion of an image.
 ///
 /// Most often used to draw a sprite from a sprite atlas.
-pub fn draw_sub_image(i: SubImage, p: Point, c: ImageColors) {
+pub fn draw_sub_image(i: &SubImage, p: Point, c: &ImageColors) {
     let ptr = i.raw.as_ptr();
     let len = i.raw.len();
     unsafe {
         b::draw_sub_image(
-            ptr as i32,
-            len as i32,
+            ptr as u32,
+            len as u32,
             p.x,
             p.y,
             i.point.x,

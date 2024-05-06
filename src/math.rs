@@ -10,16 +10,19 @@ use core::f32::consts::{FRAC_1_PI, FRAC_PI_2, PI};
 const SIGN_MASK: u32 = 0b1000_0000_0000_0000_0000_0000_0000_0000;
 
 /// Approximates `tan(x)` in radians with a maximum error of `0.6`.
+#[must_use]
 pub fn tan(x: f32) -> f32 {
     sin(x) / cos(x)
 }
 
 /// Approximates `sin(x)` in radians with a maximum error of `0.002`.
+#[must_use]
 pub fn sin(x: f32) -> f32 {
     cos(x - PI / 2.0)
 }
 
 /// Approximates `cos(x)` in radians with a maximum error of `0.002`.
+#[must_use]
 pub fn cos(x: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/cos.rs
     let mut x = x;
@@ -31,8 +34,10 @@ pub fn cos(x: f32) -> f32 {
 }
 
 /// Returns the largest integer less than or equal to a number.
+#[must_use]
 pub fn floor(x: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/floor.rs
+    #[allow(clippy::cast_precision_loss)]
     let mut res = (x as i32) as f32;
     if x < res {
         res -= 1.0;
@@ -41,12 +46,14 @@ pub fn floor(x: f32) -> f32 {
 }
 
 /// Returns the absolute value of a number.
+#[must_use]
 pub fn abs(x: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/abs.rs
     f32::from_bits(x.to_bits() & !SIGN_MASK)
 }
 
 /// Approximates the square root of a number with an average deviation of ~5%.
+#[must_use]
 pub fn sqrt(x: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/sqrt.rs
     if x >= 0. {
@@ -57,6 +64,7 @@ pub fn sqrt(x: f32) -> f32 {
 }
 
 // Calculates the least nonnegative remainder of lhs (mod rhs).
+#[must_use]
 pub fn rem_euclid(lhs: f32, rhs: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/rem_euclid.rs
     let r = lhs % rhs;
@@ -71,6 +79,7 @@ pub fn rem_euclid(lhs: f32, rhs: f32) -> f32 {
 /// `0.002`.
 ///
 /// Returns [`f32::NAN`] if the number is [`f32::NAN`].
+#[must_use]
 pub fn atan(x: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/atan.rs
     FRAC_PI_2 * atan_norm(x)
@@ -78,6 +87,7 @@ pub fn atan(x: f32) -> f32 {
 
 /// Approximates `atan(x)` normalized to the `[−1,1]` range with a maximum
 /// error of `0.1620` degrees.
+#[must_use]
 pub fn atan_norm(x: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/atan.rs
     const SIGN_MASK: u32 = 0x8000_0000;
@@ -93,4 +103,16 @@ pub fn atan_norm(x: f32) -> f32 {
 
     // Restore the sign bit and convert to float
     f32::from_bits(ux_s | atan_1q.to_bits())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[allow(clippy::float_cmp)]
+    fn test_sqrt() {
+        assert_eq!(sqrt(4.), 2.);
+        assert_eq!(sqrt(9.), 3.125);
+    }
 }

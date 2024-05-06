@@ -23,6 +23,7 @@ impl Point {
     pub const MIN: Point = Point { x: 0, y: 0 };
 
     /// Set x and y to their absolute (non-negative) value.
+    #[must_use]
     pub fn abs(self) -> Self {
         Self {
             x: self.x.abs(),
@@ -31,6 +32,7 @@ impl Point {
     }
 
     /// Set both x and y to their minimum in the two given points.
+    #[must_use]
     pub fn component_min(self, other: Self) -> Self {
         Self {
             x: self.x.min(other.x),
@@ -39,6 +41,7 @@ impl Point {
     }
 
     /// Set both x and y to their maximum in the two given points.
+    #[must_use]
     pub fn component_max(self, other: Self) -> Self {
         Self {
             x: self.x.max(other.x),

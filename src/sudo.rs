@@ -14,6 +14,7 @@ pub struct DirBuf {
 #[cfg(feature = "alloc")]
 impl DirBuf {
     /// List all subdirectories in the given directory.
+    #[must_use]
     pub fn list_dirs(name: &str) -> Self {
         let size = Dir::list_dirs_buf_size(name);
         let mut buf = vec![0; size];
@@ -22,6 +23,7 @@ impl DirBuf {
     }
 
     /// Iterate over all loaded entries in the directory.
+    #[must_use]
     pub fn iter(&self) -> DirIter<'_> {
         DirIter { raw: &self.raw }
     }
@@ -32,6 +34,7 @@ pub struct Dir<'a> {
 }
 
 impl<'a> Dir<'a> {
+    #[must_use]
     pub fn list_dirs_buf_size(name: &str) -> usize {
         let path_ptr = name.as_ptr();
         let size = unsafe { b::list_dirs_buf_size(path_ptr as u32, name.len() as u32) };
@@ -53,6 +56,7 @@ impl<'a> Dir<'a> {
     }
 
     /// Iterate over all loaded entries in the directory.
+    #[must_use]
     pub fn iter(&self) -> DirIter<'a> {
         DirIter { raw: self.raw }
     }
@@ -68,7 +72,7 @@ impl<'a> Iterator for DirIter<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         let len = self.raw.first()?;
         let len = *len as usize;
-        let raw_name = self.raw.get(1..(len + 1))?;
+        let raw_name = self.raw.get(1..=len)?;
         // Security: do NOT return None on invalid string. Otherwise,
         // adding an invalid name into the directory would hide all files
         // that go after that.
@@ -112,6 +116,7 @@ pub fn load_file<'a>(path: &str, buf: &'a mut [u8]) -> File<'a> {
 }
 
 #[cfg(feature = "alloc")]
+#[must_use]
 pub fn load_file_buf(path: &str) -> FileBuf {
     let size = get_file_size(path);
     let mut buf = vec![0; size];

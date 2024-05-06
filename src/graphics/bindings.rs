@@ -94,17 +94,17 @@ extern {
         stroke_width: i32,
     );
     pub(crate) fn draw_text(
-        text_ptr: i32,
-        text_len: i32,
-        font_ptr: i32,
-        font_len: i32,
+        text_ptr: u32,
+        text_len: u32,
+        font_ptr: u32,
+        font_len: u32,
         x: i32,
         y: i32,
         color: i32,
     );
     pub(crate) fn draw_sub_image(
-        ptr: i32,
-        len: i32,
+        ptr: u32,
+        len: u32,
         x: i32,
         y: i32,
         sub_x: i32,
@@ -117,8 +117,8 @@ extern {
         c4: i32,
     );
     pub(crate) fn draw_image(
-        ptr: i32,
-        len: i32,
+        ptr: u32,
+        len: u32,
         x: i32,
         y: i32,
         c1: i32,

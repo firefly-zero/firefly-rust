@@ -34,7 +34,7 @@ impl Default for Style {
 impl Style {
     /// Convert the style to a line style.
     ///
-    /// [LineStyle] is the same as [Style] except it doesn't have a fill color.
+    /// [`LineStyle`] is the same as [Style] except it doesn't have a fill color.
     #[must_use]
     pub fn as_line_style(&self) -> LineStyle {
         LineStyle {
