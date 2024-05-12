@@ -63,16 +63,23 @@ impl From<Style> for LineStyle {
 /// A pointer to a color in the color palette.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Color {
-    /// No color (100% transparency).
     None,
-    /// The first color in the palette. Typically, the darkest color.
-    Dark,
-    /// The second color in the palette.
-    Accent,
-    /// The third color in the palette.
-    Secondary,
-    /// The last color in the palette. Typically, the brightest, almost white, color.
-    Light,
+    Black,
+    Purple,
+    Red,
+    Orange,
+    Yellow,
+    LightGreen,
+    Green,
+    DarkGreen,
+    DarkBlue,
+    Blue,
+    LightBlue,
+    Cyan,
+    White,
+    LightGray,
+    Gray,
+    DarkGray,
 }
 
 impl Default for Color {
@@ -87,10 +94,22 @@ impl TryFrom<usize> for Color {
     fn try_from(value: usize) -> Result<Self, Self::Error> {
         match value {
             0 => Ok(Color::None),
-            1 => Ok(Color::Dark),
-            2 => Ok(Color::Accent),
-            3 => Ok(Color::Secondary),
-            4 => Ok(Color::Light),
+            1 => Ok(Color::Black),
+            2 => Ok(Color::Purple),
+            3 => Ok(Color::Red),
+            4 => Ok(Color::Orange),
+            5 => Ok(Color::Yellow),
+            6 => Ok(Color::LightGreen),
+            7 => Ok(Color::Green),
+            8 => Ok(Color::DarkGreen),
+            9 => Ok(Color::DarkBlue),
+            10 => Ok(Color::Blue),
+            11 => Ok(Color::LightBlue),
+            12 => Ok(Color::Cyan),
+            13 => Ok(Color::White),
+            14 => Ok(Color::LightGray),
+            15 => Ok(Color::Gray),
+            16 => Ok(Color::DarkGray),
             _ => Err(()),
         }
     }
@@ -100,52 +119,22 @@ impl From<Color> for i32 {
     fn from(value: Color) -> Self {
         match value {
             Color::None => 0,
-            Color::Dark => 1,
-            Color::Accent => 2,
-            Color::Secondary => 3,
-            Color::Light => 4,
-        }
-    }
-}
-
-/// A mapping of colors in the image to the color palette.
-#[derive(Clone, Eq, PartialEq, Hash, Debug)]
-pub struct ImageColors {
-    pub a: Color,
-    pub b: Color,
-    pub c: Color,
-    pub d: Color,
-}
-
-impl Default for ImageColors {
-    fn default() -> Self {
-        Self {
-            a: Color::Dark,
-            b: Color::Accent,
-            c: Color::Secondary,
-            d: Color::Light,
-        }
-    }
-}
-
-impl From<[Color; 4]> for ImageColors {
-    fn from(value: [Color; 4]) -> Self {
-        Self {
-            a: value[0],
-            b: value[1],
-            c: value[2],
-            d: value[3],
-        }
-    }
-}
-
-impl From<&[Color; 4]> for ImageColors {
-    fn from(value: &[Color; 4]) -> Self {
-        Self {
-            a: value[0],
-            b: value[1],
-            c: value[2],
-            d: value[3],
+            Color::Black => 1,
+            Color::Purple => 2,
+            Color::Red => 3,
+            Color::Orange => 4,
+            Color::Yellow => 5,
+            Color::LightGreen => 6,
+            Color::Green => 7,
+            Color::DarkGreen => 8,
+            Color::DarkBlue => 9,
+            Color::Blue => 10,
+            Color::LightBlue => 11,
+            Color::Cyan => 12,
+            Color::White => 13,
+            Color::LightGray => 14,
+            Color::Gray => 15,
+            Color::DarkGray => 16,
         }
     }
 }

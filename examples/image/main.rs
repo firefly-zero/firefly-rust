@@ -22,9 +22,8 @@ extern fn boot() {
 
 #[no_mangle]
 extern fn update() {
-    ff::clear_screen(ff::Color::Light);
+    ff::clear_screen(ff::Color::White);
     let image = unsafe { IMAGE.get().unwrap() };
     let image: ff::Image = (image).into();
-    let colors = ff::ImageColors::default();
-    ff::draw_image(&image, ff::Point { x: 60, y: 60 }, &colors);
+    ff::draw_image(&image, ff::Point { x: 60, y: 60 });
 }

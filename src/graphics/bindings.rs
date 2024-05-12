@@ -111,19 +111,6 @@ extern {
         sub_y: i32,
         sub_width: i32,
         sub_height: i32,
-        c1: i32,
-        c2: i32,
-        c3: i32,
-        c4: i32,
     );
-    pub(crate) fn draw_image(
-        ptr: u32,
-        len: u32,
-        x: i32,
-        y: i32,
-        c1: i32,
-        c2: i32,
-        c3: i32,
-        c4: i32,
-    );
+    pub(crate) fn draw_image(ptr: u32, len: u32, x: i32, y: i32);
 }
