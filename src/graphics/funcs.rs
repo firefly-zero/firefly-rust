@@ -184,27 +184,18 @@ pub fn draw_text(t: &str, f: &Font, p: Point, c: Color) {
 }
 
 /// Render an image using the given colors.
-pub fn draw_image(i: &Image, p: Point, c: &ImageColors) {
+pub fn draw_image(i: &Image, p: Point) {
     let ptr = i.raw.as_ptr();
     let len = i.raw.len();
     unsafe {
-        b::draw_image(
-            ptr as u32,
-            len as u32,
-            p.x,
-            p.y,
-            c.a.into(),
-            c.b.into(),
-            c.c.into(),
-            c.d.into(),
-        );
+        b::draw_image(ptr as u32, len as u32, p.x, p.y);
     }
 }
 
 /// Draw a subregion of an image.
 ///
 /// Most often used to draw a sprite from a sprite atlas.
-pub fn draw_sub_image(i: &SubImage, p: Point, c: &ImageColors) {
+pub fn draw_sub_image(i: &SubImage, p: Point) {
     let ptr = i.raw.as_ptr();
     let len = i.raw.len();
     unsafe {
@@ -217,10 +208,6 @@ pub fn draw_sub_image(i: &SubImage, p: Point, c: &ImageColors) {
             i.point.y,
             i.size.width,
             i.size.height,
-            c.a.into(),
-            c.b.into(),
-            c.c.into(),
-            c.d.into(),
         );
     }
 }
