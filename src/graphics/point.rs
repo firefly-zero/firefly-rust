@@ -22,6 +22,14 @@ impl Point {
     /// The coordinate of the top-left corner on the screen.
     pub const MIN: Point = Point { x: 0, y: 0 };
 
+    #[must_use]
+    pub fn new<I: Into<i32>>(x: I, y: I) -> Self {
+        Self {
+            x: x.into(),
+            y: y.into(),
+        }
+    }
+
     /// Set x and y to their absolute (non-negative) value.
     #[must_use]
     pub fn abs(self) -> Self {
