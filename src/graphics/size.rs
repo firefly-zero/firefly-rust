@@ -25,6 +25,14 @@ impl Size {
         height: HEIGHT,
     };
 
+    #[must_use]
+    pub fn new<I: Into<i32>>(width: I, height: I) -> Self {
+        Self {
+            width:  width.into(),
+            height: height.into(),
+        }
+    }
+
     /// Set both width and height to their absolute (non-negative) value.
     #[must_use]
     pub fn abs(self) -> Self {
