@@ -104,6 +104,10 @@ pub fn get_file_size(path: &str) -> usize {
     size as usize
 }
 
+/// Read a file from the filesystem into the buffer.
+///
+/// The path must be relative to the root of the FS.
+/// For example: `sys/launcher`.
 pub fn load_file<'a>(path: &str, buf: &'a mut [u8]) -> File<'a> {
     let path_ptr = path.as_ptr() as u32;
     let path_len = path.len() as u32;
@@ -115,10 +119,16 @@ pub fn load_file<'a>(path: &str, buf: &'a mut [u8]) -> File<'a> {
     File { raw: buf }
 }
 
+/// Like [`load_file`] but takes care of the buffer allocation and ownership.
+///
+/// `None` is returned if the file does not exist.
 #[cfg(feature = "alloc")]
 #[must_use]
-pub fn load_file_buf(path: &str) -> FileBuf {
+pub fn load_file_buf(path: &str) -> Option<FileBuf> {
     let size = get_file_size(path);
+    if size == 0 {
+        return None;
+    }
     let mut buf = vec![0; size];
     let path_ptr = path.as_ptr() as u32;
     let path_len = path.len() as u32;
@@ -127,7 +137,7 @@ pub fn load_file_buf(path: &str) -> FileBuf {
     unsafe {
         b::load_file(path_ptr, path_len, buf_ptr, buf_len);
     }
-    FileBuf { raw: buf }
+    Some(FileBuf { raw: buf })
 }
 
 /// Low-level bindings for host-defined "sudo" module.
