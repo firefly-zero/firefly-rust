@@ -100,6 +100,10 @@ pub mod rom {
     /// Read the whole file with the given name from ROM.
     ///
     /// If you have a pre-allocated buffer of the right size, use [load] instead.
+    ///
+    /// If the file does not exist, the returned buffer will be empty.
+    /// This, however, should not happen in normal operation because
+    /// the contents of the ROM directory are statically known.
     #[cfg(feature = "alloc")]
     #[must_use]
     pub fn load_buf(name: &str) -> FileBuf {
@@ -111,6 +115,12 @@ pub mod rom {
 }
 
 /// Functions for accessing files in the app data dir.
+///
+/// Each app has an its own data dir. That directory is empty by default,
+/// writable by the app, and not accessible by other apps.
+/// Typically, it is used to store game save data.
+///
+/// The device owner may empty this dir if they wish to remove the app data.
 pub mod data {
     use super::*;
     use crate::bindings as b;
@@ -146,13 +156,18 @@ pub mod data {
     /// Read the whole file with the given name from the data dir.
     ///
     /// If you have a pre-allocated buffer of the right size, use [load] instead.
+    ///
+    /// `None` is returned if the file does not exist.
     #[cfg(feature = "alloc")]
     #[must_use]
-    pub fn load_buf(name: &str) -> FileBuf {
+    pub fn load_buf(name: &str) -> Option<FileBuf> {
         let size = data::get_size(name);
+        if size == 0 {
+            return None;
+        }
         let mut buf = vec![0; size];
         data::load(name, &mut buf);
-        FileBuf { raw: buf }
+        Some(FileBuf { raw: buf })
     }
 
     /// Write the buffer into the given file in the data dir.
