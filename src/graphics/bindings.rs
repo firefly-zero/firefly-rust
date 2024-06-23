@@ -2,20 +2,6 @@
 extern {
     pub(crate) fn clear_screen(color: i32);
     pub(crate) fn set_color(index: i32, r: i32, g: i32, b: i32);
-    pub(crate) fn set_colors(
-        c1_r: i32,
-        c1_g: i32,
-        c1_b: i32,
-        c2_r: i32,
-        c2_g: i32,
-        c2_b: i32,
-        c3_r: i32,
-        c3_g: i32,
-        c3_b: i32,
-        c4_r: i32,
-        c4_g: i32,
-        c4_b: i32,
-    );
     pub(crate) fn draw_point(x: i32, y: i32, color: i32);
     pub(crate) fn draw_line(
         p1_x: i32,

@@ -15,26 +15,6 @@ pub fn set_color(c: Color, v: RGB) {
     }
 }
 
-/// Set the color palette.
-pub fn set_colors(dark: RGB, accent: RGB, secondary: RGB, light: RGB) {
-    unsafe {
-        b::set_colors(
-            dark.r.into(),
-            dark.g.into(),
-            dark.b.into(),
-            accent.r.into(),
-            accent.g.into(),
-            accent.b.into(),
-            secondary.r.into(),
-            secondary.g.into(),
-            secondary.b.into(),
-            light.r.into(),
-            light.g.into(),
-            light.b.into(),
-        );
-    }
-}
-
 /// Set a single point (1 pixel is scaling is 1) on the frame.
 pub fn draw_point(p: Point, c: Color) {
     unsafe {
