@@ -7,14 +7,14 @@ pub fn add_menu_item(i: u8, t: &str) {
     let ptr = t.as_ptr() as u32;
     let len = t.len() as u32;
     unsafe {
-        bindings::add_menu_item(i as u32, ptr, len);
+        bindings::add_menu_item(u32::from(i), ptr, len);
     }
 }
 
 /// Remove a custom menu item with the given index.
 pub fn remove_menu_item(i: u8) {
     unsafe {
-        bindings::remove_menu_item(i as u32);
+        bindings::remove_menu_item(u32::from(i));
     }
 }
 
@@ -22,6 +22,7 @@ pub fn remove_menu_item(i: u8) {
 ///
 /// It will be opened before the next update.
 /// The current update and then render will proceed as planned.
+#[allow(clippy::module_name_repetitions)]
 pub fn open_menu() {
     unsafe {
         bindings::open_menu();
