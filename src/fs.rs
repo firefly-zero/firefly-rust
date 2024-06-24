@@ -244,8 +244,8 @@ impl<'a> Image<'a> {
     pub fn sub(&self, p: Point, s: Size) -> SubImage<'a> {
         SubImage {
             point: p,
-            size:  s,
-            raw:   self.raw,
+            size: s,
+            raw: self.raw,
         }
     }
 }
@@ -253,6 +253,6 @@ impl<'a> Image<'a> {
 /// A subregion of an image. Constructed using [`Image::sub`].
 pub struct SubImage<'a> {
     pub(crate) point: Point,
-    pub(crate) size:  Size,
-    pub(crate) raw:   &'a [u8],
+    pub(crate) size: Size,
+    pub(crate) raw: &'a [u8],
 }

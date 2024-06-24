@@ -10,7 +10,7 @@ extern fn boot() {
         ff::Point { x: 40, y: 40 },
         ff::Point { x: 80, y: 40 },
         ff::Style {
-            fill_color:   ff::Color::LightGray,
+            fill_color: ff::Color::LightGray,
             stroke_color: ff::Color::DarkBlue,
             stroke_width: 1,
         },

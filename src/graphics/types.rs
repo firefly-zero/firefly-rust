@@ -24,7 +24,7 @@ pub struct Style {
 impl Default for Style {
     fn default() -> Self {
         Self {
-            fill_color:   Color::None,
+            fill_color: Color::None,
             stroke_color: Color::None,
             stroke_width: 1,
         }

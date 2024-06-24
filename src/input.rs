@@ -22,10 +22,10 @@ impl Pad {
     #[must_use]
     pub fn as_dpad(&self) -> DPad {
         DPad {
-            left:  self.x <= -DPAD_THRESHOLD,
+            left: self.x <= -DPAD_THRESHOLD,
             right: self.x >= DPAD_THRESHOLD,
-            down:  self.y <= -DPAD_THRESHOLD,
-            up:    self.y >= DPAD_THRESHOLD,
+            down: self.y <= -DPAD_THRESHOLD,
+            up: self.y >= DPAD_THRESHOLD,
         }
     }
 
@@ -69,7 +69,7 @@ impl From<Point> for Pad {
 impl From<Pad> for Size {
     fn from(value: Pad) -> Self {
         Self {
-            width:  value.x,
+            width: value.x,
             height: value.y,
         }
     }
@@ -94,10 +94,10 @@ impl From<Size> for Pad {
 /// (like up and right) to be active at the same time if the player presses a diagonal.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct DPad {
-    pub left:  bool,
+    pub left: bool,
     pub right: bool,
-    pub up:    bool,
-    pub down:  bool,
+    pub up: bool,
+    pub down: bool,
 }
 
 impl From<Pad> for DPad {
@@ -111,10 +111,10 @@ impl DPad {
     #[must_use]
     pub fn just_pressed(&self, old: &Self) -> Self {
         Self {
-            left:  self.left && !old.left,
+            left: self.left && !old.left,
             right: self.right && !old.right,
-            up:    self.up && !old.up,
-            down:  self.down && !old.down,
+            up: self.up && !old.up,
+            down: self.down && !old.down,
         }
     }
 
@@ -122,10 +122,10 @@ impl DPad {
     #[must_use]
     pub fn just_released(&self, old: &Self) -> Self {
         Self {
-            left:  !self.left && old.left,
+            left: !self.left && old.left,
             right: !self.right && old.right,
-            up:    !self.up && old.up,
-            down:  !self.down && old.down,
+            up: !self.up && old.up,
+            down: !self.down && old.down,
         }
     }
 
@@ -133,10 +133,10 @@ impl DPad {
     #[must_use]
     pub fn held(&self, old: &Self) -> Self {
         Self {
-            left:  self.left && old.left,
+            left: self.left && old.left,
             right: self.right && old.right,
-            up:    self.up && old.up,
-            down:  self.down && old.down,
+            up: self.up && old.up,
+            down: self.down && old.down,
         }
     }
 }
@@ -145,13 +145,13 @@ impl DPad {
 #[derive(Default)]
 pub struct Buttons {
     /// If `a` button is pressed.
-    pub a:    bool,
+    pub a: bool,
     /// If `b` button is pressed.
-    pub b:    bool,
+    pub b: bool,
     /// If `x` button is pressed.
-    pub x:    bool,
+    pub x: bool,
     /// If `y` button is pressed.
-    pub y:    bool,
+    pub y: bool,
     /// If `menu` button is pressed.
     ///
     /// For singleplayer games, the button press is always intercepted by the runtime.
@@ -169,10 +169,10 @@ impl Buttons {
     #[must_use]
     pub fn just_pressed(&self, old: &Self) -> Self {
         Self {
-            a:    self.a && !old.a,
-            b:    self.b && !old.b,
-            x:    self.x && !old.x,
-            y:    self.y && !old.y,
+            a: self.a && !old.a,
+            b: self.b && !old.b,
+            x: self.x && !old.x,
+            y: self.y && !old.y,
             menu: self.menu && !old.menu,
         }
     }
@@ -181,10 +181,10 @@ impl Buttons {
     #[must_use]
     pub fn just_released(&self, old: &Self) -> Self {
         Self {
-            a:    !self.a && old.a,
-            b:    !self.b && old.b,
-            x:    !self.x && old.x,
-            y:    !self.y && old.y,
+            a: !self.a && old.a,
+            b: !self.b && old.b,
+            x: !self.x && old.x,
+            y: !self.y && old.y,
             menu: !self.menu && old.menu,
         }
     }
@@ -193,10 +193,10 @@ impl Buttons {
     #[must_use]
     pub fn held(&self, old: &Self) -> Self {
         Self {
-            a:    self.a && old.a,
-            b:    self.b && old.b,
-            x:    self.x && old.x,
-            y:    self.y && old.y,
+            a: self.a && old.a,
+            b: self.b && old.b,
+            x: self.x && old.x,
+            y: self.y && old.y,
             menu: self.menu && old.menu,
         }
     }
@@ -225,10 +225,10 @@ pub fn read_pad(player: Player) -> Option<Pad> {
 pub fn read_buttons(player: Player) -> Buttons {
     let raw = unsafe { b::read_buttons(player.into()) };
     Buttons {
-        a:    has_bit_set(raw, 0),
-        b:    has_bit_set(raw, 1),
-        x:    has_bit_set(raw, 2),
-        y:    has_bit_set(raw, 3),
+        a: has_bit_set(raw, 0),
+        b: has_bit_set(raw, 1),
+        x: has_bit_set(raw, 2),
+        y: has_bit_set(raw, 3),
         menu: has_bit_set(raw, 4),
     }
 }

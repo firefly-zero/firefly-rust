@@ -14,21 +14,21 @@ pub const HEIGHT: i32 = 160;
 /// The width and height must be positive.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Size {
-    pub width:  i32,
+    pub width: i32,
     pub height: i32,
 }
 
 impl Size {
     /// The screen size.
     pub const MAX: Size = Size {
-        width:  WIDTH,
+        width: WIDTH,
         height: HEIGHT,
     };
 
     #[must_use]
     pub fn new<I: Into<i32>>(width: I, height: I) -> Self {
         Self {
-            width:  width.into(),
+            width: width.into(),
             height: height.into(),
         }
     }
@@ -37,7 +37,7 @@ impl Size {
     #[must_use]
     pub fn abs(self) -> Self {
         Self {
-            width:  self.width.abs(),
+            width: self.width.abs(),
             height: self.height.abs(),
         }
     }
@@ -46,7 +46,7 @@ impl Size {
     #[must_use]
     pub fn component_min(self, other: Self) -> Self {
         Self {
-            width:  self.width.min(other.width),
+            width: self.width.min(other.width),
             height: self.height.min(other.height),
         }
     }
@@ -55,7 +55,7 @@ impl Size {
     #[must_use]
     pub fn component_max(self, other: Self) -> Self {
         Self {
-            width:  self.width.max(other.width),
+            width: self.width.max(other.width),
             height: self.height.max(other.height),
         }
     }
@@ -66,7 +66,7 @@ impl Add for Size {
 
     fn add(self, other: Size) -> Self {
         Size {
-            width:  self.width + other.width,
+            width: self.width + other.width,
             height: self.height + other.height,
         }
     }
@@ -84,7 +84,7 @@ impl Sub for Size {
 
     fn sub(self, other: Size) -> Self {
         Size {
-            width:  self.width - other.width,
+            width: self.width - other.width,
             height: self.height - other.height,
         }
     }
@@ -95,7 +95,7 @@ impl Sub<Point> for Size {
 
     fn sub(self, other: Point) -> Self {
         Size {
-            width:  self.width - other.x,
+            width: self.width - other.x,
             height: self.height - other.y,
         }
     }
@@ -113,7 +113,7 @@ impl Mul<i32> for Size {
 
     fn mul(self, rhs: i32) -> Self {
         Size {
-            width:  self.width * rhs,
+            width: self.width * rhs,
             height: self.height * rhs,
         }
     }
@@ -131,7 +131,7 @@ impl Div<i32> for Size {
 
     fn div(self, rhs: i32) -> Self {
         Size {
-            width:  self.width / rhs,
+            width: self.width / rhs,
             height: self.height / rhs,
         }
     }
@@ -159,7 +159,7 @@ impl Index<usize> for Size {
 impl From<Point> for Size {
     fn from(value: Point) -> Self {
         Self {
-            width:  value.x,
+            width: value.x,
             height: value.y,
         }
     }
@@ -167,7 +167,7 @@ impl From<Point> for Size {
 impl From<(i32, i32)> for Size {
     fn from(other: (i32, i32)) -> Self {
         Size {
-            width:  other.0,
+            width: other.0,
             height: other.1,
         }
     }
@@ -176,7 +176,7 @@ impl From<(i32, i32)> for Size {
 impl From<[i32; 2]> for Size {
     fn from(other: [i32; 2]) -> Self {
         Size {
-            width:  other[0],
+            width: other[0],
             height: other[1],
         }
     }
@@ -185,7 +185,7 @@ impl From<[i32; 2]> for Size {
 impl From<&[i32; 2]> for Size {
     fn from(other: &[i32; 2]) -> Self {
         Size {
-            width:  other[0],
+            width: other[0],
             height: other[1],
         }
     }
@@ -216,7 +216,7 @@ where
 {
     fn from(other: Vector2<N>) -> Self {
         Self {
-            width:  other[0].into(),
+            width: other[0].into(),
             height: other[1].into(),
         }
     }
@@ -229,7 +229,7 @@ where
 {
     fn from(other: &Vector2<N>) -> Self {
         Self {
-            width:  other[0].into(),
+            width: other[0].into(),
             height: other[1].into(),
         }
     }
