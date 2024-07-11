@@ -16,6 +16,7 @@ pub struct Peers(pub(crate) u32);
 
 impl Peers {
     /// Iterate over peers.
+    #[must_use]
     pub fn iter(&self) -> PeersIter {
         PeersIter {
             peer: 0,
@@ -24,6 +25,7 @@ impl Peers {
     }
 
     /// Check if the given peer is online.
+    #[must_use]
     pub fn contains(&self, p: &Peer) -> bool {
         self.0 >> p.0 & 1 != 0
     }
@@ -31,14 +33,17 @@ impl Peers {
     /// Get the number of peers online.
     ///
     /// Never zero. 1 for local single-player game. 2 or more for multiplayer.
+    #[must_use]
+    #[allow(clippy::len_without_is_empty)] // always non-empty
     pub fn len(&self) -> usize {
         self.0.count_ones() as usize
     }
 
     /// Convert the list of peers into a vector.
     #[cfg(feature = "alloc")]
+    #[must_use]
     pub fn as_vec(&self) -> alloc::vec::Vec<Peer> {
-        alloc::vec::Vec::from_iter(self.iter())
+        self.iter().collect()
     }
 }
 
@@ -86,12 +91,14 @@ impl Iterator for PeersIter {
 }
 
 /// Get the peer cirresponding to the local device.
+#[must_use]
 pub fn get_me() -> Peer {
     let me = unsafe { bindings::get_me() };
     Peer(me as u8)
 }
 
 /// Get the list of peers online.
+#[must_use]
 pub fn get_peers() -> Peers {
     let peers = unsafe { bindings::get_peers() };
     Peers(peers)
