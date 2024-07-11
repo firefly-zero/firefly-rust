@@ -67,7 +67,6 @@ impl<'a> File<'a> {
 /// Functions for accessing files in the app ROM.
 pub mod rom {
     use super::*;
-    use crate::bindings as b;
 
     /// Determine the required size (in bytes) to store the given file.
     ///
@@ -75,7 +74,7 @@ pub mod rom {
     #[must_use]
     pub fn get_size(name: &str) -> usize {
         let path_ptr = name.as_ptr();
-        let size = unsafe { b::get_rom_file_size(path_ptr as u32, name.len() as u32) };
+        let size = unsafe { bindings::get_rom_file_size(path_ptr as u32, name.len() as u32) };
         size as usize
     }
 
@@ -87,7 +86,7 @@ pub mod rom {
         let path_ptr = name.as_ptr();
         let buf_ptr = buf.as_mut_ptr();
         unsafe {
-            b::load_rom_file(
+            bindings::load_rom_file(
                 path_ptr as u32,
                 name.len() as u32,
                 buf_ptr as u32,
@@ -123,7 +122,6 @@ pub mod rom {
 /// The device owner may empty this dir if they wish to remove the app data.
 pub mod data {
     use super::*;
-    use crate::bindings as b;
 
     /// Get a file size in the data dir.
     ///
@@ -131,7 +129,7 @@ pub mod data {
     #[must_use]
     pub fn get_size(name: &str) -> usize {
         let path_ptr = name.as_ptr();
-        let size = unsafe { b::get_file_size(path_ptr as u32, name.len() as u32) };
+        let size = unsafe { bindings::get_file_size(path_ptr as u32, name.len() as u32) };
         size as usize
     }
 
@@ -143,7 +141,7 @@ pub mod data {
         let path_ptr = name.as_ptr();
         let buf_ptr = buf.as_mut_ptr();
         unsafe {
-            b::load_file(
+            bindings::load_file(
                 path_ptr as u32,
                 name.len() as u32,
                 buf_ptr as u32,
@@ -178,7 +176,7 @@ pub mod data {
         let path_ptr = name.as_ptr();
         let buf_ptr = buf.as_ptr();
         unsafe {
-            b::dump_file(
+            bindings::dump_file(
                 path_ptr as u32,
                 name.len() as u32,
                 buf_ptr as u32,
@@ -191,7 +189,7 @@ pub mod data {
     pub fn remove(name: &str) {
         let path_ptr = name.as_ptr();
         unsafe {
-            b::remove_file(path_ptr as u32, name.len() as u32);
+            bindings::remove_file(path_ptr as u32, name.len() as u32);
         }
     }
 }
@@ -255,4 +253,21 @@ pub struct SubImage<'a> {
     pub(crate) point: Point,
     pub(crate) size: Size,
     pub(crate) raw: &'a [u8],
+}
+
+mod bindings {
+    #[link(wasm_import_module = "fs")]
+    extern {
+        pub(crate) fn get_rom_file_size(path_ptr: u32, path_len: u32) -> u32;
+        pub(crate) fn get_file_size(path_ptr: u32, path_len: u32) -> u32;
+        pub(crate) fn load_rom_file(
+            path_ptr: u32,
+            path_len: u32,
+            buf_ptr: u32,
+            buf_len: u32,
+        ) -> u32;
+        pub(crate) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
+        pub(crate) fn dump_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
+        pub(crate) fn remove_file(path_ptr: u32, path_len: u32);
+    }
 }

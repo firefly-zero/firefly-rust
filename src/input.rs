@@ -1,6 +1,6 @@
 //! Read inputs: touch pad, buttons, accelerometer.
 
-use crate::{bindings as b, *};
+use crate::*;
 
 const DPAD_THRESHOLD: i32 = 100;
 
@@ -207,7 +207,7 @@ impl Buttons {
 /// In singleplayer game, the player ID doesn't matter.
 #[must_use]
 pub fn read_pad(player: Player) -> Option<Pad> {
-    let raw = unsafe { b::read_pad(player.into()) };
+    let raw = unsafe { bindings::read_pad(player.into()) };
     if raw == 0xffff {
         None
     } else {
@@ -223,7 +223,7 @@ pub fn read_pad(player: Player) -> Option<Pad> {
 /// In singleplayer game, the player ID doesn't matter.
 #[must_use]
 pub fn read_buttons(player: Player) -> Buttons {
-    let raw = unsafe { b::read_buttons(player.into()) };
+    let raw = unsafe { bindings::read_buttons(player.into()) };
     Buttons {
         a: has_bit_set(raw, 0),
         b: has_bit_set(raw, 1),
@@ -237,4 +237,12 @@ pub fn read_buttons(player: Player) -> Buttons {
 #[inline]
 fn has_bit_set(val: u32, bit: usize) -> bool {
     (val >> bit) & 0b1 != 0
+}
+
+mod bindings {
+    #[link(wasm_import_module = "input")]
+    extern {
+        pub(crate) fn read_pad(player: u32) -> u32;
+        pub(crate) fn read_buttons(player: u32) -> u32;
+    }
 }
