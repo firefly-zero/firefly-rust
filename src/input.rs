@@ -203,11 +203,9 @@ impl Buttons {
 }
 
 /// Get the current touch pad state.
-///
-/// In singleplayer game, the player ID doesn't matter.
 #[must_use]
-pub fn read_pad(player: Player) -> Option<Pad> {
-    let raw = unsafe { bindings::read_pad(player.into()) };
+pub fn read_pad(peer: Peer) -> Option<Pad> {
+    let raw = unsafe { bindings::read_pad(peer.v as u32) };
     if raw == 0xffff {
         None
     } else {
@@ -219,11 +217,9 @@ pub fn read_pad(player: Player) -> Option<Pad> {
 }
 
 /// Get the currently pressed buttons.
-///
-/// In singleplayer game, the player ID doesn't matter.
 #[must_use]
-pub fn read_buttons(player: Player) -> Buttons {
-    let raw = unsafe { bindings::read_buttons(player.into()) };
+pub fn read_buttons(peer: Peer) -> Buttons {
+    let raw = unsafe { bindings::read_buttons(peer.v as u32) };
     Buttons {
         a: has_bit_set(raw, 0),
         b: has_bit_set(raw, 1),
@@ -242,7 +238,7 @@ fn has_bit_set(val: u32, bit: usize) -> bool {
 mod bindings {
     #[link(wasm_import_module = "input")]
     extern {
-        pub(crate) fn read_pad(player: u32) -> u32;
-        pub(crate) fn read_buttons(player: u32) -> u32;
+        pub(crate) fn read_pad(peer: u32) -> u32;
+        pub(crate) fn read_buttons(peer: u32) -> u32;
     }
 }
