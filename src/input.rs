@@ -205,7 +205,7 @@ impl Buttons {
 /// Get the current touch pad state.
 #[must_use]
 pub fn read_pad(peer: Peer) -> Option<Pad> {
-    let raw = unsafe { bindings::read_pad(peer.v as u32) };
+    let raw = unsafe { bindings::read_pad(peer.0 as u32) };
     if raw == 0xffff {
         None
     } else {
@@ -219,7 +219,7 @@ pub fn read_pad(peer: Peer) -> Option<Pad> {
 /// Get the currently pressed buttons.
 #[must_use]
 pub fn read_buttons(peer: Peer) -> Buttons {
-    let raw = unsafe { bindings::read_buttons(peer.v as u32) };
+    let raw = unsafe { bindings::read_buttons(peer.0 as u32) };
     Buttons {
         a: has_bit_set(raw, 0),
         b: has_bit_set(raw, 1),
