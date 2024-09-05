@@ -6,7 +6,6 @@
 #![allow(clippy::cast_possible_truncation)]
 #![allow(clippy::iter_without_into_iter)]
 
-mod bindings;
 mod fs;
 pub mod graphics;
 mod input;

@@ -1,5 +1,5 @@
 # https://taskfile.dev
-version: '3'
+version: "3"
 
 tasks:
   release:
@@ -19,6 +19,7 @@ tasks:
   test:
     desc: "run tests"
     cmds:
+      - rustup target add wasm32-unknown-unknown
       - cargo test --all-features --lib
       - >
         cargo build
