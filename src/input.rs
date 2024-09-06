@@ -33,7 +33,7 @@ impl Pad {
     #[must_use]
     pub fn radius(self) -> f32 {
         let r = self.x * self.x + self.y * self.y;
-        #[allow(clippy::cast_precision_loss)]
+        #[expect(clippy::cast_precision_loss)]
         math::sqrt(r as f32)
     }
 
@@ -42,7 +42,7 @@ impl Pad {
     /// [polar coordinate]: https://en.wikipedia.org/wiki/Polar_coordinate_system
     #[must_use]
     pub fn azimuth(self) -> Angle {
-        #[allow(clippy::cast_precision_loss)]
+        #[expect(clippy::cast_precision_loss)]
         let r = math::atan(self.y as f32 / self.x as f32);
         Angle::from_radians(r)
     }

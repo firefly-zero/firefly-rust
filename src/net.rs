@@ -34,7 +34,7 @@ impl Peers {
     ///
     /// Never zero. 1 for local single-player game. 2 or more for multiplayer.
     #[must_use]
-    #[allow(clippy::len_without_is_empty)] // always non-empty
+    #[expect(clippy::len_without_is_empty)] // always non-empty
     pub fn len(&self) -> usize {
         self.0.count_ones() as usize
     }

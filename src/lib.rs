@@ -1,11 +1,15 @@
 #![doc = include_str!("../README.md")]
 #![cfg_attr(not(feature = "std"), no_std)]
 #![deny(clippy::pedantic)]
+#![deny(clippy::alloc_instead_of_core)]
+#![deny(clippy::allow_attributes)]
+#![deny(clippy::std_instead_of_alloc)]
+#![deny(clippy::std_instead_of_core)]
 #![allow(clippy::wildcard_imports)]
-#![allow(clippy::struct_excessive_bools)]
-#![allow(clippy::cast_possible_truncation)]
-#![allow(clippy::iter_without_into_iter)]
-#![allow(clippy::module_name_repetitions)]
+#![expect(clippy::struct_excessive_bools)]
+#![expect(clippy::cast_possible_truncation)]
+#![expect(clippy::iter_without_into_iter)]
+#![expect(clippy::module_name_repetitions)]
 
 mod audio;
 mod fs;

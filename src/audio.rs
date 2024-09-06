@@ -30,6 +30,7 @@ pub struct Freq {
 }
 
 impl From<Note> for Freq {
+    #[expect(clippy::cast_precision_loss)]
     fn from(value: Note) -> Self {
         // https://github.com/crbulakites/hum/blob/master/src/hum_process/hum_math.rs
         // https://techlib.com/reference/musical_note_frequencies.htm
@@ -48,9 +49,7 @@ impl From<Note> for Freq {
             Pitch::As => 29.135,
             Pitch::B => 30.868,
         };
-        for _ in 0..value.octave {
-            f *= f;
-        }
+        f *= (1 << value.octave) as f32;
         Freq { f }
     }
 }
@@ -65,7 +64,7 @@ pub struct AudioNode {
     id: u32,
 }
 
-#[allow(clippy::must_use_candidate, clippy::return_self_not_must_use)]
+#[expect(clippy::must_use_candidate, clippy::return_self_not_must_use)]
 impl AudioNode {
     pub const ROOT: Self = Self { id: 0 };
 
