@@ -15,51 +15,22 @@ pub enum Pitch {
 }
 
 #[derive(Copy, Clone)]
-pub struct Note {
-    // TODO: add constants for all notes
-    // ...
-    /// The pitch of the note (A, B, C#, etc).
-    pub pitch: Pitch,
-    /// The octave of the note in standard notation.
-    pub octave: u8,
-}
-
-#[derive(Copy, Clone)]
 pub struct MidiNote(pub u8);
 
 #[derive(Copy, Clone)]
-pub struct Freq(pub f32);
+pub struct Freq(f32);
 
-impl From<Note> for Freq {
-    #[expect(clippy::cast_precision_loss)]
-    fn from(value: Note) -> Self {
-        // https://github.com/crbulakites/hum/blob/master/src/hum_process/hum_math.rs
-        // https://techlib.com/reference/musical_note_frequencies.htm
-        // https://www.liutaiomottola.com/formulae/freqtab.htm
-        let mut f: f32 = match value.pitch {
-            Pitch::C => 16.351,
-            Pitch::Cs => 17.324,
-            Pitch::D => 18.354,
-            Pitch::Ds => 19.445,
-            Pitch::E => 20.601,
-            Pitch::F => 21.827,
-            Pitch::Fs => 23.124,
-            Pitch::G => 24.499,
-            Pitch::Gs => 25.956,
-            Pitch::A => 27.5,
-            Pitch::As => 29.135,
-            Pitch::B => 30.868,
-        };
-        f *= (1 << value.octave) as f32;
-        Freq(f)
+impl Freq {
+    #[must_use]
+    pub fn hz(hz: f32) -> Self {
+        Self(hz)
     }
-}
 
-impl From<MidiNote> for Freq {
+    #[must_use]
     #[expect(clippy::cast_precision_loss)]
-    fn from(value: MidiNote) -> Self {
+    pub fn midi(note: u8) -> Self {
         // https://inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies
-        let mut f: f32 = match value.0 % 12 {
+        let mut f: f32 = match note % 12 {
             0 => 8.18,
             1 => 8.66,
             2 => 9.18,
@@ -73,8 +44,32 @@ impl From<MidiNote> for Freq {
             10 => 14.57,
             _ => 15.43,
         };
-        let oct = value.0 / 12;
+        let oct = note / 12;
         f *= (1 << oct) as f32;
+        Self(f)
+    }
+
+    #[must_use]
+    #[expect(clippy::cast_precision_loss)]
+    pub fn note(pitch: Pitch, octave: u8) -> Self {
+        // https://github.com/crbulakites/hum/blob/master/src/hum_process/hum_math.rs
+        // https://techlib.com/reference/musical_note_frequencies.htm
+        // https://www.liutaiomottola.com/formulae/freqtab.htm
+        let mut f: f32 = match pitch {
+            Pitch::C => 16.351,
+            Pitch::Cs => 17.324,
+            Pitch::D => 18.354,
+            Pitch::Ds => 19.445,
+            Pitch::E => 20.601,
+            Pitch::F => 21.827,
+            Pitch::Fs => 23.124,
+            Pitch::G => 24.499,
+            Pitch::Gs => 25.956,
+            Pitch::A => 27.5,
+            Pitch::As => 29.135,
+            Pitch::B => 30.868,
+        };
+        f *= (1 << octave) as f32;
         Freq(f)
     }
 }
