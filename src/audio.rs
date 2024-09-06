@@ -25,9 +25,10 @@ pub struct Note {
 }
 
 #[derive(Copy, Clone)]
-pub struct Freq {
-    f: f32,
-}
+pub struct MidiNote(pub u8);
+
+#[derive(Copy, Clone)]
+pub struct Freq(pub f32);
 
 impl From<Note> for Freq {
     #[expect(clippy::cast_precision_loss)]
@@ -50,13 +51,31 @@ impl From<Note> for Freq {
             Pitch::B => 30.868,
         };
         f *= (1 << value.octave) as f32;
-        Freq { f }
+        Freq(f)
     }
 }
 
-impl From<f32> for Freq {
-    fn from(f: f32) -> Self {
-        Self { f }
+impl From<MidiNote> for Freq {
+    #[expect(clippy::cast_precision_loss)]
+    fn from(value: MidiNote) -> Self {
+        // https://inspiredacoustics.com/en/MIDI_note_numbers_and_center_frequencies
+        let mut f: f32 = match value.0 % 12 {
+            0 => 8.18,
+            1 => 8.66,
+            2 => 9.18,
+            3 => 9.72,
+            4 => 10.30,
+            5 => 10.91,
+            6 => 11.56,
+            7 => 12.25,
+            8 => 12.98,
+            9 => 13.75,
+            10 => 14.57,
+            _ => 15.43,
+        };
+        let oct = value.0 / 12;
+        f *= (1 << oct) as f32;
+        Freq(f)
     }
 }
 
@@ -69,7 +88,7 @@ impl AudioNode {
     pub const ROOT: Self = Self { id: 0 };
 
     pub fn add_sine(&self, f: Freq, phase: f32) -> Self {
-        let id = unsafe { bindings::add_sine(self.id, f.f, phase) };
+        let id = unsafe { bindings::add_sine(self.id, f.0, phase) };
         Self { id }
     }
 
