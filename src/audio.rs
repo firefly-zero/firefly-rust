@@ -1,3 +1,5 @@
+pub const SAMPLE_RATE: u32 = 44_100;
+
 #[derive(Copy, Clone)]
 pub enum Pitch {
     C,
@@ -166,9 +168,11 @@ impl Freq {
     pub const F9: Self = Self(11175.304);
     pub const FS9: Self = Self(11839.82);
     pub const G9: Self = Self(12543.856);
+    /// G#9, MIDI note #128, the top of the MIDI tuning range.
     pub const GS9: Self = Self(13289.752);
     pub const A9: Self = Self(14080.);
     pub const AS9: Self = Self(14917.24);
+    /// B9. For most of adults, it is already beyond the hearing range.
     pub const B9: Self = Self(15804.264);
 
     #[must_use]
@@ -227,6 +231,33 @@ impl Freq {
 impl From<f32> for Freq {
     fn from(value: f32) -> Self {
         Self(value)
+    }
+}
+
+pub struct Time(u32);
+
+impl Time {
+    #[must_use]
+    pub fn samples(s: u32) -> Self {
+        Self(s)
+    }
+
+    #[must_use]
+    pub fn seconds(s: u32) -> Self {
+        Self(s * SAMPLE_RATE)
+    }
+
+    #[must_use]
+    pub fn ms(s: u32) -> Self {
+        Self(s * SAMPLE_RATE / 1000)
+    }
+
+    #[must_use]
+    pub fn duration(s: core::time::Duration) -> Self {
+        let s = s.as_secs_f32() * 44_100.;
+        #[expect(clippy::cast_sign_loss)]
+        let s = s as u32;
+        Self(s)
     }
 }
 
