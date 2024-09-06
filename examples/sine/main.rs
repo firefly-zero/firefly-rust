@@ -4,5 +4,5 @@ use firefly_rust as ff;
 
 #[no_mangle]
 extern fn boot() {
-    ff::AudioNode::ROOT.add_sine(ff::Freq::hz(440.), 0.);
+    ff::AudioNode::ROOT.add_sine(ff::Freq::A4, 0.);
 }
