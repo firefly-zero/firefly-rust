@@ -1,6 +1,6 @@
 use super::*;
 
-pub struct Time(u32);
+pub struct Time(pub(super) u32);
 
 impl Time {
     #[must_use]
