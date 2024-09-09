@@ -40,6 +40,8 @@ pub struct MidiNote(pub u8);
 pub struct Freq(pub(super) f32);
 
 impl Freq {
+    pub const ZERO: Self = Self(0.);
+
     // https://www.liutaiomottola.com/formulae/freqtab.htm
 
     /// C0, MIDI note #12

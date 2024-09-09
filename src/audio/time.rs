@@ -3,6 +3,8 @@ use super::*;
 pub struct Time(pub(super) u32);
 
 impl Time {
+    pub const ZERO: Self = Self(0);
+
     #[must_use]
     pub fn samples(s: u32) -> Self {
         Self(s)
