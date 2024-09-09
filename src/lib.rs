@@ -9,9 +9,8 @@
 #![expect(clippy::struct_excessive_bools)]
 #![expect(clippy::cast_possible_truncation)]
 #![expect(clippy::iter_without_into_iter)]
-#![expect(clippy::module_name_repetitions)]
 
-mod audio;
+pub mod audio;
 mod fs;
 pub mod graphics;
 mod input;
@@ -23,7 +22,6 @@ pub mod shapes;
 #[cfg(feature = "sudo")]
 pub mod sudo;
 
-pub use audio::*;
 pub use fs::*;
 pub use graphics::*;
 pub use input::*;
