@@ -1,16 +1,28 @@
+use core::marker::PhantomData;
+
 use super::*;
 
-pub struct Node {
+pub struct Root {}
+pub struct Sine {}
+
+pub struct Node<F> {
     id: u32,
+    _flavor: PhantomData<F>,
 }
 
-#[expect(clippy::must_use_candidate, clippy::return_self_not_must_use)]
-impl Node {
-    pub const ROOT: Self = Self { id: 0 };
+pub const OUT: Node<Root> = Node {
+    id: 0,
+    _flavor: PhantomData,
+};
 
-    pub fn add_sine(&self, f: Freq, phase: f32) -> Self {
+#[expect(clippy::must_use_candidate)]
+impl<F> Node<F> {
+    pub fn add_sine(&self, f: Freq, phase: f32) -> Node<Sine> {
         let id = unsafe { bindings::add_sine(self.id, f.0, phase) };
-        Self { id }
+        Node {
+            id,
+            _flavor: PhantomData,
+        }
     }
 
     pub fn reset(&self) {
@@ -23,6 +35,12 @@ impl Node {
 
     pub fn clear(&self) {
         unsafe { bindings::clear(self.id) }
+    }
+}
+
+impl Node<Sine> {
+    pub fn mod_freq(&self) {
+        todo!()
     }
 }
 
