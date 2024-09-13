@@ -26,13 +26,13 @@ impl Modulator for LinearModulator {
     }
 }
 
-pub struct Hold {
+pub struct HoldModulator {
     pub before: f32,
     pub after: f32,
     pub time: Time,
 }
 
-impl Modulator for Hold {
+impl Modulator for HoldModulator {
     fn modulate(self, node_id: u32, param: u32) {
         unsafe {
             bindings::mod_hold(node_id, param, self.before, self.after, self.time.0);
@@ -40,13 +40,13 @@ impl Modulator for Hold {
     }
 }
 
-pub struct Sine {
+pub struct SineModulator {
     pub freq: Freq,
     pub low: f32,
     pub high: f32,
 }
 
-impl Modulator for Sine {
+impl Modulator for SineModulator {
     fn modulate(self, node_id: u32, param: u32) {
         unsafe {
             bindings::mod_sine(node_id, param, self.freq.0, self.low, self.high);

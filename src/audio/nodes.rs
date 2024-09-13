@@ -6,6 +6,8 @@ pub struct Root {}
 pub struct Sine {}
 pub struct Gain {}
 pub struct Square {}
+pub struct Sawtooth {}
+pub struct Triangle {}
 pub struct Noise {}
 pub struct Empty {}
 pub struct Zero {}
@@ -33,6 +35,16 @@ impl<F> Node<F> {
 
     pub fn add_square(&self, f: Freq, phase: f32) -> Node<Square> {
         let id = unsafe { bindings::add_square(self.id, f.0, phase) };
+        Node::new(id)
+    }
+
+    pub fn add_sawtooth(&self, f: Freq, phase: f32) -> Node<Sawtooth> {
+        let id = unsafe { bindings::add_sawtooth(self.id, f.0, phase) };
+        Node::new(id)
+    }
+
+    pub fn add_triangle(&self, f: Freq, phase: f32) -> Node<Triangle> {
+        let id = unsafe { bindings::add_triangle(self.id, f.0, phase) };
         Node::new(id)
     }
 
@@ -81,6 +93,8 @@ mod bindings {
         pub(super) fn add_sine(parent_id: u32, freq: f32, phase: f32) -> u32;
         pub(super) fn add_gain(parent_id: u32, lvl: f32) -> u32;
         pub(super) fn add_square(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) fn add_sawtooth(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) fn add_triangle(parent_id: u32, freq: f32, phase: f32) -> u32;
         pub(super) fn add_noise(parent_id: u32, seed: i32) -> u32;
         pub(super) fn add_empty(parent_id: u32) -> u32;
         pub(super) fn add_zero(parent_id: u32) -> u32;
