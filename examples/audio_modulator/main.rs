@@ -5,7 +5,7 @@ use firefly_rust::audio;
 #[no_mangle]
 extern fn boot() {
     let gain = audio::OUT.add_gain(0.);
-    gain.modulate_level(audio::LinearModulator {
+    gain.modulate(audio::LinearModulator {
         start: 0.,
         end: 1.,
         start_at: audio::Time::ZERO,
