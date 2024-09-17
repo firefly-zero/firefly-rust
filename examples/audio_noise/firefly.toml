@@ -1,0 +1,5 @@
+author_id = "demo"
+app_id = "rust-noise"
+author_name = "Demo"
+app_name = "Noise Demo (Rust)"
+compile_args = ["--no-default-features"]
