@@ -166,13 +166,66 @@ impl<F> Node<F> {
 }
 
 impl Node<Gain> {
+    /// Modulate the gain level.
     pub fn modulate<M: Modulator>(&self, m: M) {
         m.modulate(self.id, 0);
     }
 }
 
 impl Node<Pan> {
+    /// Modulate the pan value (from 0. to 1.: 0. is only left, 1. is only right).
     pub fn modulate<M: Modulator>(&self, m: M) {
+        m.modulate(self.id, 0);
+    }
+}
+
+impl Node<Mute> {
+    /// Modulate the muted state.
+    ///
+    /// Below 0.5 is muted, above is unmuted.
+    pub fn modulate<M: Modulator>(&self, m: M) {
+        m.modulate(self.id, 0);
+    }
+}
+
+impl Node<Pause> {
+    /// Modulate the paused state.
+    ///
+    /// Below 0.5 is paused, above is playing.
+    pub fn modulate<M: Modulator>(&self, m: M) {
+        m.modulate(self.id, 0);
+    }
+}
+
+impl Node<LowPass> {
+    /// Modulate the cut-off frequency.
+    pub fn modulate_freq<M: Modulator>(&self, m: M) {
+        m.modulate(self.id, 0);
+    }
+}
+
+impl Node<HighPass> {
+    /// Modulate the cut-off frequency.
+    pub fn modulate_freq<M: Modulator>(&self, m: M) {
+        m.modulate(self.id, 0);
+    }
+}
+
+impl Node<Clip> {
+    /// Modulate the low cut amplitude and adjust the high amplitude to keep the gap.
+    ///
+    /// In other words, the difference between low and high cut points will stay the same.
+    pub fn modulate_both<M: Modulator>(&self, m: M) {
+        m.modulate(self.id, 0);
+    }
+
+    /// Modulate the low cut amplitude.
+    pub fn modulate_low<M: Modulator>(&self, m: M) {
+        m.modulate(self.id, 0);
+    }
+
+    /// Modulate the high cut amplitude.
+    pub fn modulate_high<M: Modulator>(&self, m: M) {
         m.modulate(self.id, 0);
     }
 }
@@ -180,6 +233,7 @@ impl Node<Pan> {
 mod bindings {
     #[link(wasm_import_module = "audio")]
     extern {
+        // generators
         pub(super) fn add_sine(parent_id: u32, freq: f32, phase: f32) -> u32;
         pub(super) fn add_square(parent_id: u32, freq: f32, phase: f32) -> u32;
         pub(super) fn add_sawtooth(parent_id: u32, freq: f32, phase: f32) -> u32;
@@ -188,6 +242,7 @@ mod bindings {
         pub(super) fn add_empty(parent_id: u32) -> u32;
         pub(super) fn add_zero(parent_id: u32) -> u32;
 
+        // nodes
         pub(crate) fn add_mix(parent_id: u32) -> u32;
         pub(crate) fn add_all_for_one(parent_id: u32) -> u32;
         pub(crate) fn add_gain(parent_id: u32, lvl: f32) -> u32;
