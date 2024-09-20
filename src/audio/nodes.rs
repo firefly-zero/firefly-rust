@@ -69,31 +69,31 @@ impl<F> Node<F> {
         }
     }
 
-    /// Add sine wave oscillator source.
+    /// Add sine wave oscillator source (`∿`).
     pub fn add_sine(&self, f: Freq, phase: f32) -> Node<Sine> {
         let id = unsafe { bindings::add_sine(self.id, f.0, phase) };
         Node::new(id)
     }
 
-    /// Add square wave oscillator source.
+    /// Add square wave oscillator source (`⎍`).
     pub fn add_square(&self, f: Freq, phase: f32) -> Node<Square> {
         let id = unsafe { bindings::add_square(self.id, f.0, phase) };
         Node::new(id)
     }
 
-    /// Add sawtooth wave oscillator source.
+    /// Add sawtooth wave oscillator source (`╱│`).
     pub fn add_sawtooth(&self, f: Freq, phase: f32) -> Node<Sawtooth> {
         let id = unsafe { bindings::add_sawtooth(self.id, f.0, phase) };
         Node::new(id)
     }
 
-    /// Add triangle wave oscillator source.
+    /// Add triangle wave oscillator source (`╱╲`).
     pub fn add_triangle(&self, f: Freq, phase: f32) -> Node<Triangle> {
         let id = unsafe { bindings::add_triangle(self.id, f.0, phase) };
         Node::new(id)
     }
 
-    /// Add white noise source.
+    /// Add white noise source (amplitude on each tick is random).
     pub fn add_noise(&self, seed: i32) -> Node<Noise> {
         let id = unsafe { bindings::add_noise(self.id, seed) };
         Node::new(id)

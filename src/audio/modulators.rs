@@ -4,6 +4,12 @@ pub trait Modulator {
     fn modulate(self, node_id: u32, param: u32);
 }
 
+/// Linear (ramp up or down) envelope.
+///
+/// It looks like this: `⎽╱⎺` or `⎺╲⎽`.
+///
+/// The value before `start_at` is `start`, the value after `end_at` is `end`,
+/// and the value between `start_at` and `end_at` changes linearly from `start` to `end`.
 pub struct LinearModulator {
     pub start: f32,
     pub end: f32,
@@ -26,6 +32,12 @@ impl Modulator for LinearModulator {
     }
 }
 
+/// Hold envelope.
+///
+/// It looks like this: `⎽│⎺` or `⎺│⎽`.
+///
+/// The value before `time` is `before` and the value after `time` is `after`.
+/// Equivalent to [`LinearModulator`] with `start_at` being equal to `end_at`.
 pub struct HoldModulator {
     pub before: f32,
     pub after: f32,
@@ -40,6 +52,11 @@ impl Modulator for HoldModulator {
     }
 }
 
+/// Sine wave low-frequency oscillator.
+///
+/// It looks like this: `∿`.
+///
+/// `low` is the lowest produced value, `high` is the highest.
 pub struct SineModulator {
     pub freq: Freq,
     pub low: f32,
