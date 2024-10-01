@@ -2,8 +2,6 @@ use core::marker::PhantomData;
 
 use super::*;
 
-/// A marker for a specific node type. See [`OUT`].
-pub struct Out {}
 /// A marker for a specific node type. See [`Node::add_sine`].
 pub struct Sine {}
 /// A marker for a specific node type. See [`Node::add_mix`].
@@ -57,7 +55,7 @@ pub struct Node<F> {
 }
 
 /// The output audio node. Mixes all inputs and plays them on the device's speaker.
-pub const OUT: Node<Out> = Node::new(0);
+pub const OUT: Node<Mix> = Node::new(0);
 
 #[expect(clippy::must_use_candidate)]
 impl<F> Node<F> {
@@ -326,21 +324,21 @@ mod bindings {
         pub(super) fn add_zero(parent_id: u32) -> u32;
 
         // nodes
-        pub(crate) fn add_mix(parent_id: u32) -> u32;
-        pub(crate) fn add_all_for_one(parent_id: u32) -> u32;
-        pub(crate) fn add_gain(parent_id: u32, lvl: f32) -> u32;
-        pub(crate) fn add_loop(parent_id: u32) -> u32;
-        pub(crate) fn add_concat(parent_id: u32) -> u32;
-        pub(crate) fn add_pan(parent_id: u32, lvl: f32) -> u32;
-        pub(crate) fn add_mute(parent_id: u32) -> u32;
-        pub(crate) fn add_pause(parent_id: u32) -> u32;
-        pub(crate) fn add_track_position(parent_id: u32) -> u32;
-        pub(crate) fn add_low_pass(parent_id: u32, freq: f32, q: f32) -> u32;
-        pub(crate) fn add_high_pass(parent_id: u32, freq: f32, q: f32) -> u32;
-        pub(crate) fn add_take_left(parent_id: u32) -> u32;
-        pub(crate) fn add_take_right(parent_id: u32) -> u32;
-        pub(crate) fn add_swap(parent_id: u32) -> u32;
-        pub(crate) fn add_clip(parent_id: u32, low: f32, high: f32) -> u32;
+        pub(super) fn add_mix(parent_id: u32) -> u32;
+        pub(super) fn add_all_for_one(parent_id: u32) -> u32;
+        pub(super) fn add_gain(parent_id: u32, lvl: f32) -> u32;
+        pub(super) fn add_loop(parent_id: u32) -> u32;
+        pub(super) fn add_concat(parent_id: u32) -> u32;
+        pub(super) fn add_pan(parent_id: u32, lvl: f32) -> u32;
+        pub(super) fn add_mute(parent_id: u32) -> u32;
+        pub(super) fn add_pause(parent_id: u32) -> u32;
+        pub(super) fn add_track_position(parent_id: u32) -> u32;
+        pub(super) fn add_low_pass(parent_id: u32, freq: f32, q: f32) -> u32;
+        pub(super) fn add_high_pass(parent_id: u32, freq: f32, q: f32) -> u32;
+        pub(super) fn add_take_left(parent_id: u32) -> u32;
+        pub(super) fn add_take_right(parent_id: u32) -> u32;
+        pub(super) fn add_swap(parent_id: u32) -> u32;
+        pub(super) fn add_clip(parent_id: u32, low: f32, high: f32) -> u32;
 
         pub(super) fn reset(node_id: u32);
         pub(super) fn reset_all(node_id: u32);
