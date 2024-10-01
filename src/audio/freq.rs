@@ -34,9 +34,6 @@ impl TryFrom<char> for Pitch {
 }
 
 #[derive(Copy, Clone)]
-pub struct MidiNote(pub u8);
-
-#[derive(Copy, Clone)]
 pub struct Freq(pub(super) f32);
 
 impl Freq {
