@@ -1,0 +1,5 @@
+author_id = "demo"
+app_id = "rust-chord"
+author_name = "Demo"
+app_name = "Chord Demo (Rust)"
+compile_args = ["--no-default-features"]

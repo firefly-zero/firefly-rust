@@ -1,0 +1,5 @@
+author_id = "demo"
+app_id = "rust-aud-tri"
+author_name = "Demo"
+app_name = "Triangle Wave Demo (Rust)"
+compile_args = ["--no-default-features"]

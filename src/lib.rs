@@ -1,12 +1,20 @@
 #![doc = include_str!("../README.md")]
 #![cfg_attr(not(feature = "std"), no_std)]
-#![deny(clippy::pedantic)]
+#![deny(
+    clippy::pedantic,
+    clippy::alloc_instead_of_core,
+    clippy::allow_attributes,
+    clippy::std_instead_of_alloc,
+    clippy::std_instead_of_core
+)]
 #![allow(clippy::wildcard_imports)]
-#![allow(clippy::struct_excessive_bools)]
-#![allow(clippy::cast_possible_truncation)]
-#![allow(clippy::iter_without_into_iter)]
+#![expect(
+    clippy::struct_excessive_bools,
+    clippy::cast_possible_truncation,
+    clippy::iter_without_into_iter
+)]
 
-mod bindings;
+pub mod audio;
 mod fs;
 pub mod graphics;
 mod input;

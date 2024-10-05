@@ -1,0 +1,5 @@
+author_id = "demo"
+app_id = "rust-mod"
+author_name = "Demo"
+app_name = "Modulator Demo (Rust)"
+compile_args = ["--no-default-features"]

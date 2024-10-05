@@ -1,0 +1,5 @@
+author_id = "demo"
+app_id = "rust-sine"
+author_name = "Demo"
+app_name = "Sine Demo (Rust)"
+compile_args = ["--no-default-features"]

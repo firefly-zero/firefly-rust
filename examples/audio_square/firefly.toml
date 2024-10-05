@@ -1,0 +1,5 @@
+author_id = "demo"
+app_id = "rust-square"
+author_name = "Demo"
+app_name = "Square Wave Demo (Rust)"
+compile_args = ["--no-default-features"]
