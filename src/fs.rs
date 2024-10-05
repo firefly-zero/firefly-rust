@@ -64,133 +64,73 @@ impl<'a> File<'a> {
     }
 }
 
-/// Functions for accessing files in the app ROM.
-pub mod rom {
-    use super::*;
+/// Get a file size in the data dir.
+///
+/// If the file does not exist, 0 is returned.
+#[must_use]
+pub fn get_file_size(name: &str) -> usize {
+    let path_ptr = name.as_ptr();
+    let size = unsafe { bindings::get_file_size(path_ptr as u32, name.len() as u32) };
+    size as usize
+}
 
-    /// Determine the required size (in bytes) to store the given file.
-    ///
-    /// If the file does not exist, 0 is returned.
-    #[must_use]
-    pub fn get_size(name: &str) -> usize {
-        let path_ptr = name.as_ptr();
-        let size = unsafe { bindings::get_rom_file_size(path_ptr as u32, name.len() as u32) };
-        size as usize
+/// Read the whole file with the given name into the given buffer.
+///
+/// If the file size is not known in advance (and so the buffer has to be allocated
+/// dynamically), consider using [`load_buf`] instead.
+pub fn load_file<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
+    let path_ptr = name.as_ptr();
+    let buf_ptr = buf.as_mut_ptr();
+    unsafe {
+        bindings::load_file(
+            path_ptr as u32,
+            name.len() as u32,
+            buf_ptr as u32,
+            buf.len() as u32,
+        );
     }
+    File { raw: buf }
+}
 
-    /// Read the whole file with the given name into the given buffer.
-    ///
-    /// If the file size is not known in advance (and so the buffer has to be allocated
-    /// dynamically), consider using [`load_buf`] instead.
-    pub fn load<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
-        let path_ptr = name.as_ptr();
-        let buf_ptr = buf.as_mut_ptr();
-        unsafe {
-            bindings::load_rom_file(
-                path_ptr as u32,
-                name.len() as u32,
-                buf_ptr as u32,
-                buf.len() as u32,
-            );
-        }
-        File { raw: buf }
+/// Read the whole file with the given name.
+///
+/// If you have a pre-allocated buffer of the right size, use [load] instead.
+///
+/// `None` is returned if the file does not exist.
+#[cfg(feature = "alloc")]
+#[must_use]
+pub fn load_buf(name: &str) -> Option<FileBuf> {
+    let size = get_file_size(name);
+    if size == 0 {
+        return None;
     }
+    let mut buf = vec![0; size];
+    load_file(name, &mut buf);
+    Some(FileBuf { raw: buf })
+}
 
-    /// Read the whole file with the given name from ROM.
-    ///
-    /// If you have a pre-allocated buffer of the right size, use [load] instead.
-    ///
-    /// If the file does not exist, the returned buffer will be empty.
-    /// This, however, should not happen in normal operation because
-    /// the contents of the ROM directory are statically known.
-    #[cfg(feature = "alloc")]
-    #[must_use]
-    pub fn load_buf(name: &str) -> FileBuf {
-        let size = rom::get_size(name);
-        let mut buf = vec![0; size];
-        rom::load(name, &mut buf);
-        FileBuf { raw: buf }
+/// Write the buffer into the given file in the data dir.
+///
+/// If the file exists, it will be overwritten.
+/// If it doesn't exist, it will be created.
+pub fn dump_file(name: &str, buf: &[u8]) {
+    let path_ptr = name.as_ptr();
+    let buf_ptr = buf.as_ptr();
+    unsafe {
+        bindings::dump_file(
+            path_ptr as u32,
+            name.len() as u32,
+            buf_ptr as u32,
+            buf.len() as u32,
+        );
     }
 }
 
-/// Functions for accessing files in the app data dir.
-///
-/// Each app has an its own data dir. That directory is empty by default,
-/// writable by the app, and not accessible by other apps.
-/// Typically, it is used to store game save data.
-///
-/// The device owner may empty this dir if they wish to remove the app data.
-pub mod data {
-    use super::*;
-
-    /// Get a file size in the data dir.
-    ///
-    /// If the file does not exist, 0 is returned.
-    #[must_use]
-    pub fn get_size(name: &str) -> usize {
-        let path_ptr = name.as_ptr();
-        let size = unsafe { bindings::get_file_size(path_ptr as u32, name.len() as u32) };
-        size as usize
-    }
-
-    /// Read the whole file with the given name into the given buffer.
-    ///
-    /// If the file size is not known in advance (and so the buffer has to be allocated
-    /// dynamically), consider using [`load_buf`] instead.
-    pub fn load<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
-        let path_ptr = name.as_ptr();
-        let buf_ptr = buf.as_mut_ptr();
-        unsafe {
-            bindings::load_file(
-                path_ptr as u32,
-                name.len() as u32,
-                buf_ptr as u32,
-                buf.len() as u32,
-            );
-        }
-        File { raw: buf }
-    }
-
-    /// Read the whole file with the given name from the data dir.
-    ///
-    /// If you have a pre-allocated buffer of the right size, use [load] instead.
-    ///
-    /// `None` is returned if the file does not exist.
-    #[cfg(feature = "alloc")]
-    #[must_use]
-    pub fn load_buf(name: &str) -> Option<FileBuf> {
-        let size = data::get_size(name);
-        if size == 0 {
-            return None;
-        }
-        let mut buf = vec![0; size];
-        data::load(name, &mut buf);
-        Some(FileBuf { raw: buf })
-    }
-
-    /// Write the buffer into the given file in the data dir.
-    ///
-    /// If the file exists, it will be overwritten.
-    /// If it doesn't exist, it will be created.
-    pub fn dump(name: &str, buf: &[u8]) {
-        let path_ptr = name.as_ptr();
-        let buf_ptr = buf.as_ptr();
-        unsafe {
-            bindings::dump_file(
-                path_ptr as u32,
-                name.len() as u32,
-                buf_ptr as u32,
-                buf.len() as u32,
-            );
-        }
-    }
-
-    /// Remove file (if exists) with the given name from the data dir.
-    pub fn remove(name: &str) {
-        let path_ptr = name.as_ptr();
-        unsafe {
-            bindings::remove_file(path_ptr as u32, name.len() as u32);
-        }
+/// Remove file (if exists) with the given name from the data dir.
+pub fn remove_file(name: &str) {
+    let path_ptr = name.as_ptr();
+    unsafe {
+        bindings::remove_file(path_ptr as u32, name.len() as u32);
     }
 }
 
@@ -258,14 +198,7 @@ pub struct SubImage<'a> {
 mod bindings {
     #[link(wasm_import_module = "fs")]
     extern {
-        pub(crate) fn get_rom_file_size(path_ptr: u32, path_len: u32) -> u32;
         pub(crate) fn get_file_size(path_ptr: u32, path_len: u32) -> u32;
-        pub(crate) fn load_rom_file(
-            path_ptr: u32,
-            path_len: u32,
-            buf_ptr: u32,
-            buf_len: u32,
-        ) -> u32;
         pub(crate) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(crate) fn dump_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(crate) fn remove_file(path_ptr: u32, path_len: u32);
