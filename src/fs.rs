@@ -99,7 +99,7 @@ pub fn load_file<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
 /// `None` is returned if the file does not exist.
 #[cfg(feature = "alloc")]
 #[must_use]
-pub fn load_buf(name: &str) -> Option<FileBuf> {
+pub fn load_file_buf(name: &str) -> Option<FileBuf> {
     let size = get_file_size(name);
     if size == 0 {
         return None;
