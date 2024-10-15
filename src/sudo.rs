@@ -57,7 +57,7 @@ impl<'a> Dir<'a> {
 
     /// Iterate over all loaded entries in the directory.
     #[must_use]
-    pub fn iter(&self) -> DirIter<'a> {
+    pub const fn iter(&self) -> DirIter<'a> {
         DirIter { raw: self.raw }
     }
 }

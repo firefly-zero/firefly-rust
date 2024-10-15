@@ -49,17 +49,17 @@ pub struct File<'a> {
 
 impl<'a> File<'a> {
     #[must_use]
-    pub fn data(&self) -> &[u8] {
+    pub const fn data(&self) -> &[u8] {
         self.raw
     }
 
     #[must_use]
-    pub fn as_font(&self) -> Font {
+    pub const fn as_font(&self) -> Font {
         Font { raw: self.raw }
     }
 
     #[must_use]
-    pub fn as_image(&self) -> Image {
+    pub const fn as_image(&self) -> Image {
         Image { raw: self.raw }
     }
 }

@@ -35,7 +35,7 @@ impl Size {
 
     /// Set both width and height to their absolute (non-negative) value.
     #[must_use]
-    pub fn abs(self) -> Self {
+    pub const fn abs(self) -> Self {
         Self {
             width: self.width.abs(),
             height: self.height.abs(),

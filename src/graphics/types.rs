@@ -36,7 +36,7 @@ impl Style {
     ///
     /// [`LineStyle`] is the same as [Style] except it doesn't have a fill color.
     #[must_use]
-    pub fn as_line_style(&self) -> LineStyle {
+    pub const fn as_line_style(&self) -> LineStyle {
         LineStyle {
             color: self.stroke_color,
             width: self.stroke_width,
