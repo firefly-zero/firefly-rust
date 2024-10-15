@@ -1,5 +1,7 @@
 //! Draw shapes, images, and text on the screen.
 
+#![deny(missing_docs)]
+
 mod angle;
 mod bindings;
 mod funcs;
