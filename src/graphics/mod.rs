@@ -4,6 +4,7 @@
 
 mod angle;
 mod bindings;
+mod canvas;
 mod funcs;
 mod image;
 mod point;
@@ -11,6 +12,7 @@ mod size;
 mod types;
 
 pub use angle::*;
+pub use canvas::*;
 pub use funcs::*;
 pub use image::*;
 pub use point::*;

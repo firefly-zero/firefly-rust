@@ -2,9 +2,9 @@
 
 use crate::graphics::*;
 #[cfg(feature = "alloc")]
-use alloc::vec;
+use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
-use alloc::vec::Vec;
+use alloc::vec;
 
 /// Like [File] but owns the buffer.
 ///
@@ -13,7 +13,7 @@ use alloc::vec::Vec;
 /// and [`data::load`] instead.
 #[cfg(feature = "alloc")]
 pub struct FileBuf {
-    pub(crate) raw: Vec<u8>,
+    pub(crate) raw: Box<[u8]>,
 }
 
 #[cfg(feature = "alloc")]
@@ -106,7 +106,9 @@ pub fn load_file_buf(name: &str) -> Option<FileBuf> {
     }
     let mut buf = vec![0; size];
     load_file(name, &mut buf);
-    Some(FileBuf { raw: buf })
+    Some(FileBuf {
+        raw: buf.into_boxed_slice(),
+    })
 }
 
 /// Write the buffer into the given file in the data dir.

@@ -21,6 +21,19 @@ impl<'a> From<&'a FileBuf> for Image<'a> {
     }
 }
 
+impl<'a> From<Canvas<'a>> for Image<'a> {
+    fn from(value: Canvas<'a>) -> Self {
+        Self { raw: value.raw }
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<'a> From<&'a CanvasBuf> for Image<'a> {
+    fn from(value: &'a CanvasBuf) -> Self {
+        Self { raw: &value.raw }
+    }
+}
+
 impl<'a> Image<'a> {
     /// Get a rectangle subregion of the image.
     #[must_use]
