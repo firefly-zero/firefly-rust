@@ -99,4 +99,6 @@ extern {
         sub_height: i32,
     );
     pub(crate) fn draw_image(ptr: u32, len: u32, x: i32, y: i32);
+    pub(crate) fn set_canvas(ptr: u32, len: u32);
+    pub(crate) fn unset_canvas();
 }

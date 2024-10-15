@@ -191,3 +191,19 @@ pub fn draw_sub_image(i: &SubImage, p: Point) {
         );
     }
 }
+
+/// Set canvas to be used for all subsequent drawing operations.
+pub fn set_canvas(c: &Canvas) {
+    let ptr = c.raw.as_ptr();
+    let len = c.raw.len();
+    unsafe {
+        b::set_canvas(ptr as u32, len as u32);
+    }
+}
+
+/// Unset canvas set by [`set_canvas`]. All subsequent drawing operations will target frame buffer.
+pub fn unset_canvas() {
+    unsafe {
+        b::unset_canvas();
+    }
+}

@@ -4,6 +4,10 @@ use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
 use alloc::vec;
 
+// TODO: add statically-allocated version when prepare_slice can be turned into static fn.
+// It is blocked by this feature going into stable:
+// https://github.com/rust-lang/rust/issues/57349
+
 /// Canvas is an [`Image`] that can be drawn upon.
 ///
 /// [`CanvasBuf`] is the same as [`Canvas`] but holds the ownership of the underlying slice.
@@ -30,7 +34,7 @@ impl CanvasBuf {
 
     /// Represent the canvas as an [`Image`].
     #[must_use]
-    pub fn as_image(&self) -> Image<'_> {
+    pub const fn as_image(&self) -> Image<'_> {
         Image { raw: &self.raw }
     }
 }
@@ -62,7 +66,7 @@ impl<'a> Canvas<'a> {
 
     /// Represent the canvas as an [`Image`].
     #[must_use]
-    pub fn as_image(&self) -> Image<'a> {
+    pub const fn as_image(&self) -> Image<'a> {
         Image { raw: self.raw }
     }
 }
