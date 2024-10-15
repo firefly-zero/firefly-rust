@@ -1,5 +1,5 @@
 use super::{bindings as b, *};
-use crate::fs::{Font, Image, SubImage};
+use crate::*;
 
 /// Fill the whole frame with the given color.
 pub fn clear_screen(c: Color) {
