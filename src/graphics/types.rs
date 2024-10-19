@@ -1,8 +1,11 @@
 /// The RGB value of a color in the palette.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct RGB {
+    /// Red component.
     pub r: u8,
+    /// Green component.
     pub g: u8,
+    /// Blue component.
     pub b: u8,
 }
 
@@ -36,7 +39,7 @@ impl Style {
     ///
     /// [`LineStyle`] is the same as [Style] except it doesn't have a fill color.
     #[must_use]
-    pub fn as_line_style(&self) -> LineStyle {
+    pub const fn as_line_style(&self) -> LineStyle {
         LineStyle {
             color: self.stroke_color,
             width: self.stroke_width,
@@ -47,7 +50,9 @@ impl Style {
 /// The same as [Style] but without a fill color (only stroke color and width).
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LineStyle {
+    /// The line stroke color.
     pub color: Color,
+    /// The line stroke width.
     pub width: i32,
 }
 
@@ -63,22 +68,39 @@ impl From<Style> for LineStyle {
 /// A pointer to a color in the color palette.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Color {
+    /// No color (100% transparency).
     None,
+    /// Black color: #1A1C2C.
     Black,
+    /// Purple color: #5D275D.
     Purple,
+    /// Red color: #B13E53.
     Red,
+    /// Orange color: #EF7D57.
     Orange,
+    /// Yellow color: #FFCD75.
     Yellow,
+    /// Light green color: #A7F070.
     LightGreen,
+    /// Green color: #38B764.
     Green,
+    /// Dark green color: #257179.
     DarkGreen,
+    /// Dark blue color: #29366F.
     DarkBlue,
+    /// Blue color: #3B5DC9.
     Blue,
+    /// Light blue color: #41A6F6.
     LightBlue,
+    /// Cyan color: #73EFF7.
     Cyan,
+    /// White color: #F4F4F4.
     White,
+    /// Light gray color: #94B0C2.
     LightGray,
+    /// Gray color: #566C86.
     Gray,
+    /// Dark gray color: #333C57.
     DarkGray,
 }
 

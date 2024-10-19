@@ -26,7 +26,7 @@ impl Angle {
 
     /// An angle in radians where [TAU] (doubled [PI]) is the full circle.
     #[must_use]
-    pub fn from_radians(r: f32) -> Self {
+    pub const fn from_radians(r: f32) -> Self {
         Self(r)
     }
 
@@ -50,7 +50,7 @@ impl Angle {
 
     /// Get the angle value in radians where [TAU] (doubled [PI]) is the full circle.
     #[must_use]
-    pub fn to_radians(self) -> f32 {
+    pub const fn to_radians(self) -> f32 {
         self.0
     }
 

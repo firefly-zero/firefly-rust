@@ -9,7 +9,9 @@ use nalgebra::{base::Scalar, Vector2};
 /// Typically, the upper-left corner of a bounding box of a shape.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Point {
+    /// Pixel distance from left.
     pub x: i32,
+    /// Pixel distance from the top.
     pub y: i32,
 }
 
@@ -22,6 +24,7 @@ impl Point {
     /// The coordinate of the top-left corner on the screen.
     pub const MIN: Point = Point { x: 0, y: 0 };
 
+    /// Create a new point casting the argument types.
     #[must_use]
     pub fn new<I: Into<i32>>(x: I, y: I) -> Self {
         Self {
@@ -32,7 +35,7 @@ impl Point {
 
     /// Set x and y to their absolute (non-negative) value.
     #[must_use]
-    pub fn abs(self) -> Self {
+    pub const fn abs(self) -> Self {
         Self {
             x: self.x.abs(),
             y: self.y.abs(),

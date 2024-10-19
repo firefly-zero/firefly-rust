@@ -2,13 +2,13 @@
 
 use crate::fs::{File, FileBuf};
 #[cfg(feature = "alloc")]
-use alloc::vec;
+use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
-use alloc::vec::Vec;
+use alloc::vec;
 
 #[cfg(feature = "alloc")]
 pub struct DirBuf {
-    raw: Vec<u8>,
+    raw: Box<[u8]>,
 }
 
 #[cfg(feature = "alloc")]
@@ -19,7 +19,9 @@ impl DirBuf {
         let size = Dir::list_dirs_buf_size(name);
         let mut buf = vec![0; size];
         Dir::list_dirs(name, &mut buf);
-        Self { raw: buf }
+        Self {
+            raw: buf.into_boxed_slice(),
+        }
     }
 
     /// Iterate over all loaded entries in the directory.
@@ -57,7 +59,7 @@ impl<'a> Dir<'a> {
 
     /// Iterate over all loaded entries in the directory.
     #[must_use]
-    pub fn iter(&self) -> DirIter<'a> {
+    pub const fn iter(&self) -> DirIter<'a> {
         DirIter { raw: self.raw }
     }
 }
@@ -121,7 +123,7 @@ pub fn load_file<'a>(path: &str, buf: &'a mut [u8]) -> File<'a> {
 
 /// Like [`load_file`] but takes care of the buffer allocation and ownership.
 ///
-/// `None` is returned if the file does not exist.
+/// [`None`] is returned if the file does not exist.
 #[cfg(feature = "alloc")]
 #[must_use]
 pub fn load_file_buf(path: &str) -> Option<FileBuf> {
@@ -137,7 +139,9 @@ pub fn load_file_buf(path: &str) -> Option<FileBuf> {
     unsafe {
         b::load_file(path_ptr, path_len, buf_ptr, buf_len);
     }
-    Some(FileBuf { raw: buf })
+    Some(FileBuf {
+        raw: buf.into_boxed_slice(),
+    })
 }
 
 /// Low-level bindings for host-defined "sudo" module.

@@ -5,7 +5,10 @@
     clippy::alloc_instead_of_core,
     clippy::allow_attributes,
     clippy::std_instead_of_alloc,
-    clippy::std_instead_of_core
+    clippy::std_instead_of_core,
+    clippy::expect_used,
+    clippy::unwrap_used,
+    // missing_docs
 )]
 #![allow(clippy::wildcard_imports)]
 #![expect(

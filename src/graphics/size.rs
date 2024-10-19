@@ -14,7 +14,9 @@ pub const HEIGHT: i32 = 160;
 /// The width and height must be positive.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Size {
+    /// Horizontal size in pixels.
     pub width: i32,
+    /// Vertical size in pixels.
     pub height: i32,
 }
 
@@ -25,6 +27,7 @@ impl Size {
         height: HEIGHT,
     };
 
+    /// Create a new size casting the argument types.
     #[must_use]
     pub fn new<I: Into<i32>>(width: I, height: I) -> Self {
         Self {
@@ -35,7 +38,7 @@ impl Size {
 
     /// Set both width and height to their absolute (non-negative) value.
     #[must_use]
-    pub fn abs(self) -> Self {
+    pub const fn abs(self) -> Self {
         Self {
             width: self.width.abs(),
             height: self.height.abs(),

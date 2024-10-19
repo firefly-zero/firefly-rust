@@ -1,5 +1,5 @@
 use super::{bindings as b, *};
-use crate::fs::{Font, Image, SubImage};
+use crate::*;
 
 /// Fill the whole frame with the given color.
 pub fn clear_screen(c: Color) {
@@ -189,5 +189,21 @@ pub fn draw_sub_image(i: &SubImage, p: Point) {
             i.size.width,
             i.size.height,
         );
+    }
+}
+
+/// Set canvas to be used for all subsequent drawing operations.
+pub fn set_canvas(c: &Canvas) {
+    let ptr = c.raw.as_ptr();
+    let len = c.raw.len();
+    unsafe {
+        b::set_canvas(ptr as u32, len as u32);
+    }
+}
+
+/// Unset canvas set by [`set_canvas`]. All subsequent drawing operations will target frame buffer.
+pub fn unset_canvas() {
+    unsafe {
+        b::unset_canvas();
     }
 }
