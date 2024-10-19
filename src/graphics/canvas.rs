@@ -37,6 +37,12 @@ impl CanvasBuf {
     pub const fn as_image(&self) -> Image<'_> {
         Image { raw: &self.raw }
     }
+
+    /// Represent the buffered canvas as [`Canvas`].
+    #[must_use]
+    pub const fn as_canvas(&self) -> Canvas<'_> {
+        Canvas { raw: &self.raw }
+    }
 }
 
 /// Canvas is an [`Image`] that can be drawn upon.
