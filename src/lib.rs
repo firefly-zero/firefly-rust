@@ -26,6 +26,7 @@ mod menu;
 mod misc;
 mod net;
 pub mod shapes;
+mod stats;
 #[cfg(feature = "sudo")]
 pub mod sudo;
 
@@ -35,6 +36,7 @@ pub use input::*;
 pub use menu::*;
 pub use misc::*;
 pub use net::*;
+pub use stats::*;
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
