@@ -11,11 +11,19 @@ keywords = ["gamedev", "firefly-zero"]
 categories = ["game-development", "no-std", "rendering", "api-bindings", "wasm"]
 
 [features]
-default = ["alloc", "sudo", "nalgebra_support"]
+default = ["alloc", "sudo", "nalgebra_support", "panic_info"]
+# If disabled, the crate uses no_std.
 std = []
+# Enable support for allocating functions, like load_file_buf.
+# Requires a global allocator to be configured.
 alloc = []
+# If app panics, show panic info (message, file name, line number).
+# Increases the binary size.
+panic_info = []
+# Enable support for functions requiring sudo.
 sudo = []
+# Enable support for casting graphic primitives to and from nalgebra crate primitives.
 nalgebra_support = ["nalgebra"]
 
 [dependencies]
-nalgebra = { version = "0.33.0", optional = true, default-features = false }
+nalgebra = { version = "0.33.2", optional = true, default-features = false }
