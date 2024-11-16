@@ -8,7 +8,9 @@ pub struct Board(pub u8);
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub struct Progress {
+    /// How many points the player already has.
     pub done: u16,
+    /// How many points the player needs to earn the badge.
     pub goal: u16,
 }
 
@@ -19,11 +21,19 @@ impl Progress {
     }
 }
 
+/// Get the progress of earning the badge.
 #[must_use]
 pub fn get_progress(p: Peer, b: Badge) -> Progress {
     add_progress(p, b, 0)
 }
 
+/// Add the given value to the progress for the badge.
+///
+/// May be negative if you want to decrease the progress.
+/// If zero, does not change the progress.
+///
+/// If the Peer is [`Peer::COMBINED`], the progress is added to every peer
+/// and the returned value is the lowest progress.
 #[expect(clippy::must_use_candidate)]
 pub fn add_progress(p: Peer, b: Badge, v: i16) -> Progress {
     let r = unsafe { bindings::add_progress(u32::from(p.0), u32::from(b.0), i32::from(v)) };
@@ -33,11 +43,19 @@ pub fn add_progress(p: Peer, b: Badge, v: i16) -> Progress {
     }
 }
 
+/// Get the personal best of the player.
 #[must_use]
 pub fn get_score(p: Peer, b: Badge) -> i16 {
     add_score(p, b, 0)
 }
 
+/// Add the given score to the board.
+///
+/// May be negative if you want the lower scores
+/// to rank higher. Zero value is not added to the board.
+///
+/// If the Peer is [`Peer::COMBINED`], the score is added for every peer
+/// and the returned value is the lowest of their best scores.
 #[expect(clippy::must_use_candidate)]
 pub fn add_score(p: Peer, b: Badge, v: i16) -> i16 {
     let r = unsafe { bindings::add_score(u32::from(p.0), u32::from(b.0), i32::from(v)) };
