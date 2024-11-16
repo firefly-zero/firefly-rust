@@ -47,6 +47,9 @@ pub struct Empty {}
 /// A marker for a specific node type. See [`Node::add_zero`].
 pub struct Zero {}
 
+/// A marker for a specific node type. See [`Node::add_file`].
+pub struct File {}
+
 /// An audio node: a source, a sink, a filter, an effect, etc.
 pub struct Node<F> {
     id: u32,
@@ -106,6 +109,14 @@ impl<F> Node<F> {
     /// Add silent source producing zeros.
     pub fn add_zero(&self) -> Node<Zero> {
         let id = unsafe { bindings::add_zero(self.id) };
+        Node::new(id)
+    }
+
+    /// Play an audio file from ROM.
+    pub fn add_file(&self, path: &str) -> Node<File> {
+        let ptr = path.as_ptr() as u32;
+        let len = path.len() as u32;
+        let id = unsafe { bindings::add_file(self.id, ptr, len) };
         Node::new(id)
     }
 
@@ -322,6 +333,7 @@ mod bindings {
         pub(super) fn add_noise(parent_id: u32, seed: i32) -> u32;
         pub(super) fn add_empty(parent_id: u32) -> u32;
         pub(super) fn add_zero(parent_id: u32) -> u32;
+        pub(super) fn add_file(parent: u32, ptr: u32, len: u32) -> u32;
 
         // nodes
         pub(super) fn add_mix(parent_id: u32) -> u32;
