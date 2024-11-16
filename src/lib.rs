@@ -26,6 +26,7 @@ mod menu;
 mod misc;
 mod net;
 pub mod shapes;
+mod stats;
 #[cfg(feature = "sudo")]
 pub mod sudo;
 
@@ -35,12 +36,19 @@ pub use input::*;
 pub use menu::*;
 pub use misc::*;
 pub use net::*;
+pub use stats::*;
 
 #[cfg(feature = "alloc")]
 extern crate alloc;
 
 #[cfg(all(not(test), not(feature = "std"), target_family = "wasm"))]
 #[panic_handler]
-fn handle_panic(_: &core::panic::PanicInfo) -> ! {
+#[allow(unused_variables)]
+fn handle_panic(info: &core::panic::PanicInfo) -> ! {
+    #[cfg(all(feature = "alloc", feature = "panic_info"))]
+    if true {
+        let msg = alloc::format!("{info}");
+        log_error(&msg);
+    }
     core::arch::wasm32::unreachable()
 }
