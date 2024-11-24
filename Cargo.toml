@@ -13,15 +13,15 @@ categories = ["game-development", "no-std", "rendering", "api-bindings", "wasm"]
 [features]
 default = []
 # If disabled, the crate uses no_std.
-std = []
+std = ["alloc"]
 # Enable support for allocating functions, like load_file_buf.
 # Requires a global allocator to be configured.
 alloc = []
 # If enabled, add talc-powered global allocator.
-talc = ["dep:talc"]
+talc = ["dep:talc", "alloc"]
 # If app panics, show panic info (message, file name, line number).
 # Increases the binary size.
-panic_info = []
+panic_info = ["alloc"]
 # Enable support for functions requiring sudo.
 sudo = []
 # Enable support for casting graphic primitives to and from nalgebra crate primitives.
