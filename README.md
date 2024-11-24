@@ -18,7 +18,7 @@ cargo add firefly_rust
 * `std`: required if you don't build your project with `#![no_std]`. It will remove from the crate the custom panic handler to avoid conflicts with the standard library.
 * `alloc`: required if you want to use [`FileBuf`](https://docs.rs/firefly-rust/latest/firefly_rust/struct.FileBuf.html). Allows the crate to do memory allocations. If you enable `alloc` but not `std`, you have to also provide a global allocator. We recommend using [talc](https://github.com/SFBdragon/talc).
 * `sudo`: required if you want to use [`sudo`](https://docs.rs/firefly-rust/latest/firefly_rust/sudo/index.html) module. Enables privileged access to the device.
-* `nalgebra_support`: can be activated if you use [nalgebra](https://github.com/dimforge/nalgebra). Enables type conversion to and from nalgebra vectors.
+* `nalgebra`: can be activated if you use [nalgebra](https://github.com/dimforge/nalgebra). Enables type conversion to and from nalgebra vectors.
 
 ## License
 

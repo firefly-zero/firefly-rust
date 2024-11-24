@@ -1,6 +1,6 @@
 use super::Point;
 use core::ops::*;
-#[cfg(feature = "nalgebra_support")]
+#[cfg(feature = "nalgebra")]
 use nalgebra::{base::Scalar, Vector2};
 
 /// The screen width in pixels.
@@ -154,7 +154,7 @@ impl Index<usize> for Size {
         match idx {
             0 => &self.width,
             1 => &self.height,
-            _ => panic!("index out of bounds: the len is 2 but the index is {}", idx),
+            _ => panic!("index out of bounds: the len is 2 but the index is {idx}"),
         }
     }
 }
@@ -212,7 +212,7 @@ impl From<&Size> for (i32, i32) {
     }
 }
 
-#[cfg(feature = "nalgebra_support")]
+#[cfg(feature = "nalgebra")]
 impl<N> From<Vector2<N>> for Size
 where
     N: Into<i32> + Scalar + Copy,
@@ -225,7 +225,7 @@ where
     }
 }
 
-#[cfg(feature = "nalgebra_support")]
+#[cfg(feature = "nalgebra")]
 impl<N> From<&Vector2<N>> for Size
 where
     N: Into<i32> + Scalar + Copy,
