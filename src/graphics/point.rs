@@ -1,7 +1,7 @@
 use super::*;
 use core::num::TryFromIntError;
 use core::ops::*;
-#[cfg(feature = "nalgebra_support")]
+#[cfg(feature = "nalgebra")]
 use nalgebra::{base::Scalar, Vector2};
 
 /// A point on the screen.
@@ -176,7 +176,7 @@ impl Index<usize> for Point {
         match idx {
             0 => &self.x,
             1 => &self.y,
-            _ => panic!("index out of bounds: the len is 2 but the index is {}", idx),
+            _ => panic!("index out of bounds: the len is 2 but the index is {idx}"),
         }
     }
 }
@@ -295,7 +295,7 @@ impl TryFrom<&[u32; 2]> for Point {
     }
 }
 
-#[cfg(feature = "nalgebra_support")]
+#[cfg(feature = "nalgebra")]
 impl<N> From<Vector2<N>> for Point
 where
     N: Into<i32> + Scalar + Copy,
@@ -308,7 +308,7 @@ where
     }
 }
 
-#[cfg(feature = "nalgebra_support")]
+#[cfg(feature = "nalgebra")]
 impl<N> From<&Vector2<N>> for Point
 where
     N: Into<i32> + Scalar + Copy,
