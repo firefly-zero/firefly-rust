@@ -144,17 +144,27 @@ impl DPad {
 /// State of the buttons.
 #[derive(Default)]
 pub struct Buttons {
-    /// If `a` button is pressed.
-    pub a: bool,
-    /// If `b` button is pressed.
-    pub b: bool,
-    /// If `x` button is pressed.
-    pub x: bool,
-    /// If `y` button is pressed.
-    pub y: bool,
-    /// If `menu` button is pressed.
+    /// South. The bottom button, like A on the X-Box controller.
     ///
-    /// For singleplayer games, the button press is always intercepted by the runtime.
+    /// Typically used for confirmation, main action, jump, etc.
+    pub s: bool,
+
+    /// East. The right button, like B on the X-Box controller.
+    ///
+    /// Typically used for cancellation, going to previous screen, etc.
+    pub e: bool,
+
+    /// West. The left button, like X on the X-Box controller.
+    ///
+    /// Typically used for attack.
+    pub w: bool,
+
+    /// North. The top button, like Y on the X-Box controller.
+    ///
+    /// Typically used for a secondary action, like charged attack.
+    pub n: bool,
+
+    /// The menu button, almost always handled by the runtime.
     pub menu: bool,
 }
 
@@ -162,17 +172,17 @@ impl Buttons {
     /// Check if any button is pressed.
     #[must_use]
     pub fn any(&self) -> bool {
-        self.a || self.b || self.x || self.y || self.menu
+        self.s || self.e || self.w || self.n || self.menu
     }
 
     /// Given the old state, get buttons that were not pressed but are pressed now.
     #[must_use]
     pub fn just_pressed(&self, old: &Self) -> Self {
         Self {
-            a: self.a && !old.a,
-            b: self.b && !old.b,
-            x: self.x && !old.x,
-            y: self.y && !old.y,
+            s: self.s && !old.s,
+            e: self.e && !old.e,
+            w: self.w && !old.w,
+            n: self.n && !old.n,
             menu: self.menu && !old.menu,
         }
     }
@@ -181,10 +191,10 @@ impl Buttons {
     #[must_use]
     pub fn just_released(&self, old: &Self) -> Self {
         Self {
-            a: !self.a && old.a,
-            b: !self.b && old.b,
-            x: !self.x && old.x,
-            y: !self.y && old.y,
+            s: !self.s && old.s,
+            e: !self.e && old.e,
+            w: !self.w && old.w,
+            n: !self.n && old.n,
             menu: !self.menu && old.menu,
         }
     }
@@ -193,10 +203,10 @@ impl Buttons {
     #[must_use]
     pub fn held(&self, old: &Self) -> Self {
         Self {
-            a: self.a && old.a,
-            b: self.b && old.b,
-            x: self.x && old.x,
-            y: self.y && old.y,
+            s: self.s && old.s,
+            e: self.e && old.e,
+            w: self.w && old.w,
+            n: self.n && old.n,
             menu: self.menu && old.menu,
         }
     }
@@ -223,10 +233,10 @@ pub fn read_buttons(p: Peer) -> Buttons {
     let p = u32::from(p.0);
     let raw = unsafe { bindings::read_buttons(p) };
     Buttons {
-        a: has_bit_set(raw, 0),
-        b: has_bit_set(raw, 1),
-        x: has_bit_set(raw, 2),
-        y: has_bit_set(raw, 3),
+        s: has_bit_set(raw, 0),
+        e: has_bit_set(raw, 1),
+        w: has_bit_set(raw, 2),
+        n: has_bit_set(raw, 3),
         menu: has_bit_set(raw, 4),
     }
 }

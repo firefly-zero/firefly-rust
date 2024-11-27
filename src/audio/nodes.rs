@@ -313,12 +313,12 @@ impl Node<Clip> {
 
     /// Modulate the low cut amplitude.
     pub fn modulate_low<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+        m.modulate(self.id, 1);
     }
 
     /// Modulate the high cut amplitude.
     pub fn modulate_high<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+        m.modulate(self.id, 2);
     }
 }
 
