@@ -12,7 +12,6 @@ use alloc::vec;
 ///
 /// [`CanvasBuf`] is the same as [`Canvas`] but holds the ownership of the underlying slice.
 #[cfg(feature = "alloc")]
-#[expect(clippy::module_name_repetitions)]
 pub struct CanvasBuf {
     pub(crate) raw: Box<[u8]>,
 }

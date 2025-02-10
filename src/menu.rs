@@ -22,7 +22,6 @@ pub fn remove_menu_item(i: u8) {
 ///
 /// It will be opened before the next update.
 /// The current update and then render will proceed as planned.
-#[expect(clippy::module_name_repetitions)]
 pub fn open_menu() {
     unsafe {
         bindings::open_menu();

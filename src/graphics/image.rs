@@ -120,7 +120,6 @@ impl<'a> Image<'a> {
 }
 
 /// A subregion of an image. Constructed using [`Image::sub`].
-#[expect(clippy::module_name_repetitions)]
 pub struct SubImage<'a> {
     pub(crate) point: Point,
     pub(crate) size: Size,

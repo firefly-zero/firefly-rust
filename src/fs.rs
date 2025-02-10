@@ -47,7 +47,7 @@ pub struct File<'a> {
     pub(crate) raw: &'a [u8],
 }
 
-impl<'a> File<'a> {
+impl File<'_> {
     #[must_use]
     pub const fn data(&self) -> &[u8] {
         self.raw
@@ -77,7 +77,7 @@ pub fn get_file_size(name: &str) -> usize {
 /// Read the whole file with the given name into the given buffer.
 ///
 /// If the file size is not known in advance (and so the buffer has to be allocated
-/// dynamically), consider using [`load_buf`] instead.
+/// dynamically), consider using [`load_file_buf`] instead.
 pub fn load_file<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
     let path_ptr = name.as_ptr();
     let buf_ptr = buf.as_mut_ptr();
@@ -94,7 +94,7 @@ pub fn load_file<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
 
 /// Read the whole file with the given name.
 ///
-/// If you have a pre-allocated buffer of the right size, use [load] instead.
+/// If you have a pre-allocated buffer of the right size, use [`load_file`] instead.
 ///
 /// `None` is returned if the file does not exist.
 #[cfg(feature = "alloc")]

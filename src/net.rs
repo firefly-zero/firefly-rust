@@ -27,7 +27,7 @@ impl Peers {
     /// Check if the given peer is online.
     #[must_use]
     pub fn contains(&self, p: &Peer) -> bool {
-        self.0 >> p.0 & 1 != 0
+        (self.0 >> p.0) & 1 != 0
     }
 
     /// Get the number of peers online.
