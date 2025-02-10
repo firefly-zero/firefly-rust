@@ -45,7 +45,7 @@ pub fn add_progress(p: Peer, b: Badge, v: i16) -> Progress {
 
 /// Get the personal best of the player.
 #[must_use]
-pub fn get_score(p: Peer, b: Badge) -> i16 {
+pub fn get_score(p: Peer, b: Board) -> i16 {
     add_score(p, b, 0)
 }
 
@@ -57,7 +57,7 @@ pub fn get_score(p: Peer, b: Badge) -> i16 {
 /// If the Peer is [`Peer::COMBINED`], the score is added for every peer
 /// and the returned value is the lowest of their best scores.
 #[expect(clippy::must_use_candidate)]
-pub fn add_score(p: Peer, b: Badge, v: i16) -> i16 {
+pub fn add_score(p: Peer, b: Board, v: i16) -> i16 {
     let r = unsafe { bindings::add_score(u32::from(p.0), u32::from(b.0), i32::from(v)) };
     r as i16
 }
