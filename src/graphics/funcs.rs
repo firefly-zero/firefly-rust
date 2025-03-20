@@ -163,6 +163,15 @@ pub fn draw_text(t: &str, f: &Font, p: Point, c: Color) {
     }
 }
 
+/// Render a QR code for the given text.
+pub fn draw_qr(t: &str, p: Point, black: Color, white: Color) {
+    let ptr = t.as_ptr();
+    let len = t.len();
+    unsafe {
+        b::draw_qr(ptr as u32, len as u32, p.x, p.y, black.into(), white.into());
+    }
+}
+
 /// Render an image using the given colors.
 pub fn draw_image(i: &Image, p: Point) {
     let ptr = i.raw.as_ptr();

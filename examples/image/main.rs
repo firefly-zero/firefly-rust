@@ -6,6 +6,7 @@
 //! However, to keep the example simple, we instead enable std. It significantly
 //! increases the binary size but it's good enough for simple apps.
 
+#![allow(static_mut_refs)]
 #![no_main]
 use firefly_rust as ff;
 use std::cell::OnceCell;
