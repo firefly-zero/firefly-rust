@@ -88,6 +88,7 @@ extern {
         y: i32,
         color: i32,
     );
+    pub(crate) fn draw_qr(ptr: u32, len: u32, x: i32, y: i32, black: i32, white: i32);
     pub(crate) fn draw_sub_image(
         ptr: u32,
         len: u32,
