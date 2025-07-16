@@ -35,6 +35,26 @@ impl Default for Style {
 }
 
 impl Style {
+    /// Create a shape style filled with a color and without a stroke.
+    #[must_use]
+    pub const fn solid(c: Color) -> Self {
+        Self {
+            fill_color: c,
+            stroke_color: Color::None,
+            stroke_width: 0,
+        }
+    }
+
+    /// Create a shape style with a stroke and no fill color (transparent body).
+    #[must_use]
+    pub const fn outlined(c: Color, w: i32) -> Self {
+        Self {
+            fill_color: Color::None,
+            stroke_color: c,
+            stroke_width: w,
+        }
+    }
+
     /// Convert the style to a line style.
     ///
     /// [`LineStyle`] is the same as [Style] except it doesn't have a fill color.
@@ -54,6 +74,14 @@ pub struct LineStyle {
     pub color: Color,
     /// The line stroke width.
     pub width: i32,
+}
+
+impl LineStyle {
+    /// Create a new style for a line.
+    #[must_use]
+    pub const fn new(c: Color, w: i32) -> Self {
+        Self { color: c, width: w }
+    }
 }
 
 impl From<Style> for LineStyle {
