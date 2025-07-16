@@ -64,7 +64,7 @@ pub fn add_score(p: Peer, b: Board, v: i16) -> i16 {
 
 mod bindings {
     #[link(wasm_import_module = "stats")]
-    extern {
+    extern "C" {
         pub(crate) fn add_progress(peer_id: u32, badge_id: u32, val: i32) -> u32;
         pub(crate) fn add_score(peer_id: u32, board_id: u32, new_score: i32) -> i32;
     }

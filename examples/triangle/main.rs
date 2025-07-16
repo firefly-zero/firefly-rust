@@ -3,7 +3,7 @@
 use firefly_rust as ff;
 
 #[no_mangle]
-extern fn boot() {
+extern "C" fn boot() {
     ff::clear_screen(ff::Color::White);
     ff::draw_triangle(
         ff::Point { x: 60, y: 10 },

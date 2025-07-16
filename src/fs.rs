@@ -159,7 +159,7 @@ impl<'a> From<&'a FileBuf> for Font<'a> {
 
 mod bindings {
     #[link(wasm_import_module = "fs")]
-    extern {
+    extern "C" {
         pub(crate) fn get_file_size(path_ptr: u32, path_len: u32) -> u32;
         pub(crate) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(crate) fn dump_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;

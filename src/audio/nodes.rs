@@ -324,7 +324,7 @@ impl Node<Clip> {
 
 mod bindings {
     #[link(wasm_import_module = "audio")]
-    extern {
+    extern "C" {
         // generators
         pub(super) fn add_sine(parent_id: u32, freq: f32, phase: f32) -> u32;
         pub(super) fn add_square(parent_id: u32, freq: f32, phase: f32) -> u32;

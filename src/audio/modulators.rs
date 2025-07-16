@@ -73,7 +73,7 @@ impl Modulator for SineModulator {
 
 mod bindings {
     #[link(wasm_import_module = "audio")]
-    extern {
+    extern "C" {
         pub(super) fn mod_linear(
             node_id: u32,
             param: u32,

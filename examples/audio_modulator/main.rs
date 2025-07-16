@@ -3,7 +3,7 @@
 use firefly_rust::audio;
 
 #[no_mangle]
-extern fn boot() {
+extern "C" fn boot() {
     let gain = audio::OUT.add_gain(0.);
     gain.modulate(audio::LinearModulator {
         start: 0.,
