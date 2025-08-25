@@ -67,6 +67,16 @@ impl Style {
     }
 }
 
+impl From<LineStyle> for Style {
+    fn from(value: LineStyle) -> Self {
+        Self {
+            fill_color: Color::None,
+            stroke_color: value.color,
+            stroke_width: value.width,
+        }
+    }
+}
+
 /// The same as [Style] but without a fill color (only stroke color and width).
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct LineStyle {
@@ -186,5 +196,11 @@ impl From<Color> for i32 {
             Color::Gray => 15,
             Color::DarkGray => 16,
         }
+    }
+}
+
+impl From<Option<Color>> for Color {
+    fn from(value: Option<Color>) -> Self {
+        value.unwrap_or(Color::None)
     }
 }
