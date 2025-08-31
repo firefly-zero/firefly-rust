@@ -37,7 +37,7 @@ pub fn get_random() -> u32 {
 pub fn get_name_buf(p: Peer) -> alloc::string::String {
     let mut buf = [0u8; 16];
     let name = get_name(p, &mut buf);
-    name.to_owned()
+    alloc::string::String::from(name)
 }
 
 #[must_use]
