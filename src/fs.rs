@@ -35,6 +35,35 @@ impl FileBuf {
     pub fn as_image(&'_ self) -> Image<'_> {
         Image { raw: &self.raw }
     }
+
+    #[must_use]
+    pub fn into_vec(self) -> alloc::vec::Vec<u8> {
+        self.raw.into_vec()
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl From<FileBuf> for Box<[u8]> {
+    fn from(value: FileBuf) -> Self {
+        value.raw
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl From<FileBuf> for alloc::vec::Vec<u8> {
+    fn from(value: FileBuf) -> Self {
+        value.into_vec()
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl TryFrom<FileBuf> for alloc::string::String {
+    type Error = alloc::string::FromUtf8Error;
+
+    fn try_from(value: FileBuf) -> Result<Self, Self::Error> {
+        let v = value.into_vec();
+        alloc::string::String::from_utf8(v)
+    }
 }
 
 /// A file loaded from ROM or data dir into the memory.
