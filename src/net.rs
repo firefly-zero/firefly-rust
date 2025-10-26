@@ -2,8 +2,38 @@
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Peer(pub(crate) u8);
 
+/// Represents a specific device (or combination of such).
+///
+/// Used for reading and writing state of a device: input, stash, scores, etc.
 impl Peer {
+    /// A combination of all connected peers.
     pub const COMBINED: Self = Peer(0xFF);
+}
+
+impl Peer {
+    /// Dump [`Peer`] as a primitive type (u8).
+    ///
+    /// ## Safety
+    ///
+    /// See [`Peer::to_u8`].
+    #[must_use]
+    pub unsafe fn from_u8(p: u8) -> Self {
+        Self(p)
+    }
+
+    /// Restore [`Peer`] from a primitive type (u8).
+    ///
+    /// ## Safety
+    ///
+    /// For most applications, [`Peers`] and [`Peer`] types should be considered
+    /// opaque and agnostic of their internal representation.
+    /// However, some code interpreters written for Firefly in Rust
+    /// might need the ability to save values on virtual stack as primitive types,
+    /// and this is where this function comes in handy.
+    #[must_use]
+    pub unsafe fn into_u8(self) -> u8 {
+        self.0
+    }
 }
 
 /// The list of peers online.
@@ -15,6 +45,30 @@ impl Peer {
 pub struct Peers(pub(crate) u32);
 
 impl Peers {
+    /// Dump [`Peers`] as a primitive type (u32).
+    ///
+    /// ## Safety
+    ///
+    /// See [`Peers::to_u32`].
+    #[must_use]
+    pub unsafe fn from_u32(p: u32) -> Self {
+        Self(p)
+    }
+
+    /// Restore [`Peers`] from a primitive type (u32).
+    ///
+    /// ## Safety
+    ///
+    /// For most applications, [`Peers`] and [`Peer`] types should be considered
+    /// opaque and agnostic of their internal representation.
+    /// However, some code interpreters written for Firefly in Rust
+    /// might need the ability to save values on virtual stack as primitive types,
+    /// and this is where this function comes in handy.
+    #[must_use]
+    pub unsafe fn into_u32(self) -> u32 {
+        self.0
+    }
+
     /// Iterate over peers.
     #[must_use]
     pub fn iter(&self) -> PeersIter {

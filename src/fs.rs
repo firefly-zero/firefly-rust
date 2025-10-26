@@ -24,6 +24,12 @@ impl FileBuf {
         &self.raw
     }
 
+    /// Alias for [`FileBuf::data`].
+    #[must_use]
+    pub fn as_bytes(&self) -> &[u8] {
+        &self.raw
+    }
+
     /// Interpret the file as a font.
     #[must_use]
     pub fn as_font(&'_ self) -> Font<'_> {
@@ -76,17 +82,43 @@ pub struct File<'a> {
     pub(crate) raw: &'a [u8],
 }
 
-impl File<'_> {
+impl<'a> File<'a> {
+    /// Construct [`File`] from raw bytes.
+    ///
+    /// The main purpose of this function is to support convering [`File`]
+    /// to and from "basic" types, which might be required for implementing
+    /// some language interpreters (Lua, Python, etc) for Firefly in Rust.
+    ///
+    /// ## Safety
+    ///
+    /// This function allows bypassing type safety and constructing [`Image`]
+    /// and [`Font`] in runtime. Don't do that. Relying on internal representation
+    /// of file formats might make your app incompatible with future Firefly runtimes.
+    /// If you need to modify an in-memory image, use [`Canvas`] instead.
+    #[must_use]
+    pub unsafe fn from_bytes(self, b: &'a [u8]) -> Self {
+        Self { raw: b }
+    }
+
+    /// Access the raw data in the file.
     #[must_use]
     pub const fn data(&self) -> &[u8] {
         self.raw
     }
 
+    /// Alias for [`File::data`].
+    #[must_use]
+    pub fn as_bytes(&self) -> &[u8] {
+        self.raw
+    }
+
+    /// Interpret the file as a font.
     #[must_use]
     pub const fn as_font(&'_ self) -> Font<'_> {
         Font { raw: self.raw }
     }
 
+    /// Interpret the file as an image.
     #[must_use]
     pub const fn as_image(&'_ self) -> Image<'_> {
         Image { raw: self.raw }
