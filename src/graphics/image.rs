@@ -54,8 +54,7 @@ impl<'a> Image<'a> {
     /// The color used for transparency. If no transparency, returns [`Color::None`].
     #[must_use]
     pub fn transparency(&self) -> Color {
-        let c = usize::from(self.raw[4]) + 1;
-        c.try_into().unwrap_or(Color::None)
+        Color::from(self.raw[4] + 1)
     }
 
     // pub fn set_transparency(&mut self, c: Color) {
@@ -114,8 +113,7 @@ impl<'a> Image<'a> {
         if byte_val == transp {
             return Color::None;
         }
-        let color_val = usize::from(byte_val + 1);
-        color_val.try_into().unwrap_or(Color::None)
+        Color::from(byte_val + 1)
     }
 }
 

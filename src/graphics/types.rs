@@ -9,6 +9,14 @@ pub struct RGB {
     pub b: u8,
 }
 
+impl RGB {
+    /// Create a new RGB color.
+    #[must_use]
+    pub fn new(r: u8, g: u8, b: u8) -> Self {
+        Self { r, g, b }
+    }
+}
+
 /// Style of a shape.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub struct Style {
@@ -148,29 +156,32 @@ impl Default for Color {
     }
 }
 
-impl TryFrom<usize> for Color {
-    type Error = ();
+impl From<u8> for Color {
+    fn from(value: u8) -> Self {
+        Self::from(i32::from(value))
+    }
+}
 
-    fn try_from(value: usize) -> Result<Self, Self::Error> {
+impl From<i32> for Color {
+    fn from(value: i32) -> Self {
         match value {
-            0 => Ok(Color::None),
-            1 => Ok(Color::Black),
-            2 => Ok(Color::Purple),
-            3 => Ok(Color::Red),
-            4 => Ok(Color::Orange),
-            5 => Ok(Color::Yellow),
-            6 => Ok(Color::LightGreen),
-            7 => Ok(Color::Green),
-            8 => Ok(Color::DarkGreen),
-            9 => Ok(Color::DarkBlue),
-            10 => Ok(Color::Blue),
-            11 => Ok(Color::LightBlue),
-            12 => Ok(Color::Cyan),
-            13 => Ok(Color::White),
-            14 => Ok(Color::LightGray),
-            15 => Ok(Color::Gray),
-            16 => Ok(Color::DarkGray),
-            _ => Err(()),
+            1 => Color::Black,
+            2 => Color::Purple,
+            3 => Color::Red,
+            4 => Color::Orange,
+            5 => Color::Yellow,
+            6 => Color::LightGreen,
+            7 => Color::Green,
+            8 => Color::DarkGreen,
+            9 => Color::DarkBlue,
+            10 => Color::Blue,
+            11 => Color::LightBlue,
+            12 => Color::Cyan,
+            13 => Color::White,
+            14 => Color::LightGray,
+            15 => Color::Gray,
+            16 => Color::DarkGray,
+            _ => Color::None,
         }
     }
 }

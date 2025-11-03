@@ -96,7 +96,7 @@ impl<'a> File<'a> {
     /// of file formats might make your app incompatible with future Firefly runtimes.
     /// If you need to modify an in-memory image, use [`Canvas`] instead.
     #[must_use]
-    pub unsafe fn from_bytes(self, b: &'a [u8]) -> Self {
+    pub unsafe fn from_bytes(b: &'a [u8]) -> Self {
         Self { raw: b }
     }
 
