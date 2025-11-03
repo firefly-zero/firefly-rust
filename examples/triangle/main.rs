@@ -2,7 +2,7 @@
 #![no_main]
 use firefly_rust as ff;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn boot() {
     ff::clear_screen(ff::Color::White);
     ff::draw_triangle(

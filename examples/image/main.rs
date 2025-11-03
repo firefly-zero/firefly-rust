@@ -13,7 +13,7 @@ use std::cell::OnceCell;
 
 static mut IMAGE: OnceCell<ff::FileBuf> = OnceCell::new();
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn boot() {
     let file = ff::load_file_buf("img").unwrap();
     unsafe {
@@ -21,7 +21,7 @@ extern "C" fn boot() {
     }
 }
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn update() {
     ff::clear_screen(ff::Color::White);
     let image = unsafe { IMAGE.get().unwrap() };

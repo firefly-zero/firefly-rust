@@ -2,7 +2,7 @@
 #![no_main]
 use firefly_rust::audio;
 
-#[no_mangle]
+#[unsafe(no_mangle)]
 extern "C" fn boot() {
     let gain = audio::OUT.add_gain(0.);
     gain.modulate(audio::LinearModulator {
