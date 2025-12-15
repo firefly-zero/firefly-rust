@@ -112,9 +112,10 @@ impl From<Style> for LineStyle {
 }
 
 /// A pointer to a color in the color palette.
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub enum Color {
     /// No color (100% transparency).
+    #[default]
     None,
     /// Black color: #1A1C2C.
     Black,
@@ -148,12 +149,6 @@ pub enum Color {
     Gray,
     /// Dark gray color: #333C57.
     DarkGray,
-}
-
-impl Default for Color {
-    fn default() -> Self {
-        Self::None
-    }
 }
 
 impl From<u8> for Color {

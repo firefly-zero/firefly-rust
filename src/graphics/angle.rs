@@ -42,7 +42,7 @@ impl Angle {
         Self(math::rem_euclid(self.0, TAU))
     }
 
-    /// Get the angle value in degrees where 360.0 is the full circle..
+    /// Get the angle value in degrees where 360.0 is the full circle.
     #[must_use]
     pub fn to_degrees(self) -> f32 {
         180. * self.0 / PI

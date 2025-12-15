@@ -35,6 +35,18 @@ impl<'a> From<&'a CanvasBuf> for Image<'a> {
 }
 
 impl<'a> Image<'a> {
+    /// Reinterpret raw bytes as an image.
+    ///
+    /// # Safety
+    ///
+    /// Using this function requires a good understanding of the internal
+    /// Firefly Zero binary image format. In 99% cases, you should not construct
+    /// a raw image but instead load it from a [`File`] or generate using [`Canvas`].
+    #[must_use]
+    pub const unsafe fn from_bytes(raw: &'a [u8]) -> Self {
+        Self { raw }
+    }
+
     /// Get a rectangle subregion of the image.
     #[must_use]
     pub const fn sub(&self, p: Point, s: Size) -> SubImage<'a> {

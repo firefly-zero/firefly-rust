@@ -15,7 +15,7 @@ pub fn set_color(c: Color, v: RGB) {
     }
 }
 
-/// Set a single point (1 pixel is scaling is 1) on the frame.
+/// Set a single point (1 pixel if scaling is 1) on the frame.
 pub fn draw_point(p: Point, c: Color) {
     unsafe {
         b::draw_point(p.x, p.y, c.into());
