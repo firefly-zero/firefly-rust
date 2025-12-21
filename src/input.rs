@@ -107,6 +107,11 @@ impl From<Pad> for DPad {
 }
 
 impl DPad {
+    #[must_use]
+    pub fn any(&self) -> bool {
+        self.left || self.right || self.up || self.down
+    }
+
     /// Given the old state, get directions that were not pressed but are pressed now.
     #[must_use]
     pub fn just_pressed(&self, old: &Self) -> Self {
