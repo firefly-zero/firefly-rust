@@ -5,7 +5,7 @@
 //! [micromath]: https://github.com/tarcieri/micromath
 //! [nalgebra]: https://github.com/dimforge/nalgebra
 
-use core::f32::consts::{FRAC_1_PI, FRAC_PI_2, PI};
+use core::f32::consts::{FRAC_1_PI, PI};
 
 const SIGN_MASK: u32 = 0b1000_0000_0000_0000_0000_0000_0000_0000;
 
@@ -75,34 +75,40 @@ pub fn rem_euclid(lhs: f32, rhs: f32) -> f32 {
     }
 }
 
-/// Approximates `atan(x)` approximation in radians with a maximum error of
-/// `0.002`.
-///
-/// Returns [`f32::NAN`] if the number is [`f32::NAN`].
 #[must_use]
-pub fn atan(x: f32) -> f32 {
-    // https://github.com/tarcieri/micromath/blob/main/src/float/atan.rs
-    FRAC_PI_2 * atan_norm(x)
+pub fn atan2(lhs: f32, rhs: f32) -> f32 {
+    // https://github.com/tarcieri/micromath/blob/main/src/float/atan2.rs
+    let n = atan2_norm(lhs, rhs);
+    PI / 2.0 * if n > 2.0 { n - 4.0 } else { n }
 }
 
-/// Approximates `atan(x)` normalized to the `[−1,1]` range with a maximum
+/// Approximates `atan2(y,x)` normalized to the `[0, 4)` range with a maximum
 /// error of `0.1620` degrees.
 #[must_use]
-pub fn atan_norm(x: f32) -> f32 {
-    // https://github.com/tarcieri/micromath/blob/main/src/float/atan.rs
+#[expect(clippy::similar_names)]
+pub(crate) fn atan2_norm(lhs: f32, rhs: f32) -> f32 {
     const SIGN_MASK: u32 = 0x8000_0000;
     const B: f32 = 0.596_227;
 
-    // Extract the sign bit
+    let y = lhs;
+    let x = rhs;
+
+    // Extract sign bits from floating point values
     let ux_s = SIGN_MASK & x.to_bits();
+    let uy_s = SIGN_MASK & y.to_bits();
 
-    // Calculate the arctangent in the first quadrant
-    let bx_a = abs(B * x);
-    let n = bx_a + x * x;
-    let atan_1q = n / (1.0 + bx_a + n);
+    // Determine quadrant offset
+    #[expect(clippy::cast_precision_loss)]
+    let q = ((!ux_s & uy_s) >> 29 | ux_s >> 30) as f32;
 
-    // Restore the sign bit and convert to float
-    f32::from_bits(ux_s | atan_1q.to_bits())
+    // Calculate arctangent in the first quadrant
+    let bxy_a = (B * x * y).abs();
+    let n = bxy_a + y * y;
+    let atan_1q = n / (x * x + bxy_a + n);
+
+    // Translate it to the proper quadrant
+    let uatan_2q = (ux_s ^ uy_s) | atan_1q.to_bits();
+    q + f32::from_bits(uatan_2q)
 }
 
 #[cfg(test)]

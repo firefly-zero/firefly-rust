@@ -43,7 +43,7 @@ impl Pad {
     #[must_use]
     pub fn azimuth(self) -> Angle {
         #[expect(clippy::cast_precision_loss)]
-        let r = math::atan(self.y as f32 / self.x as f32);
+        let r = math::atan2(self.y as f32, self.x as f32);
         Angle::from_radians(r)
     }
 }
