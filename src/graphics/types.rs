@@ -12,7 +12,7 @@ pub struct RGB {
 impl RGB {
     /// Create a new RGB color.
     #[must_use]
-    pub fn new(r: u8, g: u8, b: u8) -> Self {
+    pub const fn new(r: u8, g: u8, b: u8) -> Self {
         Self { r, g, b }
     }
 }
@@ -151,15 +151,13 @@ pub enum Color {
     DarkGray,
 }
 
-impl From<u8> for Color {
-    fn from(value: u8) -> Self {
-        Self::from(i32::from(value))
-    }
-}
-
-impl From<i32> for Color {
-    fn from(value: i32) -> Self {
-        match value {
+impl Color {
+    /// Convert a number to a color.
+    ///
+    /// Unlike [`From::from`], this constructor can be used in the `const` context.
+    #[must_use]
+    pub const fn new(v: u8) -> Self {
+        match v {
             1 => Color::Black,
             2 => Color::Purple,
             3 => Color::Red,
@@ -181,7 +179,25 @@ impl From<i32> for Color {
     }
 }
 
+impl From<u8> for Color {
+    fn from(value: u8) -> Self {
+        Self::new(value)
+    }
+}
+
 impl From<Color> for i32 {
+    fn from(value: Color) -> Self {
+        i32::from(u8::from(value))
+    }
+}
+
+impl From<Color> for usize {
+    fn from(value: Color) -> Self {
+        usize::from(u8::from(value))
+    }
+}
+
+impl From<Color> for u8 {
     fn from(value: Color) -> Self {
         match value {
             Color::None => 0,
