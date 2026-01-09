@@ -2,12 +2,17 @@
 
 use crate::*;
 
-const DPAD_THRESHOLD: i32 = 100;
+const DPAD4_THRESHOLD: i32 = 100;
+const DPAD8_THRESHOLD: i32 = 100;
 
 /// A finger position on the touch pad.
 ///
 /// Both x and y are somewhere the range between -1000 and 1000 (both ends included).
 /// The 1000 x is on the right, the 1000 y is on the top.
+///
+/// Note that the y coordinate is flipped compared to the screen coordinates.
+/// While the display coordinates follow the text reading direction,
+/// the touchpad coordinates follow the directions used in geometry.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 pub struct Pad {
     pub x: i32,
@@ -15,17 +20,41 @@ pub struct Pad {
 }
 
 impl Pad {
+    /// The top-right corner of the pad's bounding box.
     pub const MAX: Pad = Pad { x: 1000, y: 1000 };
+    /// The bottom-left corner of the pad's bounding box.
     pub const MIN: Pad = Pad { x: -1000, y: -1000 };
 
-    /// Represent the pad values as a directional pad.
+    /// Represent the pad values as an 4-directional pad.
+    ///
+    /// Use [`Pad::as_dpad8`] instead if you want to also allow diagonal movement.
     #[must_use]
-    pub fn as_dpad(&self) -> DPad {
-        DPad {
-            left: self.x <= -DPAD_THRESHOLD,
-            right: self.x >= DPAD_THRESHOLD,
-            down: self.y <= -DPAD_THRESHOLD,
-            up: self.y >= DPAD_THRESHOLD,
+    pub fn as_dpad4(&self) -> DPad4 {
+        let x = self.x;
+        let y = self.y;
+        if y > DPAD4_THRESHOLD && y > x.abs() {
+            DPad4::Up
+        } else if y < -DPAD4_THRESHOLD && -y > x.abs() {
+            DPad4::Down
+        } else if x > DPAD4_THRESHOLD && x > y.abs() {
+            DPad4::Right
+        } else if x < -DPAD4_THRESHOLD && -x > y.abs() {
+            DPad4::Left
+        } else {
+            DPad4::None
+        }
+    }
+
+    /// Represent the pad values as an 8-directional pad.
+    ///
+    /// Use [`Pad::as_dpad4`] instead if you don't want to allow diagonal movement.
+    #[must_use]
+    pub fn as_dpad8(&self) -> DPad8 {
+        DPad8 {
+            left: self.x <= -DPAD8_THRESHOLD,
+            right: self.x >= DPAD8_THRESHOLD,
+            down: self.y <= -DPAD8_THRESHOLD,
+            up: self.y >= DPAD8_THRESHOLD,
         }
     }
 
@@ -84,29 +113,38 @@ impl From<Size> for Pad {
     }
 }
 
-/// DPad-like representation of the [`Pad`].
+/// 8-directional DPad-like representation of the [`Pad`].
 ///
-/// Constructed with [`Pad::as_dpad`]. Useful for simple games and ports.
+/// Constructed with [`Pad::as_dpad8`]. Useful for simple games and ports.
 /// The middle of the pad is a "dead zone" pressing which will not activate any direction.
+///
+/// Implements all the same methods as [`DPad4`].
 ///
 /// Invariant: it's not possible for opposite directions (left and right, or down and up)
 /// to be active at the same time. However, it's possible for heighboring directions
 /// (like up and right) to be active at the same time if the player presses a diagonal.
+///
+/// For completness, here is the full list of possible states:
+///
+/// * right
+/// * right and up
+/// * up
+/// * left and up
+/// * left
+/// * left and down
+/// * down
+/// * right and down
+/// * none
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
-pub struct DPad {
+pub struct DPad8 {
     pub left: bool,
     pub right: bool,
     pub up: bool,
     pub down: bool,
 }
 
-impl From<Pad> for DPad {
-    fn from(value: Pad) -> Self {
-        value.as_dpad()
-    }
-}
-
-impl DPad {
+impl DPad8 {
+    /// Check if any button is pressed.
     #[must_use]
     pub fn any(&self) -> bool {
         self.left || self.right || self.up || self.down
@@ -143,6 +181,98 @@ impl DPad {
             up: self.up && old.up,
             down: self.down && old.down,
         }
+    }
+}
+
+impl From<Pad> for DPad8 {
+    fn from(value: Pad) -> Self {
+        value.as_dpad8()
+    }
+}
+
+impl From<Option<DPad8>> for DPad8 {
+    fn from(value: Option<DPad8>) -> Self {
+        value.unwrap_or_default()
+    }
+}
+
+impl From<DPad4> for DPad8 {
+    fn from(value: DPad4) -> Self {
+        let mut pad = Self::default();
+        match value {
+            DPad4::None => {}
+            DPad4::Left => pad.left = true,
+            DPad4::Right => pad.right = true,
+            DPad4::Up => pad.up = true,
+            DPad4::Down => pad.down = true,
+        }
+        pad
+    }
+}
+
+/// 4-directional DPad-like representation of the [`Pad`].
+///
+/// Constructed with [`Pad::as_dpad4`]. Useful for simple games and ports.
+/// The middle of the pad is a "dead zone" pressing which will not activate any direction.
+///
+/// Implements all the same methods as [`DPad8`].
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
+pub enum DPad4 {
+    #[default]
+    None,
+    Left,
+    Right,
+    Up,
+    Down,
+}
+
+impl DPad4 {
+    /// Check if any button is pressed.
+    #[must_use]
+    pub fn any(self) -> bool {
+        self != Self::None
+    }
+
+    /// Given the old state, get directions that were not pressed but are pressed now.
+    #[must_use]
+    pub fn just_pressed(self, old: Self) -> Self {
+        if self == old {
+            Self::None
+        } else {
+            self
+        }
+    }
+
+    /// Given the old state, get directions that were pressed but aren't pressed now.
+    #[must_use]
+    pub fn just_released(self, old: Self) -> Self {
+        if self == old {
+            Self::None
+        } else {
+            old
+        }
+    }
+
+    /// Given the old state, get directions that were pressed and are still pressed now.
+    #[must_use]
+    pub fn held(self, old: Self) -> Self {
+        if self == old {
+            self
+        } else {
+            Self::None
+        }
+    }
+}
+
+impl From<Pad> for DPad4 {
+    fn from(value: Pad) -> Self {
+        value.as_dpad4()
+    }
+}
+
+impl From<Option<DPad4>> for DPad4 {
+    fn from(value: Option<DPad4>) -> Self {
+        value.unwrap_or_default()
     }
 }
 
