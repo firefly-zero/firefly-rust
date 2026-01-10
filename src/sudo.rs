@@ -147,7 +147,7 @@ pub fn load_file_buf(path: &str) -> Option<FileBuf> {
 /// Low-level bindings for host-defined "sudo" module.
 mod b {
     #[link(wasm_import_module = "sudo")]
-    extern "C" {
+    unsafe extern "C" {
         pub(super) fn list_dirs_buf_size(path_ptr: u32, path_len: u32) -> u32;
         pub(super) fn list_dirs(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(super) fn run_app(author_ptr: u32, author_len: u32, app_ptr: u32, app_len: u32);

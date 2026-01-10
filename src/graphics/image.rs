@@ -117,7 +117,7 @@ impl<'a> Image<'a> {
         }
         let byte_idx = usize::from(5 + p / 2);
         let mut byte_val = self.raw[byte_idx];
-        if p % 2 == 0 {
+        if p.is_multiple_of(2) {
             byte_val >>= 4;
         }
         byte_val &= 0b1111;

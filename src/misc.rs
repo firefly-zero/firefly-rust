@@ -55,7 +55,7 @@ pub fn quit() {
 
 mod bindings {
     #[link(wasm_import_module = "misc")]
-    extern "C" {
+    unsafe extern "C" {
         pub(crate) fn log_debug(ptr: u32, len: u32);
         pub(crate) fn log_error(ptr: u32, len: u32);
         pub(crate) fn set_seed(seed: u32);

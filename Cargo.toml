@@ -1,8 +1,8 @@
 [package]
 name = "firefly-rust"
 version = "0.10.0"
-edition = "2021"
-rust-version = "1.81.0"
+edition = "2024"
+rust-version = "1.89.0"
 authors = ["Firefly Zero team"]
 description = "Rust SDK for making Firefly Zero games"
 repository = "https://github.com/firefly-zero/firefly-rust"

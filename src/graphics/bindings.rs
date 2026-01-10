@@ -1,5 +1,5 @@
 #[link(wasm_import_module = "graphics")]
-extern "C" {
+unsafe extern "C" {
     pub(crate) fn clear_screen(color: i32);
     pub(crate) fn set_color(index: i32, r: i32, g: i32, b: i32);
     pub(crate) fn draw_point(x: i32, y: i32, color: i32);

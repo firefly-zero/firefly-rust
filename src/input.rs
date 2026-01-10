@@ -236,31 +236,19 @@ impl DPad4 {
     /// Given the old state, get directions that were not pressed but are pressed now.
     #[must_use]
     pub fn just_pressed(self, old: Self) -> Self {
-        if self == old {
-            Self::None
-        } else {
-            self
-        }
+        if self == old { Self::None } else { self }
     }
 
     /// Given the old state, get directions that were pressed but aren't pressed now.
     #[must_use]
     pub fn just_released(self, old: Self) -> Self {
-        if self == old {
-            Self::None
-        } else {
-            old
-        }
+        if self == old { Self::None } else { old }
     }
 
     /// Given the old state, get directions that were pressed and are still pressed now.
     #[must_use]
     pub fn held(self, old: Self) -> Self {
-        if self == old {
-            self
-        } else {
-            Self::None
-        }
+        if self == old { self } else { Self::None }
     }
 }
 
@@ -384,7 +372,7 @@ fn has_bit_set(val: u32, bit: usize) -> bool {
 
 mod bindings {
     #[link(wasm_import_module = "input")]
-    extern "C" {
+    unsafe extern "C" {
         pub(crate) fn read_pad(peer: u32) -> u32;
         pub(crate) fn read_buttons(peer: u32) -> u32;
     }
