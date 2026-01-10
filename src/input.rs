@@ -2,8 +2,8 @@
 
 use crate::*;
 
-const DPAD4_THRESHOLD: i32 = 100;
-const DPAD8_THRESHOLD: i32 = 100;
+const DPAD4_THRESHOLD: i32 = 300;
+const DPAD8_THRESHOLD: i32 = 300;
 
 /// A finger position on the touch pad.
 ///
@@ -124,7 +124,7 @@ impl From<Size> for Pad {
 /// to be active at the same time. However, it's possible for heighboring directions
 /// (like up and right) to be active at the same time if the player presses a diagonal.
 ///
-/// For completness, here is the full list of possible states:
+/// For completeness, here is the full list of possible states:
 ///
 /// * right
 /// * right and up
@@ -144,7 +144,7 @@ pub struct DPad8 {
 }
 
 impl DPad8 {
-    /// Check if any button is pressed.
+    /// Check if any direction is pressed.
     #[must_use]
     pub fn any(&self) -> bool {
         self.left || self.right || self.up || self.down
@@ -227,7 +227,7 @@ pub enum DPad4 {
 }
 
 impl DPad4 {
-    /// Check if any button is pressed.
+    /// Check if any direction is pressed.
     #[must_use]
     pub fn any(self) -> bool {
         self != Self::None
