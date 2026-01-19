@@ -71,6 +71,9 @@ impl Pad {
     /// [polar coordinate]: https://en.wikipedia.org/wiki/Polar_coordinate_system
     #[must_use]
     pub fn azimuth(self) -> Angle {
+        if self.x == 0 && self.y == 0 {
+            return Angle::ZERO;
+        }
         #[expect(clippy::cast_precision_loss)]
         let r = math::atan2(self.y as f32, self.x as f32);
         Angle::from_radians(r)
