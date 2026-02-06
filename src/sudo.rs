@@ -24,6 +24,17 @@ impl DirBuf {
         }
     }
 
+    /// List all files in the given directory.
+    #[must_use]
+    pub fn list_files(name: &str) -> Self {
+        let size = Dir::list_files_buf_size(name);
+        let mut buf = vec![0; size];
+        Dir::list_files(name, &mut buf);
+        Self {
+            raw: buf.into_boxed_slice(),
+        }
+    }
+
     /// Iterate over all loaded entries in the directory.
     #[must_use]
     pub fn iter(&self) -> DirIter<'_> {
@@ -43,11 +54,32 @@ impl<'a> Dir<'a> {
         size as usize
     }
 
+    #[must_use]
+    pub fn list_files_buf_size(name: &str) -> usize {
+        let path_ptr = name.as_ptr();
+        let size = unsafe { b::list_files_buf_size(path_ptr as u32, name.len() as u32) };
+        size as usize
+    }
+
     pub fn list_dirs(name: &str, buf: &'a mut [u8]) -> Self {
         let path_ptr = name.as_ptr();
         let buf_ptr = buf.as_mut_ptr();
         unsafe {
             b::list_dirs(
+                path_ptr as u32,
+                name.len() as u32,
+                buf_ptr as u32,
+                buf.len() as u32,
+            );
+        }
+        Self { raw: buf }
+    }
+
+    pub fn list_files(name: &str, buf: &'a mut [u8]) -> Self {
+        let path_ptr = name.as_ptr();
+        let buf_ptr = buf.as_mut_ptr();
+        unsafe {
+            b::list_files(
                 path_ptr as u32,
                 name.len() as u32,
                 buf_ptr as u32,
@@ -150,6 +182,8 @@ mod b {
     unsafe extern "C" {
         pub(super) fn list_dirs_buf_size(path_ptr: u32, path_len: u32) -> u32;
         pub(super) fn list_dirs(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
+        pub(super) fn list_files_buf_size(path_ptr: u32, path_len: u32) -> u32;
+        pub(super) fn list_files(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(super) fn run_app(author_ptr: u32, author_len: u32, app_ptr: u32, app_len: u32);
         pub(super) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(super) fn get_file_size(path_ptr: u32, path_len: u32) -> u32;
