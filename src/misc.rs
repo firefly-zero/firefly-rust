@@ -1,5 +1,104 @@
 use crate::net::Peer;
 
+#[derive(PartialEq)]
+pub enum Language {
+    /// en 🇬🇧 💂
+    English,
+    /// nl 🇳🇱 🧀
+    Dutch,
+    /// fr 🇫🇷 🥐
+    French,
+    /// de 🇩🇪 🥨
+    German,
+    /// it 🇮🇹 🍕
+    Italian,
+    /// pl 🇵🇱 🥟
+    Polish,
+    /// ru 🇷🇺 🪆
+    Russian,
+    // sp 🇪🇸 🐂
+    Spanish,
+    // tk 🇹🇷 🕌
+    Turkish,
+    /// ua 🇺🇦 ✊
+    Ukrainian,
+    /// tp 🇨🇦 🙂
+    TokiPona,
+}
+
+impl Language {
+    #[must_use]
+    pub fn from_code(b: [u8; 2]) -> Option<Self> {
+        let code = match b {
+            [b'e', b'n'] => Self::English,
+            [b'n', b'l'] => Self::Dutch,
+            [b'f', b'r'] => Self::French,
+            [b'd', b'e'] => Self::German,
+            [b'i', b't'] => Self::Italian,
+            [b'p', b'o'] => Self::Polish,
+            [b'r', b'u'] => Self::Russian,
+            [b's', b'p'] => Self::Spanish,
+            [b't', b'p'] => Self::TokiPona,
+            [b't', b'k'] => Self::Turkish,
+            [b'u', b'a'] => Self::Ukrainian,
+            _ => return None,
+        };
+        Some(code)
+    }
+
+    #[must_use]
+    pub fn code_array(&self) -> [u8; 2] {
+        match self {
+            Self::English => [b'e', b'n'],
+            Self::Dutch => [b'n', b'l'],
+            Self::French => [b'f', b'r'],
+            Self::German => [b'd', b'e'],
+            Self::Italian => [b'i', b't'],
+            Self::Polish => [b'p', b'o'],
+            Self::Russian => [b'r', b'u'],
+            Self::Spanish => [b's', b'p'],
+            Self::TokiPona => [b't', b'p'],
+            Self::Turkish => [b't', b'k'],
+            Self::Ukrainian => [b'u', b'a'],
+        }
+    }
+
+    #[must_use]
+    pub fn code_str(&self) -> &'static str {
+        match self {
+            Self::English => "en",
+            Self::Dutch => "nl",
+            Self::French => "fr",
+            Self::German => "de",
+            Self::Italian => "it",
+            Self::Polish => "po",
+            Self::Russian => "ru",
+            Self::Spanish => "sp",
+            Self::TokiPona => "tp",
+            Self::Turkish => "tk",
+            Self::Ukrainian => "ua",
+        }
+    }
+
+    /// ISO 8859 encoding slug for the language.
+    ///
+    /// Useful for dynamically loading the correct font for the given language.
+    #[must_use]
+    pub fn encoding(&self) -> &'static str {
+        match self {
+            // Just like English, Dutch has very little non-ASCII characters
+            // which can be avoided in translations to make it possible to stick
+            // to the smaller fonts.
+            Self::English | Self::Dutch | Self::TokiPona => "ascii",
+            Self::Italian | Self::Spanish => "iso_8859_1",
+            Self::German | Self::French => "iso_8859_2",
+            Self::Polish => "iso_8859_3",
+            Self::Russian | Self::Ukrainian => "iso_8859_5",
+            Self::Turkish => "iso_8859_9",
+        }
+    }
+}
+
 /// Log a debug message.
 pub fn log_debug(t: &str) {
     let ptr = t.as_ptr() as u32;
