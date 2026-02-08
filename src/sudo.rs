@@ -176,6 +176,24 @@ pub fn load_file_buf(path: &str) -> Option<FileBuf> {
     })
 }
 
+pub fn dump_file(path: &str, buf: &mut [u8]) {
+    let path_ptr = path.as_ptr() as u32;
+    let path_len = path.len() as u32;
+    let buf_ptr = buf.as_mut_ptr() as u32;
+    let buf_len = buf.len() as u32;
+    unsafe {
+        b::dump_file(path_ptr, path_len, buf_ptr, buf_len);
+    }
+}
+
+pub fn remove_file(path: &str) {
+    let path_ptr = path.as_ptr() as u32;
+    let path_len = path.len() as u32;
+    unsafe {
+        b::remove_file(path_ptr, path_len);
+    }
+}
+
 /// Low-level bindings for host-defined "sudo" module.
 mod b {
     #[link(wasm_import_module = "sudo")]
@@ -185,7 +203,9 @@ mod b {
         pub(super) fn list_files_buf_size(path_ptr: u32, path_len: u32) -> u32;
         pub(super) fn list_files(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(super) fn run_app(author_ptr: u32, author_len: u32, app_ptr: u32, app_len: u32);
-        pub(super) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(super) fn get_file_size(path_ptr: u32, path_len: u32) -> u32;
+        pub(super) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
+        pub(super) fn dump_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
+        pub(super) fn remove_file(path_ptr: u32, path_len: u32);
     }
 }
