@@ -176,10 +176,10 @@ pub fn load_file_buf(path: &str) -> Option<FileBuf> {
     })
 }
 
-pub fn dump_file(path: &str, buf: &mut [u8]) {
+pub fn dump_file(path: &str, buf: &[u8]) {
     let path_ptr = path.as_ptr() as u32;
     let path_len = path.len() as u32;
-    let buf_ptr = buf.as_mut_ptr() as u32;
+    let buf_ptr = buf.as_ptr() as u32;
     let buf_len = buf.len() as u32;
     unsafe {
         b::dump_file(path_ptr, path_len, buf_ptr, buf_len);
