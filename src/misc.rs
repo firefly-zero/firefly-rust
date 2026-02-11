@@ -228,10 +228,10 @@ pub fn get_settings(p: Peer) -> Settings {
     let theme = raw >> 32;
     let theme = Theme {
         id: theme as u8,
-        primary: Color::from((raw >> 20) as u8),
-        secondary: Color::from((raw >> 16) as u8),
-        accent: Color::from((raw >> 12) as u8),
-        bg: Color::from((raw >> 8) as u8),
+        primary: parse_color(theme >> 20),
+        secondary: parse_color(theme >> 16),
+        accent: parse_color(theme >> 12),
+        bg: parse_color(theme >> 8),
     };
     Settings {
         theme,
@@ -241,6 +241,10 @@ pub fn get_settings(p: Peer) -> Settings {
         contrast: (flags & 0b0100) != 0,
         easter_eggs: (flags & 0b1000) != 0,
     }
+}
+
+fn parse_color(c: u64) -> Color {
+    Color::from((c as u8 & 0xf) + 1)
 }
 
 /// Exit the app after the current update is finished.
