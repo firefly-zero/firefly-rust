@@ -1,8 +1,9 @@
-use crate::net::Peer;
+use crate::*;
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Eq, Copy, Clone, Debug, Default)]
 pub enum Language {
     /// en 🇬🇧 💂
+    #[default]
     English,
     /// nl 🇳🇱 🧀
     Dutch,
@@ -92,9 +93,35 @@ impl Language {
             Self::English | Self::Dutch | Self::TokiPona => "ascii",
             Self::Italian | Self::Spanish => "iso_8859_1",
             Self::German | Self::French => "iso_8859_2",
-            Self::Polish => "iso_8859_3",
+            Self::Polish => "iso_8859_13",
             Self::Russian | Self::Ukrainian => "iso_8859_5",
             Self::Turkish => "iso_8859_9",
+        }
+    }
+}
+
+/// The preferred color scheme of the player.
+#[derive(Clone, Copy, Debug)]
+pub struct Theme {
+    pub id: u8,
+    /// The main color of text and boxes.
+    pub primary: Color,
+    // The color of disable options, muted text, etc.
+    pub secondary: Color,
+    // The color of important elements, active options, etc.
+    pub accent: Color,
+    // The background color, the most contrast color to primary.
+    pub bg: Color,
+}
+
+impl Default for Theme {
+    fn default() -> Self {
+        Self {
+            id: 0,
+            primary: Color::Black,
+            secondary: Color::LightGray,
+            accent: Color::Green,
+            bg: Color::White,
         }
     }
 }
@@ -145,6 +172,26 @@ pub fn get_name(p: Peer, buf: &mut [u8; 16]) -> &str {
     let len = unsafe { bindings::get_name(u32::from(p.0), ptr) };
     let buf = &buf[..len as usize];
     unsafe { core::str::from_utf8_unchecked(buf) }
+}
+
+#[must_use]
+pub fn get_language(peer: Peer) -> Language {
+    // ...
+    todo!()
+}
+
+/// Load the preferred color scheme of the peer.
+///
+/// Can be useful for:
+///
+/// * Making UI that matches the system UI.
+/// * Preventing image flashes by making the UI background
+///   the same as in the system UI.
+/// * Providing and auto-switching the dark and light mode.
+#[must_use]
+pub fn get_theme(peer: Peer) -> Theme {
+    // ...
+    todo!()
 }
 
 /// Exit the app after the current update is finished.
