@@ -1,5 +1,35 @@
 use crate::*;
 
+/// System settings. Can be requested using [`get_settings`].
+#[derive(Clone, Debug)]
+pub struct Settings {
+    /// The preferred color scheme of the player.
+    pub theme: Theme,
+
+    /// The configured interface language.
+    pub language: Language,
+
+    /// If true, the screen is rotated 180 degrees.
+    ///
+    /// In other words, the player holds the device upside-down.
+    /// The touchpad is now on the right and the buttons are on the left.
+    pub rotate_screen: bool,
+
+    /// The player has photosensitivity. The app should avoid any rapid flashes.
+    pub reduce_flashing: bool,
+
+    /// The player wants increased contrast for colors.
+    ///
+    /// If set, the black and white colors in the default
+    /// palette are adjusted automatically. All other colors
+    /// in the default palette or all colors in a custom palette
+    /// should be adjusted by the app.
+    pub contrast: bool,
+
+    /// If true, the player wants to see easter eggs, holiday effects, and weird jokes.
+    pub easter_eggs: bool,
+}
+
 #[derive(PartialEq, Eq, Copy, Clone, Debug, Default)]
 pub enum Language {
     /// en 🇬🇧 💂
@@ -100,7 +130,14 @@ impl Language {
     }
 }
 
-/// The preferred color scheme of the player.
+/// The preferred color scheme of the peer.
+///
+/// Can be useful for:
+///
+/// * Making UI that matches the system UI.
+/// * Preventing image flashes by making the UI background
+///   the same as in the system UI.
+/// * Providing and auto-switching the dark and light mode.
 #[derive(Clone, Copy, Debug)]
 pub struct Theme {
     pub id: u8,
@@ -158,6 +195,9 @@ pub fn get_random() -> u32 {
 }
 
 /// Get the Peer's name.
+///
+/// The name is guaranteed to be a valid ASCII string
+/// and have between 1 and 16 characters.
 #[cfg(feature = "alloc")]
 #[must_use]
 pub fn get_name_buf(p: Peer) -> alloc::string::String {
@@ -166,6 +206,10 @@ pub fn get_name_buf(p: Peer) -> alloc::string::String {
     alloc::string::String::from(name)
 }
 
+/// Get the Peer's name.
+///
+/// The name is guaranteed to be a valid ASCII string
+/// and have between 1 and 16 characters.
 #[must_use]
 pub fn get_name(p: Peer, buf: &mut [u8; 16]) -> &str {
     let ptr = buf.as_ptr() as u32;
@@ -174,24 +218,29 @@ pub fn get_name(p: Peer, buf: &mut [u8; 16]) -> &str {
     unsafe { core::str::from_utf8_unchecked(buf) }
 }
 
+/// Get the peer's system settings.
 #[must_use]
-pub fn get_language(peer: Peer) -> Language {
-    // ...
-    todo!()
-}
-
-/// Load the preferred color scheme of the peer.
-///
-/// Can be useful for:
-///
-/// * Making UI that matches the system UI.
-/// * Preventing image flashes by making the UI background
-///   the same as in the system UI.
-/// * Providing and auto-switching the dark and light mode.
-#[must_use]
-pub fn get_theme(peer: Peer) -> Theme {
-    // ...
-    todo!()
+pub fn get_settings(p: Peer) -> Settings {
+    let raw = unsafe { bindings::get_settings(u32::from(p.0)) };
+    let code = [(raw >> 8) as u8, raw as u8];
+    let language = Language::from_code(code).unwrap_or_default();
+    let flags = raw >> 16;
+    let theme = raw >> 32;
+    let theme = Theme {
+        id: theme as u8,
+        primary: Color::from((raw >> 20) as u8),
+        secondary: Color::from((raw >> 16) as u8),
+        accent: Color::from((raw >> 12) as u8),
+        bg: Color::from((raw >> 8) as u8),
+    };
+    Settings {
+        theme,
+        language,
+        rotate_screen: (flags & 0b0001) != 0,
+        reduce_flashing: (flags & 0b0010) != 0,
+        contrast: (flags & 0b0100) != 0,
+        easter_eggs: (flags & 0b1000) != 0,
+    }
 }
 
 /// Exit the app after the current update is finished.
@@ -202,11 +251,12 @@ pub fn quit() {
 mod bindings {
     #[link(wasm_import_module = "misc")]
     unsafe extern "C" {
-        pub(crate) fn log_debug(ptr: u32, len: u32);
-        pub(crate) fn log_error(ptr: u32, len: u32);
-        pub(crate) fn set_seed(seed: u32);
-        pub(crate) fn get_random() -> u32;
-        pub(crate) fn get_name(idx: u32, ptr: u32) -> u32;
-        pub(crate) fn quit();
+        pub(crate) unsafe fn log_debug(ptr: u32, len: u32);
+        pub(crate) unsafe fn log_error(ptr: u32, len: u32);
+        pub(crate) unsafe fn set_seed(seed: u32);
+        pub(crate) unsafe fn get_random() -> u32;
+        pub(crate) unsafe fn get_name(idx: u32, ptr: u32) -> u32;
+        pub(crate) unsafe fn get_settings(idx: u32) -> u64;
+        pub(crate) unsafe fn quit();
     }
 }
