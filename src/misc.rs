@@ -47,9 +47,11 @@ pub enum Language {
     Polish,
     /// ru 🇷🇺 🪆
     Russian,
-    // sp 🇪🇸 🐂
+    /// sp 🇪🇸 🐂
     Spanish,
-    // tk 🇹🇷 🕌
+    /// se 🇸🇪 ❄️
+    Swedish,
+    /// tk 🇹🇷 🕌
     Turkish,
     /// ua 🇺🇦 ✊
     Ukrainian,
@@ -88,6 +90,7 @@ impl Language {
             Self::Polish => [b'p', b'o'],
             Self::Russian => [b'r', b'u'],
             Self::Spanish => [b's', b'p'],
+            Self::Swedish => [b's', b'e'],
             Self::TokiPona => [b't', b'p'],
             Self::Turkish => [b't', b'k'],
             Self::Ukrainian => [b'u', b'a'],
@@ -105,9 +108,48 @@ impl Language {
             Self::Polish => "po",
             Self::Russian => "ru",
             Self::Spanish => "sp",
+            Self::Swedish => "se",
             Self::TokiPona => "tp",
             Self::Turkish => "tk",
             Self::Ukrainian => "ua",
+        }
+    }
+
+    /// The language name in English.
+    #[must_use]
+    pub fn name_english(&self) -> &'static str {
+        match self {
+            Self::English => "English",
+            Self::Dutch => "Dutch",
+            Self::French => "French",
+            Self::German => "German",
+            Self::Italian => "Italian",
+            Self::Polish => "Polish",
+            Self::Russian => "Russian",
+            Self::Spanish => "Spanish",
+            Self::Swedish => "Swedish",
+            Self::TokiPona => "TokiPona",
+            Self::Turkish => "Turkish",
+            Self::Ukrainian => "Ukrainian",
+        }
+    }
+
+    /// The language name in the language itself (endonym).
+    #[must_use]
+    pub fn name_native(&self) -> &'static str {
+        match self {
+            Self::English => "English",
+            Self::Dutch => "Nederlands",
+            Self::French => "Français",
+            Self::German => "Deutsch",
+            Self::Italian => "Italiano",
+            Self::Polish => "Polski",
+            Self::Russian => "Русский",
+            Self::Spanish => "Español",
+            Self::Swedish => "Svenska",
+            Self::TokiPona => "toki pona",
+            Self::Turkish => "Türkçe",
+            Self::Ukrainian => "Українська",
         }
     }
 
@@ -121,7 +163,7 @@ impl Language {
             // which can be avoided in translations to make it possible to stick
             // to the smaller fonts.
             Self::English | Self::Dutch | Self::TokiPona => "ascii",
-            Self::Italian | Self::Spanish => "iso_8859_1",
+            Self::Italian | Self::Spanish | Self::Swedish => "iso_8859_1",
             Self::German | Self::French => "iso_8859_2",
             Self::Polish => "iso_8859_13",
             Self::Russian | Self::Ukrainian => "iso_8859_5",
