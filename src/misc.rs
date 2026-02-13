@@ -71,6 +71,7 @@ impl Language {
             [b'p', b'o'] => Self::Polish,
             [b'r', b'u'] => Self::Russian,
             [b's', b'p'] => Self::Spanish,
+            [b's', b'e'] => Self::Swedish,
             [b't', b'p'] => Self::TokiPona,
             [b't', b'k'] => Self::Turkish,
             [b'u', b'a'] => Self::Ukrainian,
@@ -80,7 +81,7 @@ impl Language {
     }
 
     #[must_use]
-    pub fn code_array(&self) -> [u8; 2] {
+    pub fn code_array(self) -> [u8; 2] {
         match self {
             Self::English => [b'e', b'n'],
             Self::Dutch => [b'n', b'l'],
@@ -98,7 +99,7 @@ impl Language {
     }
 
     #[must_use]
-    pub fn code_str(&self) -> &'static str {
+    pub fn code_str(self) -> &'static str {
         match self {
             Self::English => "en",
             Self::Dutch => "nl",
@@ -117,7 +118,7 @@ impl Language {
 
     /// The language name in English.
     #[must_use]
-    pub fn name_english(&self) -> &'static str {
+    pub fn name_english(self) -> &'static str {
         match self {
             Self::English => "English",
             Self::Dutch => "Dutch",
@@ -136,7 +137,7 @@ impl Language {
 
     /// The language name in the language itself (endonym).
     #[must_use]
-    pub fn name_native(&self) -> &'static str {
+    pub fn name_native(self) -> &'static str {
         match self {
             Self::English => "English",
             Self::Dutch => "Nederlands",
@@ -157,7 +158,7 @@ impl Language {
     ///
     /// Useful for dynamically loading the correct font for the given language.
     #[must_use]
-    pub fn encoding(&self) -> &'static str {
+    pub fn encoding(self) -> &'static str {
         match self {
             // Just like English, Dutch has very little non-ASCII characters
             // which can be avoided in translations to make it possible to stick
