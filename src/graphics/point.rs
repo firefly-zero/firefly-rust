@@ -2,7 +2,7 @@ use super::*;
 use core::num::TryFromIntError;
 use core::ops::*;
 #[cfg(feature = "nalgebra")]
-use nalgebra::{base::Scalar, Vector2};
+use nalgebra::{Vector2, base::Scalar};
 
 /// A point on the screen.
 ///
