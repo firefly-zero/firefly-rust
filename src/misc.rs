@@ -45,6 +45,8 @@ pub enum Language {
     Italian,
     /// pl 🇵🇱 🥟
     Polish,
+    /// ro 🇷🇴 🧛
+    Romanian,
     /// ru 🇷🇺 🪆
     Russian,
     /// sp 🇪🇸 🐂
@@ -53,7 +55,7 @@ pub enum Language {
     Swedish,
     /// tk 🇹🇷 🕌
     Turkish,
-    /// ua 🇺🇦 ✊
+    /// uk 🇺🇦 ✊
     Ukrainian,
     /// tp 🇨🇦 🙂
     TokiPona,
@@ -69,12 +71,13 @@ impl Language {
             [b'd', b'e'] => Self::German,
             [b'i', b't'] => Self::Italian,
             [b'p', b'o'] => Self::Polish,
+            [b'r', b'o'] => Self::Romanian,
             [b'r', b'u'] => Self::Russian,
             [b's', b'p'] => Self::Spanish,
             [b's', b'e'] => Self::Swedish,
             [b't', b'p'] => Self::TokiPona,
             [b't', b'k'] => Self::Turkish,
-            [b'u', b'a'] => Self::Ukrainian,
+            [b'u', b'k'] => Self::Ukrainian,
             _ => return None,
         };
         Some(code)
@@ -89,12 +92,13 @@ impl Language {
             Self::German => [b'd', b'e'],
             Self::Italian => [b'i', b't'],
             Self::Polish => [b'p', b'o'],
+            Self::Romanian => [b'r', b'o'],
             Self::Russian => [b'r', b'u'],
             Self::Spanish => [b's', b'p'],
             Self::Swedish => [b's', b'e'],
             Self::TokiPona => [b't', b'p'],
             Self::Turkish => [b't', b'k'],
-            Self::Ukrainian => [b'u', b'a'],
+            Self::Ukrainian => [b'u', b'k'],
         }
     }
 
@@ -107,12 +111,13 @@ impl Language {
             Self::German => "de",
             Self::Italian => "it",
             Self::Polish => "po",
+            Self::Romanian => "ro",
             Self::Russian => "ru",
             Self::Spanish => "sp",
             Self::Swedish => "se",
             Self::TokiPona => "tp",
             Self::Turkish => "tk",
-            Self::Ukrainian => "ua",
+            Self::Ukrainian => "uk",
         }
     }
 
@@ -126,6 +131,7 @@ impl Language {
             Self::German => "German",
             Self::Italian => "Italian",
             Self::Polish => "Polish",
+            Self::Romanian => "Romanian",
             Self::Russian => "Russian",
             Self::Spanish => "Spanish",
             Self::Swedish => "Swedish",
@@ -145,6 +151,7 @@ impl Language {
             Self::German => "Deutsch",
             Self::Italian => "Italiano",
             Self::Polish => "Polski",
+            Self::Romanian => "Română",
             Self::Russian => "Русский",
             Self::Spanish => "Español",
             Self::Swedish => "Svenska",
@@ -166,9 +173,10 @@ impl Language {
             Self::English | Self::Dutch | Self::TokiPona => "ascii",
             Self::Italian | Self::Spanish | Self::Swedish => "iso_8859_1",
             Self::German | Self::French => "iso_8859_2",
-            Self::Polish => "iso_8859_13",
             Self::Russian | Self::Ukrainian => "iso_8859_5",
             Self::Turkish => "iso_8859_9",
+            Self::Polish => "iso_8859_13",
+            Self::Romanian => "iso_8859_16",
         }
     }
 }
@@ -186,11 +194,11 @@ pub struct Theme {
     pub id: u8,
     /// The main color of text and boxes.
     pub primary: Color,
-    // The color of disable options, muted text, etc.
+    /// The color of disable options, muted text, etc.
     pub secondary: Color,
-    // The color of important elements, active options, etc.
+    /// The color of important elements, active options, etc.
     pub accent: Color,
-    // The background color, the most contrast color to primary.
+    /// The background color, the most contrast color to primary.
     pub bg: Color,
 }
 
