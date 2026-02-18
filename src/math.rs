@@ -68,11 +68,7 @@ pub fn sqrt(x: f32) -> f32 {
 pub fn rem_euclid(lhs: f32, rhs: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/rem_euclid.rs
     let r = lhs % rhs;
-    if r < 0.0 {
-        r + abs(rhs)
-    } else {
-        r
-    }
+    if r < 0.0 { r + abs(rhs) } else { r }
 }
 
 #[must_use]

@@ -1,7 +1,7 @@
 use super::Point;
 use core::ops::*;
 #[cfg(feature = "nalgebra")]
-use nalgebra::{base::Scalar, Vector2};
+use nalgebra::{Vector2, base::Scalar};
 
 /// The screen width in pixels.
 pub const WIDTH: i32 = 240;

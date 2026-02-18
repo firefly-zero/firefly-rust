@@ -22,7 +22,7 @@ impl CanvasBuf {
     #[must_use]
     #[expect(clippy::cast_sign_loss)]
     pub fn new(s: Size) -> Self {
-        const HEADER_SIZE: usize = 5 + 8;
+        const HEADER_SIZE: usize = 4;
         let body_size = s.width * s.height / 2;
         let mut raw = vec![0; HEADER_SIZE + body_size as usize];
         prepare_slice(&mut raw, s.width);
@@ -57,7 +57,7 @@ impl<'a> Canvas<'a> {
     #[must_use]
     #[expect(clippy::cast_sign_loss)]
     pub fn new(s: Size, raw: &'a mut [u8]) -> Option<Self> {
-        const HEADER_SIZE: usize = 5 + 8;
+        const HEADER_SIZE: usize = 4;
         let body_size = s.width * s.height / 2;
         let exp_size = HEADER_SIZE + body_size as usize;
         if raw.len() < exp_size {
@@ -85,14 +85,8 @@ impl<'a> From<&'a CanvasBuf> for Canvas<'a> {
 
 #[expect(clippy::cast_sign_loss)]
 fn prepare_slice(raw: &mut [u8], width: i32) {
-    raw[0] = 0x21; // magic number
-    raw[1] = 4; // BPP
-    raw[2] = width as u8; // width
-    raw[3] = (width >> 8) as u8; // width
-    raw[4] = 255; // transparency
-
-    // color swaps
-    for i in 0u8..8u8 {
-        raw[5 + i as usize] = ((i * 2) << 4) | (i * 2 + 1);
-    }
+    raw[0] = 0x22; // magic number
+    raw[1] = width as u8; // width
+    raw[2] = (width >> 8) as u8; // width
+    raw[3] = 255; // transparency
 }

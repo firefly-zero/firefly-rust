@@ -57,38 +57,25 @@ impl<'a> Image<'a> {
         }
     }
 
-    /// Bits per pixel. One of: 1, 2, or 4.
-    #[must_use]
-    pub const fn bpp(&self) -> u8 {
-        self.raw[1]
-    }
-
     /// The color used for transparency. If no transparency, returns [`Color::None`].
     #[must_use]
     pub fn transparency(&self) -> Color {
-        Color::from(self.raw[4] + 1)
+        Color::from(self.raw[3] + 1)
     }
-
-    // pub fn set_transparency(&mut self, c: Color) {
-    //     let c: i32 = c.into();
-    //     if c == 0 {
-    //         self.raw[4] = 16;
-    //     } else {
-    //         self.raw[4] = c as u8;
-    //     }
-    // }
 
     /// The number of pixels the image has.
     #[must_use]
     pub const fn pixels(&self) -> usize {
-        self.raw.len() * 8 / self.bpp() as usize
+        const HEADER_SIZE: usize = 4;
+        const PPB: usize = 2;
+        (self.raw.len() - HEADER_SIZE) * PPB
     }
 
     /// The image width in pixels.
     #[must_use]
     pub fn width(&self) -> u16 {
-        let big = u16::from(self.raw[2]);
-        let little = u16::from(self.raw[3]);
+        let big = u16::from(self.raw[1]);
+        let little = u16::from(self.raw[2]);
         big | (little << 8)
     }
 
@@ -96,7 +83,7 @@ impl<'a> Image<'a> {
     #[must_use]
     pub fn height(&self) -> u16 {
         let p = self.pixels();
-        let w = self.width() as usize;
+        let w = usize::from(self.width());
         p.checked_div(w).unwrap_or(0) as u16
     }
 
@@ -107,25 +94,6 @@ impl<'a> Image<'a> {
             width: i32::from(self.width()),
             height: i32::from(self.height()),
         }
-    }
-
-    /// Get the color used to represent the given pixel value.
-    #[must_use]
-    pub fn get_color(&self, p: u8) -> Color {
-        if p > 15 {
-            return Color::None;
-        }
-        let byte_idx = usize::from(5 + p / 2);
-        let mut byte_val = self.raw[byte_idx];
-        if p.is_multiple_of(2) {
-            byte_val >>= 4;
-        }
-        byte_val &= 0b1111;
-        let transp = self.raw[4];
-        if byte_val == transp {
-            return Color::None;
-        }
-        Color::from(byte_val + 1)
     }
 }
 
