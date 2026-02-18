@@ -32,3 +32,8 @@ nalgebra = { version = "0.34.1", optional = true, default-features = false }
 talc = { version = "4.4.3", optional = true, default-features = false, features = [
     "lock_api",
 ] }
+
+# https://docs.rs/about/metadata
+# https://github.com/firefly-zero/firefly-rust/issues/17
+[package.metadata.docs.rs]
+features = ["alloc"]
