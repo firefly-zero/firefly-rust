@@ -315,3 +315,26 @@ mod bindings {
         pub(crate) unsafe fn quit();
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_language_code_roundtrip() {
+        let mut valid_codes = 0;
+        let letters = "abcdefghijklmnopqrstuvwxyz";
+        for fst in letters.as_bytes() {
+            for snd in letters.as_bytes() {
+                let given = [*fst, *snd];
+                let Some(lang) = Language::from_code(given) else {
+                    continue;
+                };
+                valid_codes += 1;
+                let actual = lang.code_array();
+                assert_eq!(actual, given);
+            }
+        }
+        assert!(valid_codes > 8);
+    }
+}
