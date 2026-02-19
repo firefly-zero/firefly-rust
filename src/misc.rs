@@ -49,11 +49,11 @@ pub enum Language {
     Romanian,
     /// ru 🇷🇺 🪆
     Russian,
-    /// sp 🇪🇸 🐂
+    /// es 🇪🇸 🐂
     Spanish,
-    /// se 🇸🇪 ❄️
+    /// sv 🇸🇪 ❄️
     Swedish,
-    /// tk 🇹🇷 🕌
+    /// tr 🇹🇷 🕌
     Turkish,
     /// uk 🇺🇦 ✊
     Ukrainian,
@@ -65,18 +65,18 @@ impl Language {
     #[must_use]
     pub fn from_code(b: [u8; 2]) -> Option<Self> {
         let code = match b {
-            [b'e', b'n'] => Self::English,
-            [b'n', b'l'] => Self::Dutch,
-            [b'f', b'r'] => Self::French,
             [b'd', b'e'] => Self::German,
+            [b'e', b'n'] => Self::English,
+            [b'e', b's'] => Self::Spanish,
+            [b'f', b'r'] => Self::French,
             [b'i', b't'] => Self::Italian,
+            [b'n', b'l'] => Self::Dutch,
             [b'p', b'o'] => Self::Polish,
             [b'r', b'o'] => Self::Romanian,
             [b'r', b'u'] => Self::Russian,
-            [b's', b'p'] => Self::Spanish,
-            [b's', b'e'] => Self::Swedish,
+            [b's', b'v'] => Self::Swedish,
             [b't', b'p'] => Self::TokiPona,
-            [b't', b'k'] => Self::Turkish,
+            [b't', b'r'] => Self::Turkish,
             [b'u', b'k'] => Self::Ukrainian,
             _ => return None,
         };
@@ -94,11 +94,11 @@ impl Language {
             Self::Polish => [b'p', b'o'],
             Self::Romanian => [b'r', b'o'],
             Self::Russian => [b'r', b'u'],
-            Self::Spanish => [b's', b'p'],
-            Self::Swedish => [b's', b'e'],
-            Self::TokiPona => [b't', b'p'],
-            Self::Turkish => [b't', b'k'],
+            Self::Spanish => [b'e', b's'],
+            Self::Swedish => [b's', b'v'],
+            Self::Turkish => [b't', b'r'],
             Self::Ukrainian => [b'u', b'k'],
+            Self::TokiPona => [b't', b'p'],
         }
     }
 
@@ -113,11 +113,11 @@ impl Language {
             Self::Polish => "po",
             Self::Romanian => "ro",
             Self::Russian => "ru",
-            Self::Spanish => "sp",
-            Self::Swedish => "se",
-            Self::TokiPona => "tp",
-            Self::Turkish => "tk",
+            Self::Spanish => "es",
+            Self::Swedish => "sv",
+            Self::Turkish => "tr",
             Self::Ukrainian => "uk",
+            Self::TokiPona => "tp",
         }
     }
 
