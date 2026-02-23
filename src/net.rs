@@ -1,4 +1,8 @@
-// The peer ID.
+pub trait AnyPeer {}
+
+/// The peer ID.
+///
+/// Constructed from [`Peers`] (which is constructed by [`get_peers`]).
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Peer(pub(crate) u8);
 
@@ -8,14 +12,12 @@ pub struct Peer(pub(crate) u8);
 impl Peer {
     /// A combination of all connected peers.
     pub const COMBINED: Self = Peer(0xFF);
-}
 
-impl Peer {
     /// Dump [`Peer`] as a primitive type (u8).
     ///
     /// ## Safety
     ///
-    /// See [`Peer::to_u8`].
+    /// See [`Peer::into_u8`].
     #[must_use]
     pub unsafe fn from_u8(p: u8) -> Self {
         Self(p)
@@ -36,11 +38,60 @@ impl Peer {
     }
 }
 
+impl AnyPeer for Peer {}
+
+/// The peer representing the current device.
+///
+/// Can be compared to [`Peer`] or used to [`get_settings`][crate::get_settings].
+///
+/// **IMPORTANT:** using this type may cause state drift between device in multiplayer.
+/// See [the docs](https://docs.fireflyzero.com/dev/net/) for more info.
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
+pub struct Me(pub(crate) u8);
+
+impl Me {
+    /// Convert [`Me`] into primitive type.
+    ///
+    /// ## Safety
+    ///
+    /// See [`Peer::into_u8`].
+    #[must_use]
+    pub unsafe fn from_u8(p: u8) -> Self {
+        Self(p)
+    }
+
+    /// Restore [`Me`] from a primitive type (u8).
+    ///
+    /// ## Safety
+    ///
+    /// See [`Peer::into_u8`].
+    #[must_use]
+    pub unsafe fn into_u8(self) -> u8 {
+        self.0
+    }
+}
+
+impl AnyPeer for Me {}
+
+impl PartialEq<Peer> for Me {
+    fn eq(&self, other: &Peer) -> bool {
+        self.0 == other.0
+    }
+}
+
+impl PartialEq<Me> for Peer {
+    fn eq(&self, other: &Me) -> bool {
+        self.0 == other.0
+    }
+}
+
 /// The list of peers online.
 ///
 /// Includes all connected peers as well as the local device.
 ///
 /// The order is deterministic between calls and between runs.
+///
+/// Constructed by [`get_peers`].
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub struct Peers(pub(crate) u32);
 
@@ -157,9 +208,9 @@ type Stash = [u8];
 
 /// Get the peer corresponding to the local device.
 #[must_use]
-pub fn get_me() -> Peer {
+pub fn get_me() -> Me {
     let me = unsafe { bindings::get_me() };
-    Peer(me as u8)
+    Me(me as u8)
 }
 
 /// Get the list of peers online.
