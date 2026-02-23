@@ -1,6 +1,6 @@
 /// A peer obtained either from [`Peers`] ([`get_peers`]) or from [`get_me`].
 pub trait AnyPeer {
-    /// Dump the peer as a primitive type (u8).
+    /// Restore the peer from a primitive type (u8).
     ///
     /// ## Safety
     ///
@@ -8,7 +8,7 @@ pub trait AnyPeer {
     #[must_use]
     unsafe fn from_u8(p: u8) -> Self;
 
-    /// Restore the peer from a primitive type (u8).
+    /// Dump the peer as a primitive type (u8).
     ///
     /// ## Safety
     ///
