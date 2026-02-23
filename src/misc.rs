@@ -270,9 +270,13 @@ pub fn get_name(p: Peer, buf: &mut [u8; 16]) -> &str {
 }
 
 /// Get the peer's system settings.
+///
+/// **IMPORTANT:** This is the only function that accepts as input not only [`Peer`]
+/// but also [`Me`], which might lead to a state drift if used incorrectly.
+/// See [the docs](https://docs.fireflyzero.com/dev/net/) for more info.
 #[must_use]
-pub fn get_settings(p: Peer) -> Settings {
-    let raw = unsafe { bindings::get_settings(u32::from(p.0)) };
+pub fn get_settings<P: AnyPeer>(p: P) -> Settings {
+    let raw = unsafe { bindings::get_settings(u32::from(p.into_u8())) };
     let code = [(raw >> 8) as u8, raw as u8];
     let language = Language::from_code(code).unwrap_or_default();
     let flags = raw >> 16;
