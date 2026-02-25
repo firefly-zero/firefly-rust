@@ -56,3 +56,6 @@ fn handle_panic(info: &core::panic::PanicInfo) -> ! {
     }
     core::arch::wasm32::unreachable()
 }
+
+#[cfg(feature = "macros")]
+pub use firefly_toml::import;

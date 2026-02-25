@@ -11,7 +11,7 @@ keywords = ["gamedev", "firefly-zero"]
 categories = ["game-development", "no-std", "rendering", "api-bindings", "wasm"]
 
 [features]
-default = []
+default = ["macros"]
 # If disabled, the crate uses no_std.
 std = ["alloc"]
 # Enable support for allocating functions, like load_file_buf.
@@ -26,12 +26,15 @@ panic_info = ["alloc"]
 sudo = []
 # Enable support for casting graphic primitives to and from nalgebra crate primitives.
 nalgebra = ["dep:nalgebra"]
+# Enable support for convenience macros
+macros = ["dep:firefly_toml"]
 
 [dependencies]
 nalgebra = { version = "0.34.1", optional = true, default-features = false }
 talc = { version = "4.4.3", optional = true, default-features = false, features = [
     "lock_api",
 ] }
+firefly_toml = { version = "0.1", optional = true, path = "firefly_toml" }
 
 # https://docs.rs/about/metadata
 # https://github.com/firefly-zero/firefly-rust/issues/17

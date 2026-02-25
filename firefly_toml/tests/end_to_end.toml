@@ -1,0 +1,18 @@
+author_id = "ferris"
+app_id = "crabtopia"
+author_name = "Ferris"
+app_name = "Crabtopia"
+lang = "rust"
+
+[cheats]
+goto-level = 1
+
+[badges]
+1 = { name = "segfault", descr = "caused an unsoundness without unsafe code" }
+2 = { name = "secret", descr = "found a secret", hidden = 1 }
+
+[boards]
+1 = { name = "level 1", min = -10000, max = 0, decimals = 3 }
+2 = { name = "level 2", max = 10, time = true }
+
+3 = { name = "speedrun", min = -10000, max = 0 }

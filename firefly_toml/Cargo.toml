@@ -1,0 +1,22 @@
+[package]
+name = "firefly_toml"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89.0"
+authors = ["Firefly Zero team"]
+description = "Rust SDK helper macros for making Firefly Zero games"
+repository = "https://github.com/firefly-zero/firefly-rust"
+license = "MIT"
+keywords = ["gamedev", "firefly-zero"]
+categories = ["game-development", "no-std", "rendering", "api-bindings", "wasm"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+toml = "0.9"
+serde = { version = "1", features = ["serde_derive"] }
+
+[dev-dependencies]
+snapshot-testing = "0.1.8"
+firefly-rust = { path = ".." }
