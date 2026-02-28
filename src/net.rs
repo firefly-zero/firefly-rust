@@ -10,6 +10,12 @@ impl Peer {
     pub const COMBINED: Self = Peer(0xFF);
 }
 
+impl Default for Peer {
+    fn default() -> Self {
+        Self::COMBINED
+    }
+}
+
 impl Peer {
     /// Dump [`Peer`] as a primitive type (u8).
     ///
