@@ -31,16 +31,22 @@ impl Font<'_> {
         t.chars().count() as u32 * u32::from(self.char_width())
     }
 
-    /// The width (in pixels) of one character.
+    /// The width (in pixels) of one glyph bounding box.
     #[must_use]
     pub fn char_width(&self) -> u8 {
         self.raw[2]
     }
 
-    /// The hight (in pixels) of one character (one line).
+    /// The height (in pixels) of one glyph (one line) bounding box.
     #[must_use]
     pub fn char_height(&self) -> u8 {
         self.raw[3]
+    }
+
+    /// Offset from the top of the glyph bounding box to the baseline.
+    #[must_use]
+    pub fn baseline(&self) -> u8 {
+        self.raw[4]
     }
 }
 
