@@ -29,6 +29,8 @@ pub mod shapes;
 mod stats;
 #[cfg(feature = "sudo")]
 pub mod sudo;
+#[cfg(feature = "firefly-toml")]
+pub mod toml;
 
 pub use fs::*;
 pub use graphics::*;
@@ -49,7 +51,7 @@ static ALLOCATOR: talc::TalckWasm = unsafe { talc::TalckWasm::new_global() };
 #[panic_handler]
 #[allow(unused_variables)]
 fn handle_panic(info: &core::panic::PanicInfo) -> ! {
-    #[cfg(all(feature = "alloc", feature = "panic_info"))]
+    #[cfg(all(feature = "alloc", feature = "panic-info"))]
     if true {
         let msg = alloc::format!("{info}");
         log_error(&msg);
