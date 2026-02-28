@@ -15,12 +15,20 @@ impl Font<'_> {
         self.raw[1] == 0
     }
 
-    /// Calculate width (in pixels) of the given text.
+    /// Calculate width (in pixels) of the given ASCII text.
     ///
     /// This function does not account for newlines.
     #[must_use]
-    pub fn line_width(&self, t: &str) -> u32 {
+    pub fn line_width_ascii(&self, t: &str) -> u32 {
         t.len() as u32 * u32::from(self.char_width())
+    }
+
+    /// Calculate width (in pixels) of the given UTF-8 text.
+    ///
+    /// This function does not account for newlines.
+    #[must_use]
+    pub fn line_width_utf8(&self, t: &str) -> u32 {
+        t.chars().count() as u32 * u32::from(self.char_width())
     }
 
     /// The width (in pixels) of one character.
