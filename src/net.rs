@@ -1,8 +1,33 @@
-// The peer ID.
+/// A peer obtained either from [`Peers`] ([`get_peers`]) or from [`get_me`].
+pub trait AnyPeer {
+    /// Restore the peer from a primitive type (u8).
+    ///
+    /// ## Safety
+    ///
+    /// See [`AnyPeer::into_u8`].
+    #[must_use]
+    unsafe fn from_u8(p: u8) -> Self;
+
+    /// Dump the peer as a primitive type (u8).
+    ///
+    /// ## Safety
+    ///
+    /// For most applications, [`Peers`], [`Peer`], and [`Me`] types should
+    /// be considered opaque and agnostic of their internal representation.
+    /// However, some code interpreters written for Firefly in Rust (firefly-lua)
+    /// might need the ability to save values on the virtual stack as primitive types,
+    /// and this is where this function comes in handy.
+    #[must_use]
+    unsafe fn into_u8(self) -> u8;
+}
+
+/// The peer ID.
+///
+/// Constructed from [`Peers`] (which is constructed by [`get_peers`]).
 #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
 pub struct Peer(pub(crate) u8);
 
-/// Represents a specific device (or combination of such).
+/// Represents a specific device (or a combination of all devices).
 ///
 /// Used for reading and writing state of a device: input, stash, scores, etc.
 impl Peer {
@@ -16,29 +41,44 @@ impl Default for Peer {
     }
 }
 
-impl Peer {
-    /// Dump [`Peer`] as a primitive type (u8).
-    ///
-    /// ## Safety
-    ///
-    /// See [`Peer::to_u8`].
-    #[must_use]
-    pub unsafe fn from_u8(p: u8) -> Self {
+impl AnyPeer for Peer {
+    unsafe fn from_u8(p: u8) -> Self {
         Self(p)
     }
 
-    /// Restore [`Peer`] from a primitive type (u8).
-    ///
-    /// ## Safety
-    ///
-    /// For most applications, [`Peers`] and [`Peer`] types should be considered
-    /// opaque and agnostic of their internal representation.
-    /// However, some code interpreters written for Firefly in Rust
-    /// might need the ability to save values on virtual stack as primitive types,
-    /// and this is where this function comes in handy.
-    #[must_use]
-    pub unsafe fn into_u8(self) -> u8 {
+    unsafe fn into_u8(self) -> u8 {
         self.0
+    }
+}
+
+/// The peer representing the current device.
+///
+/// Can be compared to [`Peer`] or used to [`get_settings`][crate::get_settings].
+///
+/// **IMPORTANT:** Using this type may cause state drift between device in multiplayer.
+/// See [the docs](https://docs.fireflyzero.com/dev/net/) for more info.
+#[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
+pub struct Me(pub(crate) u8);
+
+impl AnyPeer for Me {
+    unsafe fn from_u8(p: u8) -> Self {
+        Self(p)
+    }
+
+    unsafe fn into_u8(self) -> u8 {
+        self.0
+    }
+}
+
+impl PartialEq<Peer> for Me {
+    fn eq(&self, other: &Peer) -> bool {
+        self.0 == other.0
+    }
+}
+
+impl PartialEq<Me> for Peer {
+    fn eq(&self, other: &Me) -> bool {
+        self.0 == other.0
     }
 }
 
@@ -47,6 +87,8 @@ impl Peer {
 /// Includes all connected peers as well as the local device.
 ///
 /// The order is deterministic between calls and between runs.
+///
+/// Constructed by [`get_peers`].
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub struct Peers(pub(crate) u32);
 
@@ -163,9 +205,9 @@ type Stash = [u8];
 
 /// Get the peer corresponding to the local device.
 #[must_use]
-pub fn get_me() -> Peer {
+pub fn get_me() -> Me {
     let me = unsafe { bindings::get_me() };
-    Peer(me as u8)
+    Me(me as u8)
 }
 
 /// Get the list of peers online.
