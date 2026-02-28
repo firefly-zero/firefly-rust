@@ -15,24 +15,38 @@ impl Font<'_> {
         self.raw[1] == 0
     }
 
-    /// Calculate width (in pixels) of the given text.
+    /// Calculate width (in pixels) of the given ASCII text.
     ///
     /// This function does not account for newlines.
     #[must_use]
-    pub fn line_width(&self, t: &str) -> u32 {
+    pub fn line_width_ascii(&self, t: &str) -> u32 {
         t.len() as u32 * u32::from(self.char_width())
     }
 
-    /// The width (in pixels) of one character.
+    /// Calculate width (in pixels) of the given UTF-8 text.
+    ///
+    /// This function does not account for newlines.
+    #[must_use]
+    pub fn line_width_utf8(&self, t: &str) -> u32 {
+        t.chars().count() as u32 * u32::from(self.char_width())
+    }
+
+    /// The width (in pixels) of one glyph bounding box.
     #[must_use]
     pub fn char_width(&self) -> u8 {
         self.raw[2]
     }
 
-    /// The hight (in pixels) of one character (one line).
+    /// The height (in pixels) of one glyph (one line) bounding box.
     #[must_use]
     pub fn char_height(&self) -> u8 {
         self.raw[3]
+    }
+
+    /// Offset from the top of the glyph bounding box to the baseline.
+    #[must_use]
+    pub fn baseline(&self) -> u8 {
+        self.raw[4]
     }
 }
 

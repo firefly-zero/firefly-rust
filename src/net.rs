@@ -35,6 +35,12 @@ impl Peer {
     pub const COMBINED: Self = Peer(0xFF);
 }
 
+impl Default for Peer {
+    fn default() -> Self {
+        Self::COMBINED
+    }
+}
+
 impl AnyPeer for Peer {
     unsafe fn from_u8(p: u8) -> Self {
         Self(p)

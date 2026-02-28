@@ -268,7 +268,7 @@ impl From<Option<DPad4>> for DPad4 {
 }
 
 /// State of the buttons.
-#[derive(Default)]
+#[derive(Default, Clone, Copy)]
 pub struct Buttons {
     /// South. The bottom button, like A on the X-Box controller.
     ///
