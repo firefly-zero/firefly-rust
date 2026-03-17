@@ -194,6 +194,22 @@ pub fn remove_file(path: &str) {
     }
 }
 
+pub fn remove_dir(path: &str) {
+    let path_ptr = path.as_ptr() as u32;
+    let path_len = path.len() as u32;
+    unsafe {
+        b::remove_dir(path_ptr, path_len);
+    }
+}
+
+pub fn create_dir(path: &str) {
+    let path_ptr = path.as_ptr() as u32;
+    let path_len = path.len() as u32;
+    unsafe {
+        b::create_dir(path_ptr, path_len);
+    }
+}
+
 /// Low-level bindings for host-defined "sudo" module.
 mod b {
     #[link(wasm_import_module = "sudo")]
@@ -207,5 +223,7 @@ mod b {
         pub(super) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(super) fn dump_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
         pub(super) fn remove_file(path_ptr: u32, path_len: u32);
+        pub(super) fn remove_dir(path_ptr: u32, path_len: u32);
+        pub(super) fn create_dir(path_ptr: u32, path_len: u32);
     }
 }
