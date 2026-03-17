@@ -3,7 +3,7 @@
 use crate::*;
 
 const DPAD4_THRESHOLD: i32 = 300;
-const DPAD8_THRESHOLD: i32 = 300;
+const DPAD8_THRESHOLD: i32 = 400;
 
 /// A finger position on the touch pad.
 ///
