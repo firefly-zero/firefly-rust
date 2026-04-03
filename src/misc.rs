@@ -307,6 +307,11 @@ pub fn quit() {
     unsafe { bindings::quit() }
 }
 
+/// Restart the app after the current update is finished.
+pub fn restart() {
+    unsafe { bindings::restart() }
+}
+
 mod bindings {
     #[link(wasm_import_module = "misc")]
     unsafe extern "C" {
@@ -316,6 +321,7 @@ mod bindings {
         pub(crate) unsafe fn get_random() -> u32;
         pub(crate) unsafe fn get_name(idx: u32, ptr: u32) -> u32;
         pub(crate) unsafe fn get_settings(idx: u32) -> u64;
+        pub(crate) unsafe fn restart();
         pub(crate) unsafe fn quit();
     }
 }
