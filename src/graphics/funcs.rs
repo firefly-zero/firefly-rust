@@ -142,13 +142,14 @@ pub fn draw_sector(p: Point, d: i32, start: Angle, sweep: Angle, s: Style) {
 
 /// Render text using the given font.
 ///
-/// Unlike in the other drawing functions, here [Point] points not to the top-left corner
-/// but to the baseline start position.
-pub fn draw_text(t: &str, f: &Font, p: Point, c: Color) {
+/// Unlike in the other drawing functions, here [`Point`] points not to the top-left
+/// corner but to the baseline start position ([`Font::baseline`]).
+pub fn draw_text<F: Font>(t: &str, f: &F, p: Point, c: Color) {
     let text_ptr = t.as_ptr();
     let text_len = t.len();
-    let font_ptr = f.raw.as_ptr();
-    let font_len = f.raw.len();
+    let font = unsafe { f.as_bytes() };
+    let font_ptr = font.as_ptr();
+    let font_len = font.len();
     unsafe {
         b::draw_text(
             text_ptr as u32,

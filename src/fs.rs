@@ -47,12 +47,6 @@ impl FileBuf {
         &self.raw
     }
 
-    /// Interpret the file as a font.
-    #[must_use]
-    pub fn as_font(&'_ self) -> Font<'_> {
-        Font { raw: &self.raw }
-    }
-
     /// Interpret the file as an image.
     #[must_use]
     pub fn as_image(&'_ self) -> Image<'_> {
@@ -127,18 +121,6 @@ impl<'a> File<'a> {
     #[must_use]
     pub fn as_bytes(&self) -> &[u8] {
         self.raw
-    }
-
-    /// Interpret the file as a font.
-    #[must_use]
-    pub const fn as_font(&'_ self) -> Font<'_> {
-        Font { raw: self.raw }
-    }
-
-    /// Interpret the file as an image.
-    #[must_use]
-    pub const fn as_image(&'_ self) -> Image<'_> {
-        Image { raw: self.raw }
     }
 }
 
