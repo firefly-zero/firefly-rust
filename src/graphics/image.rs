@@ -1,40 +1,37 @@
 use crate::*;
 
-/// A loaded image file.
+/// Owned version of [`Image`].
 ///
 /// Can be loaded as [`FileBuf`] from ROM with [`load_file_buf`]
+/// and then cast using [`Into::into`].
+#[cfg(feature = "alloc")]
+pub struct ImageBuf {
+    pub(crate) raw: alloc::boxed::Box<[u8]>,
+}
+
+#[cfg(feature = "alloc")]
+impl Image for ImageBuf {
+    unsafe fn as_bytes(&self) -> &[u8] {
+        &self.raw
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl From<FileBuf> for ImageBuf {
+    fn from(value: FileBuf) -> Self {
+        Self { raw: value.raw }
+    }
+}
+
+/// A loaded image file.
+///
+/// Can be loaded as [`FileRef`] from ROM with [`load_file`]
 /// and then cast using [`Into`].
-pub struct Image<'a> {
-    pub(crate) raw: &'a [u8],
+pub struct ImageRef<'a> {
+    raw: &'a [u8],
 }
 
-impl<'a> From<FileRef<'a>> for Image<'a> {
-    fn from(value: FileRef<'a>) -> Self {
-        Self { raw: value.raw }
-    }
-}
-
-#[cfg(feature = "alloc")]
-impl<'a> From<&'a FileBuf> for Image<'a> {
-    fn from(value: &'a FileBuf) -> Self {
-        Self { raw: &value.raw }
-    }
-}
-
-impl<'a> From<Canvas<'a>> for Image<'a> {
-    fn from(value: Canvas<'a>) -> Self {
-        Self { raw: value.raw }
-    }
-}
-
-#[cfg(feature = "alloc")]
-impl<'a> From<&'a CanvasBuf> for Image<'a> {
-    fn from(value: &'a CanvasBuf) -> Self {
-        Self { raw: &value.raw }
-    }
-}
-
-impl<'a> Image<'a> {
+impl<'a> ImageRef<'a> {
     /// Reinterpret raw bytes as an image.
     ///
     /// # Safety
@@ -43,45 +40,72 @@ impl<'a> Image<'a> {
     /// Firefly Zero binary image format. In 99% cases, you should not construct
     /// a raw image but instead load it from a [`File`] or generate using [`Canvas`].
     #[must_use]
-    pub const unsafe fn from_bytes(raw: &'a [u8]) -> Self {
+    pub unsafe fn from_bytes(raw: &'a [u8]) -> Self {
         Self { raw }
     }
+}
+
+impl Image for ImageRef<'_> {
+    unsafe fn as_bytes(&self) -> &[u8] {
+        self.raw
+    }
+}
+
+impl<'a> From<FileRef<'a>> for ImageRef<'a> {
+    fn from(value: FileRef<'a>) -> Self {
+        Self { raw: value.raw }
+    }
+}
+
+/// A loaded image file.
+pub trait Image {
+    /// Get the raw image representation.
+    ///
+    /// # Safety
+    ///
+    /// Don't use it. The internal image representation might change
+    /// in the future and so should not be relied upon.
+    unsafe fn as_bytes(&self) -> &[u8];
 
     /// Get a rectangle subregion of the image.
     #[must_use]
-    pub const fn sub(&self, p: Point, s: Size) -> SubImage<'a> {
+    fn sub(&self, p: Point, s: Size) -> SubImage<'_> {
+        let raw = unsafe { self.as_bytes() };
         SubImage {
             point: p,
             size: s,
-            raw: self.raw,
+            raw,
         }
     }
 
     /// The color used for transparency. If no transparency, returns [`Color::None`].
     #[must_use]
-    pub fn transparency(&self) -> Color {
-        Color::from(self.raw[3] + 1)
+    fn transparency(&self) -> Color {
+        let raw = unsafe { self.as_bytes() };
+        Color::from(raw[3] + 1)
     }
 
     /// The number of pixels the image has.
     #[must_use]
-    pub const fn pixels(&self) -> usize {
+    fn pixels(&self) -> usize {
         const HEADER_SIZE: usize = 4;
         const PPB: usize = 2;
-        (self.raw.len() - HEADER_SIZE) * PPB
+        let raw = unsafe { self.as_bytes() };
+        (raw.len() - HEADER_SIZE) * PPB
     }
 
     /// The image width in pixels.
     #[must_use]
-    pub fn width(&self) -> u16 {
-        let big = u16::from(self.raw[1]);
-        let little = u16::from(self.raw[2]);
+    fn width(&self) -> u16 {
+        let raw = unsafe { self.as_bytes() };
+        let big = u16::from(raw[1]);
+        let little = u16::from(raw[2]);
         big | (little << 8)
     }
 
     /// The image height in pixels.
     #[must_use]
-    pub fn height(&self) -> u16 {
+    fn height(&self) -> u16 {
         let p = self.pixels();
         let w = usize::from(self.width());
         p.checked_div(w).unwrap_or(0) as u16
@@ -89,7 +113,7 @@ impl<'a> Image<'a> {
 
     /// The image size in pixels.
     #[must_use]
-    pub fn size(&self) -> Size {
+    fn size(&self) -> Size {
         Size {
             width: i32::from(self.width()),
             height: i32::from(self.height()),

@@ -173,9 +173,10 @@ pub fn draw_qr(t: &str, p: Point, black: Color, white: Color) {
 }
 
 /// Render an image using the given colors.
-pub fn draw_image(i: &Image, p: Point) {
-    let ptr = i.raw.as_ptr();
-    let len = i.raw.len();
+pub fn draw_image<I: Image>(i: &I, p: Point) {
+    let raw = unsafe { i.as_bytes() };
+    let ptr = raw.as_ptr();
+    let len = raw.len();
     unsafe {
         b::draw_image(ptr as u32, len as u32, p.x, p.y);
     }
