@@ -27,8 +27,6 @@ mod misc;
 mod net;
 pub mod shapes;
 mod stats;
-#[cfg(feature = "sudo")]
-pub mod sudo;
 #[cfg(feature = "firefly-toml")]
 pub mod toml;
 

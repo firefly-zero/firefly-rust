@@ -22,8 +22,6 @@ talc = ["dep:talc", "alloc"]
 # If app panics, show panic info (message, file name, line number).
 # Increases the binary size.
 panic-info = ["alloc"]
-# Enable support for functions requiring sudo.
-sudo = []
 # Enable static parsing of firefly-toml.
 firefly-toml = ["dep:firefly-toml"]
 # Enable support for casting graphic primitives to and from nalgebra crate primitives.
