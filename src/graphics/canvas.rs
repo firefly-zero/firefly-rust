@@ -44,6 +44,11 @@ impl CanvasBuf {
             raw: raw.into_boxed_slice(),
         }
     }
+
+    #[must_use]
+    pub fn into_image(self) -> ImageBuf {
+        self.into()
+    }
 }
 
 #[cfg(feature = "alloc")]
@@ -76,6 +81,11 @@ impl<'a> CanvasRef<'a> {
         Some(Self {
             raw: &raw[..exp_size],
         })
+    }
+
+    #[must_use]
+    pub fn into_image(self) -> ImageRef<'a> {
+        self.into()
     }
 }
 

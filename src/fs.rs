@@ -1,5 +1,6 @@
 //! Access file system: the game ROM files and the data dir.
 
+use crate::*;
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
@@ -31,6 +32,21 @@ impl FileBuf {
     #[must_use]
     pub unsafe fn from_bytes(b: Box<[u8]>) -> Self {
         Self { raw: b }
+    }
+
+    #[must_use]
+    pub fn into_font(self) -> FontBuf {
+        self.into()
+    }
+
+    #[must_use]
+    pub fn into_image(self) -> ImageBuf {
+        self.into()
+    }
+
+    #[must_use]
+    pub fn into_bytes(self) -> Box<[u8]> {
+        self.into()
     }
 }
 
@@ -93,16 +109,25 @@ impl<'a> FileRef<'a> {
         Self { raw: b }
     }
 
-    /// Access the raw data in the file.
     #[must_use]
-    pub const fn data(&self) -> &[u8] {
-        self.raw
+    pub fn into_font(self) -> FontRef<'a> {
+        self.into()
     }
 
-    /// Alias for [`File::data`].
     #[must_use]
-    pub fn as_bytes(&self) -> &[u8] {
-        self.raw
+    pub fn into_image(self) -> ImageRef<'a> {
+        self.into()
+    }
+
+    #[must_use]
+    pub fn into_bytes(self) -> &'a [u8] {
+        self.into()
+    }
+}
+
+impl<'a> From<FileRef<'a>> for &'a [u8] {
+    fn from(value: FileRef<'a>) -> Self {
+        value.raw
     }
 }
 
