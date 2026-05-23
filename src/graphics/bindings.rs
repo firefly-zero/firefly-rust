@@ -1,9 +1,9 @@
 #[link(wasm_import_module = "graphics")]
 unsafe extern "C" {
-    pub(crate) fn clear_screen(color: i32);
-    pub(crate) fn set_color(index: i32, r: i32, g: i32, b: i32);
-    pub(crate) fn draw_point(x: i32, y: i32, color: i32);
-    pub(crate) fn draw_line(
+    pub(crate) unsafe fn clear_screen(color: i32);
+    pub(crate) unsafe fn set_color(index: i32, r: i32, g: i32, b: i32);
+    pub(crate) unsafe fn draw_point(x: i32, y: i32, color: i32);
+    pub(crate) unsafe fn draw_line(
         p1_x: i32,
         p1_y: i32,
         p2_x: i32,
@@ -11,7 +11,7 @@ unsafe extern "C" {
         color: i32,
         stroke_width: i32,
     );
-    pub(crate) fn draw_rect(
+    pub(crate) unsafe fn draw_rect(
         x: i32,
         y: i32,
         width: i32,
@@ -20,7 +20,7 @@ unsafe extern "C" {
         stroke_color: i32,
         stroke_width: i32,
     );
-    pub(crate) fn draw_rounded_rect(
+    pub(crate) unsafe fn draw_rounded_rect(
         x: i32,
         y: i32,
         width: i32,
@@ -31,7 +31,7 @@ unsafe extern "C" {
         stroke_color: i32,
         stroke_width: i32,
     );
-    pub(crate) fn draw_circle(
+    pub(crate) unsafe fn draw_circle(
         x: i32,
         y: i32,
         diameter: i32,
@@ -39,7 +39,7 @@ unsafe extern "C" {
         stroke_color: i32,
         stroke_width: i32,
     );
-    pub(crate) fn draw_ellipse(
+    pub(crate) unsafe fn draw_ellipse(
         x: i32,
         y: i32,
         width: i32,
@@ -48,7 +48,7 @@ unsafe extern "C" {
         stroke_color: i32,
         stroke_width: i32,
     );
-    pub(crate) fn draw_triangle(
+    pub(crate) unsafe fn draw_triangle(
         p1_x: i32,
         p1_y: i32,
         p2_x: i32,
@@ -59,7 +59,7 @@ unsafe extern "C" {
         stroke_color: i32,
         stroke_width: i32,
     );
-    pub(crate) fn draw_arc(
+    pub(crate) unsafe fn draw_arc(
         x: i32,
         y: i32,
         diameter: i32,
@@ -69,7 +69,7 @@ unsafe extern "C" {
         stroke_color: i32,
         stroke_width: i32,
     );
-    pub(crate) fn draw_sector(
+    pub(crate) unsafe fn draw_sector(
         x: i32,
         y: i32,
         diameter: i32,
@@ -79,7 +79,7 @@ unsafe extern "C" {
         stroke_color: i32,
         stroke_width: i32,
     );
-    pub(crate) fn draw_text(
+    pub(crate) unsafe fn draw_text(
         text_ptr: u32,
         text_len: u32,
         font_ptr: u32,
@@ -88,8 +88,8 @@ unsafe extern "C" {
         y: i32,
         color: i32,
     );
-    pub(crate) fn draw_qr(ptr: u32, len: u32, x: i32, y: i32, black: i32, white: i32);
-    pub(crate) fn draw_sub_image(
+    pub(crate) unsafe fn draw_qr(ptr: u32, len: u32, x: i32, y: i32, black: i32, white: i32);
+    pub(crate) unsafe fn draw_sub_image(
         ptr: u32,
         len: u32,
         x: i32,
@@ -99,7 +99,7 @@ unsafe extern "C" {
         sub_width: i32,
         sub_height: i32,
     );
-    pub(crate) fn draw_image(ptr: u32, len: u32, x: i32, y: i32);
-    pub(crate) fn set_canvas(ptr: u32, len: u32);
-    pub(crate) fn unset_canvas();
+    pub(crate) unsafe fn draw_image(ptr: u32, len: u32, x: i32, y: i32);
+    pub(crate) unsafe fn set_canvas(ptr: u32, len: u32);
+    pub(crate) unsafe fn unset_canvas();
 }

@@ -1,6 +1,6 @@
 //! Access file system: the game ROM files and the data dir.
 
-use crate::graphics::*;
+use crate::*;
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
@@ -8,9 +8,8 @@ use alloc::vec;
 
 /// Like [File] but owns the buffer.
 ///
-/// Returned by [`rom::load_buf`] and [`data::load_buf`]. Requires a global allocator.
-/// For a file of statically-known size, you might want to use [`rom::load`]
-/// and [`data::load`] instead.
+/// Returned by [`load_file_buf`]. Requires a global allocator.
+/// For a file of statically-known size, you might want to use [`load_file`] instead.
 #[cfg(feature = "alloc")]
 pub struct FileBuf {
     pub(crate) raw: Box<[u8]>,
@@ -35,33 +34,19 @@ impl FileBuf {
         Self { raw: b }
     }
 
-    /// Access the raw data in the file.
     #[must_use]
-    pub fn data(&self) -> &[u8] {
-        &self.raw
-    }
-
-    /// Alias for [`FileBuf::data`].
-    #[must_use]
-    pub fn as_bytes(&self) -> &[u8] {
-        &self.raw
-    }
-
-    /// Interpret the file as a font.
-    #[must_use]
-    pub fn as_font(&'_ self) -> Font<'_> {
-        Font { raw: &self.raw }
-    }
-
-    /// Interpret the file as an image.
-    #[must_use]
-    pub fn as_image(&'_ self) -> Image<'_> {
-        Image { raw: &self.raw }
+    pub fn into_font(self) -> FontBuf {
+        self.into()
     }
 
     #[must_use]
-    pub fn into_vec(self) -> alloc::vec::Vec<u8> {
-        self.raw.into_vec()
+    pub fn into_image(self) -> ImageBuf {
+        self.into()
+    }
+
+    #[must_use]
+    pub fn into_bytes(self) -> Box<[u8]> {
+        self.into()
     }
 }
 
@@ -75,7 +60,14 @@ impl From<FileBuf> for Box<[u8]> {
 #[cfg(feature = "alloc")]
 impl From<FileBuf> for alloc::vec::Vec<u8> {
     fn from(value: FileBuf) -> Self {
-        value.into_vec()
+        value.raw.into_vec()
+    }
+}
+
+#[cfg(feature = "alloc")]
+impl<'a> From<&'a FileBuf> for &'a [u8] {
+    fn from(value: &'a FileBuf) -> Self {
+        &value.raw
     }
 }
 
@@ -84,7 +76,7 @@ impl TryFrom<FileBuf> for alloc::string::String {
     type Error = alloc::string::FromUtf8Error;
 
     fn try_from(value: FileBuf) -> Result<Self, Self::Error> {
-        let v = value.into_vec();
+        let v = value.raw.into_vec();
         alloc::string::String::from_utf8(v)
     }
 }
@@ -95,11 +87,11 @@ impl TryFrom<FileBuf> for alloc::string::String {
 /// of the right size. If the file size is deterimed dynamically,
 /// you might want to use [`rom::load_buf`] and [`data::load_buf`] instead
 /// (which will take care of the dynamic allocation).
-pub struct File<'a> {
+pub struct FileRef<'a> {
     pub(crate) raw: &'a [u8],
 }
 
-impl<'a> File<'a> {
+impl<'a> FileRef<'a> {
     /// Construct [`File`] from raw bytes.
     ///
     /// The main purpose of this function is to support convering [`File`]
@@ -117,28 +109,25 @@ impl<'a> File<'a> {
         Self { raw: b }
     }
 
-    /// Access the raw data in the file.
     #[must_use]
-    pub const fn data(&self) -> &[u8] {
-        self.raw
+    pub fn into_font(self) -> FontRef<'a> {
+        self.into()
     }
 
-    /// Alias for [`File::data`].
     #[must_use]
-    pub fn as_bytes(&self) -> &[u8] {
-        self.raw
+    pub fn into_image(self) -> ImageRef<'a> {
+        self.into()
     }
 
-    /// Interpret the file as a font.
     #[must_use]
-    pub const fn as_font(&'_ self) -> Font<'_> {
-        Font { raw: self.raw }
+    pub fn into_bytes(self) -> &'a [u8] {
+        self.into()
     }
+}
 
-    /// Interpret the file as an image.
-    #[must_use]
-    pub const fn as_image(&'_ self) -> Image<'_> {
-        Image { raw: self.raw }
+impl<'a> From<FileRef<'a>> for &'a [u8] {
+    fn from(value: FileRef<'a>) -> Self {
+        value.raw
     }
 }
 
@@ -156,7 +145,7 @@ pub fn get_file_size(name: &str) -> usize {
 ///
 /// If the file size is not known in advance (and so the buffer has to be allocated
 /// dynamically), consider using [`load_file_buf`] instead.
-pub fn load_file<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
+pub fn load_file<'a>(name: &str, buf: &'a mut [u8]) -> FileRef<'a> {
     let path_ptr = name.as_ptr();
     let buf_ptr = buf.as_mut_ptr();
     unsafe {
@@ -167,7 +156,7 @@ pub fn load_file<'a>(name: &str, buf: &'a mut [u8]) -> File<'a> {
             buf.len() as u32,
         );
     }
-    File { raw: buf }
+    FileRef { raw: buf }
 }
 
 /// Read the whole file with the given name.
@@ -217,9 +206,19 @@ pub fn remove_file(name: &str) {
 mod bindings {
     #[link(wasm_import_module = "fs")]
     unsafe extern "C" {
-        pub(crate) fn get_file_size(path_ptr: u32, path_len: u32) -> u32;
-        pub(crate) fn load_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
-        pub(crate) fn dump_file(path_ptr: u32, path_len: u32, buf_ptr: u32, buf_len: u32) -> u32;
-        pub(crate) fn remove_file(path_ptr: u32, path_len: u32);
+        pub(crate) unsafe fn get_file_size(path_ptr: u32, path_len: u32) -> u32;
+        pub(crate) unsafe fn load_file(
+            path_ptr: u32,
+            path_len: u32,
+            buf_ptr: u32,
+            buf_len: u32,
+        ) -> u32;
+        pub(crate) unsafe fn dump_file(
+            path_ptr: u32,
+            path_len: u32,
+            buf_ptr: u32,
+            buf_len: u32,
+        ) -> u32;
+        pub(crate) unsafe fn remove_file(path_ptr: u32, path_len: u32);
     }
 }

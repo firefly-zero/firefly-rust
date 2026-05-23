@@ -31,8 +31,8 @@ pub fn open_menu() {
 mod bindings {
     #[link(wasm_import_module = "menu")]
     unsafe extern "C" {
-        pub(crate) fn add_menu_item(index: u32, text_ptr: u32, text_len: u32);
-        pub(crate) fn remove_menu_item(index: u32);
-        pub(crate) fn open_menu();
+        pub(crate) unsafe fn add_menu_item(index: u32, text_ptr: u32, text_len: u32);
+        pub(crate) unsafe fn remove_menu_item(index: u32);
+        pub(crate) unsafe fn open_menu();
     }
 }

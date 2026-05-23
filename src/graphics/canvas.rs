@@ -4,9 +4,23 @@ use alloc::boxed::Box;
 #[cfg(feature = "alloc")]
 use alloc::vec;
 
-// TODO: add statically-allocated version when prepare_slice can be turned into static fn.
-// It is blocked by this feature going into stable:
-// https://github.com/rust-lang/rust/issues/57349
+// /// Canvas is an [`Image`] that can be drawn upon.
+// #[cfg(feature = "alloc")]
+// pub struct CanvasStatic<const SIZE: usize> {
+//     pub(crate) raw: [u8; SIZE],
+// }
+
+// impl<const SIZE: usize> CanvasStatic<SIZE> {
+//     /// Create new [`CanvasStatic`].
+//     #[must_use]
+//     pub const fn new(width: usize) -> Self {
+//         const HEADER_SIZE: usize = 4;
+//         let mut raw = [0u8; SIZE];
+//         #[expect(clippy::cast_possible_wrap)]
+//         prepare_slice(&mut raw, width as i32);
+//         Self { raw }
+//     }
+// }
 
 /// Canvas is an [`Image`] that can be drawn upon.
 ///
@@ -31,25 +45,25 @@ impl CanvasBuf {
         }
     }
 
-    /// Represent the canvas as an [`Image`].
     #[must_use]
-    pub const fn as_image(&self) -> Image<'_> {
-        Image { raw: &self.raw }
+    pub fn into_image(self) -> ImageBuf {
+        self.into()
     }
+}
 
-    /// Represent the buffered canvas as [`Canvas`].
-    #[must_use]
-    pub const fn as_canvas(&self) -> Canvas<'_> {
-        Canvas { raw: &self.raw }
+#[cfg(feature = "alloc")]
+impl Canvas for CanvasBuf {
+    unsafe fn as_bytes(&self) -> &[u8] {
+        &self.raw
     }
 }
 
 /// Canvas is an [`Image`] that can be drawn upon.
-pub struct Canvas<'a> {
+pub struct CanvasRef<'a> {
     pub(crate) raw: &'a [u8],
 }
 
-impl<'a> Canvas<'a> {
+impl<'a> CanvasRef<'a> {
     /// Create new empty canvas using the given slice.
     ///
     /// Returns [`None`] if the slice is too small for the given image size.
@@ -69,24 +83,39 @@ impl<'a> Canvas<'a> {
         })
     }
 
-    /// Represent the canvas as an [`Image`].
     #[must_use]
-    pub const fn as_image(&self) -> Image<'a> {
-        Image { raw: self.raw }
+    pub fn into_image(self) -> ImageRef<'a> {
+        self.into()
     }
 }
 
-#[cfg(feature = "alloc")]
-impl<'a> From<&'a CanvasBuf> for Canvas<'a> {
-    fn from(value: &'a CanvasBuf) -> Self {
-        Self { raw: &value.raw }
+impl Canvas for CanvasRef<'_> {
+    unsafe fn as_bytes(&self) -> &[u8] {
+        self.raw
     }
+}
+
+/// Canvas is an [`Image`] that can be drawn upon.
+pub trait Canvas {
+    /// Get the raw canvas representation.
+    ///
+    /// # Safety
+    ///
+    /// Don't use it. The internal canvas representation might change
+    /// in the future and so should not be relied upon.
+    unsafe fn as_bytes(&self) -> &[u8];
 }
 
 #[expect(clippy::cast_sign_loss)]
-fn prepare_slice(raw: &mut [u8], width: i32) {
+const fn prepare_slice(raw: &mut [u8], width: i32) {
     raw[0] = 0x22; // magic number
     raw[1] = width as u8; // width
     raw[2] = (width >> 8) as u8; // width
     raw[3] = 255; // transparency
+}
+
+impl<T: Canvas> Image for T {
+    unsafe fn as_bytes(&self) -> &[u8] {
+        unsafe { Canvas::as_bytes(self) }
+    }
 }

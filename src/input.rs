@@ -376,7 +376,7 @@ fn has_bit_set(val: u32, bit: usize) -> bool {
 mod bindings {
     #[link(wasm_import_module = "input")]
     unsafe extern "C" {
-        pub(crate) fn read_pad(peer: u32) -> u32;
-        pub(crate) fn read_buttons(peer: u32) -> u32;
+        pub(crate) unsafe fn read_pad(peer: u32) -> u32;
+        pub(crate) unsafe fn read_buttons(peer: u32) -> u32;
     }
 }
