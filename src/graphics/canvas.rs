@@ -102,3 +102,9 @@ const fn prepare_slice(raw: &mut [u8], width: i32) {
     raw[2] = (width >> 8) as u8; // width
     raw[3] = 255; // transparency
 }
+
+impl<T: Canvas> Image for T {
+    unsafe fn as_bytes(&self) -> &[u8] {
+        unsafe { Canvas::as_bytes(self) }
+    }
+}
