@@ -34,7 +34,6 @@ impl Font for FontRef<'_> {
     }
 }
 
-#[cfg(feature = "alloc")]
 impl<'a> From<FileRef<'a>> for FontRef<'a> {
     fn from(value: FileRef<'a>) -> Self {
         Self { raw: value.raw }
