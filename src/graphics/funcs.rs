@@ -203,9 +203,10 @@ pub fn draw_sub_image(i: &SubImage, p: Point) {
 }
 
 /// Set canvas to be used for all subsequent drawing operations.
-pub fn set_canvas(c: &Canvas) {
-    let ptr = c.raw.as_ptr();
-    let len = c.raw.len();
+pub fn set_canvas<C: Canvas>(c: &C) {
+    let raw = unsafe { c.as_bytes() };
+    let ptr = raw.as_ptr();
+    let len = raw.len();
     unsafe {
         b::set_canvas(ptr as u32, len as u32);
     }

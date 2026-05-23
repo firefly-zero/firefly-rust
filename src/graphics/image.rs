@@ -23,6 +23,13 @@ impl From<FileBuf> for ImageBuf {
     }
 }
 
+#[cfg(feature = "alloc")]
+impl From<CanvasBuf> for ImageBuf {
+    fn from(value: CanvasBuf) -> Self {
+        Self { raw: value.raw }
+    }
+}
+
 /// A loaded image file.
 ///
 /// Can be loaded as [`FileRef`] from ROM with [`load_file`]
@@ -53,6 +60,12 @@ impl Image for ImageRef<'_> {
 
 impl<'a> From<FileRef<'a>> for ImageRef<'a> {
     fn from(value: FileRef<'a>) -> Self {
+        Self { raw: value.raw }
+    }
+}
+
+impl<'a> From<CanvasRef<'a>> for ImageRef<'a> {
+    fn from(value: CanvasRef<'a>) -> Self {
         Self { raw: value.raw }
     }
 }
