@@ -2,6 +2,8 @@
 
 #[cfg(feature = "alloc")]
 use alloc::boxed::Box;
+#[cfg(feature = "alloc")]
+use alloc::vec;
 
 /// Like [File] but owns the buffer.
 ///

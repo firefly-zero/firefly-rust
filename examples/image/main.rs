@@ -8,8 +8,9 @@
 
 #![allow(static_mut_refs)]
 #![no_main]
+#![no_std]
+use core::cell::OnceCell;
 use firefly_rust as ff;
-use std::cell::OnceCell;
 
 static mut IMAGE: OnceCell<ff::ImageBuf> = OnceCell::new();
 

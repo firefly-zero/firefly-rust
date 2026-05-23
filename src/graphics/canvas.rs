@@ -46,6 +46,7 @@ impl CanvasBuf {
     }
 }
 
+#[cfg(feature = "alloc")]
 impl Canvas for CanvasBuf {
     unsafe fn as_bytes(&self) -> &[u8] {
         &self.raw
