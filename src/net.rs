@@ -279,9 +279,9 @@ pub fn load_stash_buf<const N: usize>(peer: Peer) -> Option<[u8; N]> {
 mod bindings {
     #[link(wasm_import_module = "net")]
     unsafe extern "C" {
-        pub(crate) fn get_me() -> u32;
-        pub(crate) fn get_peers() -> u32;
-        pub(crate) fn save_stash(peer: u32, ptr: u32, len: u32);
-        pub(crate) fn load_stash(peer: u32, ptr: u32, len: u32) -> u32;
+        pub(crate) unsafe fn get_me() -> u32;
+        pub(crate) unsafe fn get_peers() -> u32;
+        pub(crate) unsafe fn save_stash(peer: u32, ptr: u32, len: u32);
+        pub(crate) unsafe fn load_stash(peer: u32, ptr: u32, len: u32) -> u32;
     }
 }
