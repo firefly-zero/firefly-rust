@@ -18,6 +18,23 @@ pub struct FileBuf {
 
 #[cfg(feature = "alloc")]
 impl FileBuf {
+    /// Construct [`FileBuf`] from raw bytes.
+    ///
+    /// The main purpose of this function is to support convering [`FileBuf`]
+    /// to and from "basic" types, which might be required for implementing
+    /// some language interpreters (Lua, Python, etc) for Firefly in Rust.
+    ///
+    /// ## Safety
+    ///
+    /// This function allows bypassing type safety and constructing [`Image`]
+    /// and [`Font`] in runtime. Don't do that. Relying on internal representation
+    /// of file formats might make your app incompatible with future Firefly runtimes.
+    /// If you need to modify an in-memory image, use [`Canvas`] instead.
+    #[must_use]
+    pub unsafe fn from_bytes(b: Box<[u8]>) -> Self {
+        Self { raw: b }
+    }
+
     /// Access the raw data in the file.
     #[must_use]
     pub fn data(&self) -> &[u8] {
