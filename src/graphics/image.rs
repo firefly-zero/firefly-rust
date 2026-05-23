@@ -8,8 +8,8 @@ pub struct Image<'a> {
     pub(crate) raw: &'a [u8],
 }
 
-impl<'a> From<File<'a>> for Image<'a> {
-    fn from(value: File<'a>) -> Self {
+impl<'a> From<FileRef<'a>> for Image<'a> {
+    fn from(value: FileRef<'a>) -> Self {
         Self { raw: value.raw }
     }
 }

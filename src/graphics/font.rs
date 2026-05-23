@@ -6,7 +6,7 @@ use crate::*;
 /// and then cast using [`Into::into`].
 #[cfg(feature = "alloc")]
 pub struct FontBuf {
-    pub(crate) raw: Box<[u8]>,
+    pub(crate) raw: alloc::boxed::Box<[u8]>,
 }
 
 #[cfg(feature = "alloc")]
@@ -35,16 +35,9 @@ impl Font for FontRef<'_> {
 }
 
 #[cfg(feature = "alloc")]
-impl<'a> From<File<'a>> for FontRef<'a> {
-    fn from(value: File<'a>) -> Self {
+impl<'a> From<FileRef<'a>> for FontRef<'a> {
+    fn from(value: FileRef<'a>) -> Self {
         Self { raw: value.raw }
-    }
-}
-
-#[cfg(feature = "alloc")]
-impl<'a> From<&'a FontBuf> for FontRef<'a> {
-    fn from(value: &'a FontBuf) -> Self {
-        Self { raw: &value.raw }
     }
 }
 
