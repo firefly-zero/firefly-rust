@@ -231,43 +231,43 @@ impl<F> Node<F> {
 
 impl Node<Sine> {
     /// Modulate oscillation frequency.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
     }
 }
 
 impl Node<Square> {
     /// Modulate oscillation frequency.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
     }
 }
 
 impl Node<Sawtooth> {
     /// Modulate oscillation frequency.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
     }
 }
 
 impl Node<Triangle> {
     /// Modulate oscillation frequency.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
     }
 }
 
 impl Node<Gain> {
     /// Modulate the gain level.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
     }
 }
 
 impl Node<Pan> {
     /// Modulate the pan value (from 0. to 1.: 0. is only left, 1. is only right).
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
     }
 }
 
@@ -275,8 +275,8 @@ impl Node<Mute> {
     /// Modulate the muted state.
     ///
     /// Below 0.5 is muted, above is unmuted.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
     }
 }
 
@@ -284,22 +284,22 @@ impl Node<Pause> {
     /// Modulate the paused state.
     ///
     /// Below 0.5 is paused, above is playing.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
     }
 }
 
 impl Node<LowPass> {
     /// Modulate the cut-off frequency.
-    pub fn modulate_freq<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate_freq<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
     }
 }
 
 impl Node<HighPass> {
     /// Modulate the cut-off frequency.
-    pub fn modulate_freq<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate_freq<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
     }
 }
 
@@ -307,18 +307,18 @@ impl Node<Clip> {
     /// Modulate the low cut amplitude and adjust the high amplitude to keep the gap.
     ///
     /// In other words, the difference between low and high cut points will stay the same.
-    pub fn modulate_both<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate_both<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
     }
 
     /// Modulate the low cut amplitude.
-    pub fn modulate_low<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 1);
+    pub fn modulate_low<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 1, low, high);
     }
 
     /// Modulate the high cut amplitude.
-    pub fn modulate_high<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 2);
+    pub fn modulate_high<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 2, low, high);
     }
 }
 

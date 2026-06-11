@@ -232,3 +232,9 @@ impl From<f32> for Freq {
         Self(value)
     }
 }
+
+impl From<Freq> for f32 {
+    fn from(value: Freq) -> Self {
+        value.0
+    }
+}

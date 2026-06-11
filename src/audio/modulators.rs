@@ -1,53 +1,60 @@
 use super::*;
 
+/// Modulator can be attached to a node to change a node parameter over time.
+///
+/// Modulators include both LFOs (Low-Frequency Oscillator) and envelopes.
+/// The difference is that LFOs keep oscillating between values
+/// while envelopes go from one value to another and then stop.
+///
+/// Internally, modulators only produce values from 0 to 1.
+/// Then, to get the final value of the parameter,
+/// the value from the modulator is projected on the range
+/// between `low` and `high` arguments passed together
+/// with the modulator when attaching a modulator to a node.
+/// For example, [`Node<Sine>::modulate`] accepts the range of modulated values
+/// for the sine wave frequency (which can be used for vibrato effect).
+///
+/// Even if a node has multiple parameters that can be modulated,
+/// currently  single node may have at most one modulator attached.
 pub trait Modulator {
-    fn modulate(self, node_id: u32, param: u32);
+    fn modulate(self, node_id: u32, param: u32, low: f32, high: f32);
 }
 
 /// Linear (ramp up or down) envelope.
 ///
-/// It looks like this: `⎽╱⎺` or `⎺╲⎽`.
+/// It looks like this: `⎽╱⎺` (or `⎺╲⎽` if `low` is bigger than `high`).
 ///
-/// The value before `start_at` is `start`, the value after `end_at` is `end`,
-/// and the value between `start_at` and `end_at` changes linearly from `start` to `end`.
+/// The value before `start_at` is 0, the value after `end_at` is 1,
+/// and the value between `start_at` and `end_at` changes linearly from 0 to 1.
+///
+/// Most often used with [`Gain`] for fade in and fade out effect.
 pub struct LinearModulator {
-    pub start: f32,
-    pub end: f32,
     pub start_at: Time,
     pub end_at: Time,
 }
 
 impl Modulator for LinearModulator {
-    fn modulate(self, node_id: u32, param: u32) {
+    fn modulate(self, node_id: u32, param: u32, low: f32, high: f32) {
         unsafe {
-            bindings::mod_linear(
-                node_id,
-                param,
-                self.start,
-                self.end,
-                self.start_at.0,
-                self.end_at.0,
-            );
+            bindings::mod_linear(node_id, param, low, high, self.start_at.0, self.end_at.0);
         }
     }
 }
 
 /// Hold envelope.
 ///
-/// It looks like this: `⎽│⎺` or `⎺│⎽`.
+/// It looks like this: `⎽│⎺` (or `⎺│⎽` if `low` is bigger than `high`).
 ///
-/// The value before `time` is `before` and the value after `time` is `after`.
+/// The value before `time` is 0 and the value after `time` is 1.
 /// Equivalent to [`LinearModulator`] with `start_at` being equal to `end_at`.
 pub struct HoldModulator {
-    pub before: f32,
-    pub after: f32,
     pub time: Time,
 }
 
 impl Modulator for HoldModulator {
-    fn modulate(self, node_id: u32, param: u32) {
+    fn modulate(self, node_id: u32, param: u32, low: f32, high: f32) {
         unsafe {
-            bindings::mod_hold(node_id, param, self.before, self.after, self.time.0);
+            bindings::mod_hold(node_id, param, low, high, self.time.0);
         }
     }
 }
@@ -56,17 +63,16 @@ impl Modulator for HoldModulator {
 ///
 /// It looks like this: `∿`.
 ///
-/// `low` is the lowest produced value, `high` is the highest.
+/// Most commonly used with [`Sine`] (or another wave generator)
+/// to produce vibrato effect.
 pub struct SineModulator {
     pub freq: Freq,
-    pub low: f32,
-    pub high: f32,
 }
 
 impl Modulator for SineModulator {
-    fn modulate(self, node_id: u32, param: u32) {
+    fn modulate(self, node_id: u32, param: u32, low: f32, high: f32) {
         unsafe {
-            bindings::mod_sine(node_id, param, self.freq.0, self.low, self.high);
+            bindings::mod_sine(node_id, param, self.freq.0, low, high);
         }
     }
 }
