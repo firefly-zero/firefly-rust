@@ -59,6 +59,48 @@ impl Modulator for HoldModulator {
     }
 }
 
+/// ADSR envelope.
+///
+/// It looks like this: `🭋🭍🬹🬿`
+///
+///  1. Until `attack`, the value goes from 0 to 1;
+///  2. Until `decay`, it goes from 1 to `sustain_level`;
+///  3. Until `sustain`, it holds `sustain_level`;
+///  4. Until `release`, it goes from `sustain_level` to 0;
+///  5. After `release`, it holds 0.
+///
+/// Most commonly used with [`Gain`].
+pub struct AdsrModulator {
+    /// When the value reaches 1.
+    attack: Time,
+    /// When the value reaches `sustain_level`.
+    decay: Time,
+    /// Until when the value holds `sustain_level`.
+    sustain: Time,
+    /// The value generated from `decay` until `sustain`.
+    sustain_level: f32,
+    /// When the value drops to 0.
+    release: Time,
+}
+
+impl Modulator for AdsrModulator {
+    fn modulate(self, node_id: u32, param: u32, low: f32, high: f32) {
+        unsafe {
+            bindings::mod_adsr(
+                node_id,
+                param,
+                low,
+                high,
+                self.attack.0,
+                self.decay.0,
+                self.sustain.0,
+                self.sustain_level,
+                self.release.0,
+            );
+        }
+    }
+}
+
 /// Sine wave low-frequency oscillator.
 ///
 /// It looks like this: `∿`.
@@ -80,7 +122,7 @@ impl Modulator for SineModulator {
 mod bindings {
     #[link(wasm_import_module = "audio")]
     unsafe extern "C" {
-        pub(super) fn mod_linear(
+        pub(super) unsafe fn mod_linear(
             node_id: u32,
             param: u32,
             start: f32,
@@ -88,7 +130,18 @@ mod bindings {
             start_at: u32,
             end_at: u32,
         );
-        pub(super) fn mod_hold(node_id: u32, param: u32, v1: f32, v2: f32, time: u32);
-        pub(super) fn mod_sine(node_id: u32, param: u32, freq: f32, low: f32, high: f32);
+        pub(super) unsafe fn mod_hold(node_id: u32, param: u32, v1: f32, v2: f32, time: u32);
+        pub(super) unsafe fn mod_sine(node_id: u32, param: u32, freq: f32, low: f32, high: f32);
+        pub(super) unsafe fn mod_adsr(
+            node_id: u32,
+            param: u32,
+            low: f32,
+            high: f32,
+            attack: u32,
+            decay: u32,
+            sustain: u32,
+            sustain_level: f32,
+            release: u32,
+        );
     }
 }

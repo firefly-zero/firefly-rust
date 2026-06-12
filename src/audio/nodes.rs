@@ -326,34 +326,35 @@ mod bindings {
     #[link(wasm_import_module = "audio")]
     unsafe extern "C" {
         // generators
-        pub(super) fn add_sine(parent_id: u32, freq: f32, phase: f32) -> u32;
-        pub(super) fn add_square(parent_id: u32, freq: f32, phase: f32) -> u32;
-        pub(super) fn add_sawtooth(parent_id: u32, freq: f32, phase: f32) -> u32;
-        pub(super) fn add_triangle(parent_id: u32, freq: f32, phase: f32) -> u32;
-        pub(super) fn add_noise(parent_id: u32, seed: i32) -> u32;
-        pub(super) fn add_empty(parent_id: u32) -> u32;
-        pub(super) fn add_zero(parent_id: u32) -> u32;
-        pub(super) fn add_file(parent: u32, ptr: u32, len: u32) -> u32;
+        pub(super) unsafe fn add_sine(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) unsafe fn add_square(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) unsafe fn add_sawtooth(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) unsafe fn add_triangle(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) unsafe fn add_noise(parent_id: u32, seed: i32) -> u32;
+        pub(super) unsafe fn add_empty(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_zero(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_file(parent: u32, ptr: u32, len: u32) -> u32;
 
         // nodes
-        pub(super) fn add_mix(parent_id: u32) -> u32;
-        pub(super) fn add_all_for_one(parent_id: u32) -> u32;
-        pub(super) fn add_gain(parent_id: u32, lvl: f32) -> u32;
-        pub(super) fn add_loop(parent_id: u32) -> u32;
-        pub(super) fn add_concat(parent_id: u32) -> u32;
-        pub(super) fn add_pan(parent_id: u32, lvl: f32) -> u32;
-        pub(super) fn add_mute(parent_id: u32) -> u32;
-        pub(super) fn add_pause(parent_id: u32) -> u32;
-        pub(super) fn add_track_position(parent_id: u32) -> u32;
-        pub(super) fn add_low_pass(parent_id: u32, freq: f32, q: f32) -> u32;
-        pub(super) fn add_high_pass(parent_id: u32, freq: f32, q: f32) -> u32;
-        pub(super) fn add_take_left(parent_id: u32) -> u32;
-        pub(super) fn add_take_right(parent_id: u32) -> u32;
-        pub(super) fn add_swap(parent_id: u32) -> u32;
-        pub(super) fn add_clip(parent_id: u32, low: f32, high: f32) -> u32;
+        pub(super) unsafe fn add_mix(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_all_for_one(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_gain(parent_id: u32, lvl: f32) -> u32;
+        pub(super) unsafe fn add_loop(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_concat(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_pan(parent_id: u32, lvl: f32) -> u32;
+        pub(super) unsafe fn add_mute(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_pause(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_track_position(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_low_pass(parent_id: u32, freq: f32, q: f32) -> u32;
+        pub(super) unsafe fn add_high_pass(parent_id: u32, freq: f32, q: f32) -> u32;
+        pub(super) unsafe fn add_take_left(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_take_right(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_swap(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_clip(parent_id: u32, low: f32, high: f32) -> u32;
 
-        pub(super) fn reset(node_id: u32);
-        pub(super) fn reset_all(node_id: u32);
-        pub(super) fn clear(node_id: u32);
+        pub(super) unsafe fn reset(node_id: u32);
+        pub(super) unsafe fn reset_all(node_id: u32);
+        pub(super) unsafe fn clear(node_id: u32);
+        pub(super) unsafe fn set_param(node_id: u32, param: u32, val: f32);
     }
 }
