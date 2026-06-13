@@ -175,7 +175,7 @@ impl Freq {
     pub const B9: Self = Self(15804.264);
 
     #[must_use]
-    pub fn hz(hz: f32) -> Self {
+    pub fn from_hz(hz: f32) -> Self {
         Self(hz)
     }
 
@@ -225,6 +225,12 @@ impl Freq {
         f *= (1 << octave) as f32;
         Freq(f)
     }
+}
+
+/// Alias for [`Freq::from_hz`].
+#[must_use]
+pub fn hz(hz: f32) -> Freq {
+    Freq::from_hz(hz)
 }
 
 impl From<f32> for Freq {
