@@ -2,52 +2,52 @@ use core::marker::PhantomData;
 
 use super::*;
 
-/// A marker for a specific node type. See [`Node::add_sine`].
+/// A marker for a node created by [`Node::add_sine`].
 pub struct Sine {}
-/// A marker for a specific node type. See [`Node::add_mix`].
+/// A marker for a node created by [`Node::add_mix`].
 pub struct Mix {}
-/// A marker for a specific node type. See [`Node::add_all_for_one`].
+/// A marker for a node created by [`Node::add_all_for_one`].
 pub struct AllForOne {}
-/// A marker for a specific node type. See [`Node::add_gain`].
+/// A marker for a node created by [`Node::add_gain`].
 pub struct Gain {}
-/// A marker for a specific node type. See [`Node::add_loop`].
+/// A marker for a node created by [`Node::add_loop`].
 pub struct Loop {}
-/// A marker for a specific node type. See [`Node::add_concat`].
+/// A marker for a node created by [`Node::add_concat`].
 pub struct Concat {}
-/// A marker for a specific node type. See [`Node::add_pan`].
+/// A marker for a node created by [`Node::add_pan`].
 pub struct Pan {}
-/// A marker for a specific node type. See [`Node::add_mute`].
+/// A marker for a node created by [`Node::add_mute`].
 pub struct Mute {}
-/// A marker for a specific node type. See [`Node::add_pause`].
+/// A marker for a node created by [`Node::add_pause`].
 pub struct Pause {}
-/// A marker for a specific node type. See [`Node::add_track_position`].
+/// A marker for a node created by [`Node::add_track_position`].
 pub struct TrackPosition {}
-/// A marker for a specific node type. See [`Node::add_low_pass`].
+/// A marker for a node created by [`Node::add_low_pass`].
 pub struct LowPass {}
-/// A marker for a specific node type. See [`Node::add_high_pass`].
+/// A marker for a node created by [`Node::add_high_pass`].
 pub struct HighPass {}
-/// A marker for a specific node type. See [`Node::add_take_left`].
+/// A marker for a node created by [`Node::add_take_left`].
 pub struct TakeLeft {}
-/// A marker for a specific node type. See [`Node::add_take_right`].
+/// A marker for a node created by [`Node::add_take_right`].
 pub struct TakeRight {}
-/// A marker for a specific node type. See [`Node::add_swap`].
+/// A marker for a node created by [`Node::add_swap`].
 pub struct Swap {}
-/// A marker for a specific node type. See [`Node::add_clip`].
+/// A marker for a node created by [`Node::add_clip`].
 pub struct Clip {}
-/// A marker for a specific node type. See [`Node::add_square`].
+/// A marker for a node created by [`Node::add_square`].
 pub struct Square {}
-/// A marker for a specific node type. See [`Node::add_sawtooth`].
+/// A marker for a node created by [`Node::add_sawtooth`].
 pub struct Sawtooth {}
-/// A marker for a specific node type. See [`Node::add_triangle`].
+/// A marker for a node created by [`Node::add_triangle`].
 pub struct Triangle {}
-/// A marker for a specific node type. See [`Node::add_noise`].
+/// A marker for a node created by [`Node::add_noise`].
 pub struct Noise {}
-/// A marker for a specific node type. See [`Node::add_empty`].
+/// A marker for a node created by [`Node::add_empty`].
 pub struct Empty {}
-/// A marker for a specific node type. See [`Node::add_zero`].
+/// A marker for a node created by [`Node::add_zero`].
 pub struct Zero {}
 
-/// A marker for a specific node type. See [`Node::add_file`].
+/// A marker for a node created by [`Node::add_file`].
 pub struct File {}
 
 /// An audio node: a source, a sink, a filter, an effect, etc.
@@ -234,12 +234,22 @@ impl Node<Sine> {
     pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
         m.modulate(self.id, 0, low.0, high.0);
     }
+
+    /// Set the oscillation frequency.
+    pub fn set(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
+    }
 }
 
 impl Node<Square> {
     /// Modulate oscillation frequency.
     pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
         m.modulate(self.id, 0, low.0, high.0);
+    }
+
+    /// Set the oscillation frequency.
+    pub fn set(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
     }
 }
 
@@ -248,12 +258,22 @@ impl Node<Sawtooth> {
     pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
         m.modulate(self.id, 0, low.0, high.0);
     }
+
+    /// Set the oscillation frequency.
+    pub fn set(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
+    }
 }
 
 impl Node<Triangle> {
     /// Modulate oscillation frequency.
     pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
         m.modulate(self.id, 0, low.0, high.0);
+    }
+
+    /// Set the oscillation frequency.
+    pub fn set(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
     }
 }
 
@@ -262,12 +282,22 @@ impl Node<Gain> {
     pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
         m.modulate(self.id, 0, low, high);
     }
+
+    /// Set the the gain level.
+    pub fn set(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 0, val) };
+    }
 }
 
 impl Node<Pan> {
     /// Modulate the pan value (from 0. to 1.: 0. is only left, 1. is only right).
     pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
         m.modulate(self.id, 0, low, high);
+    }
+
+    /// Set the the pan value (from 0. to 1.: 0. is only left, 1. is only right).
+    pub fn set(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 0, val) };
     }
 }
 
@@ -278,6 +308,14 @@ impl Node<Mute> {
     pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
         m.modulate(self.id, 0, low, high);
     }
+
+    pub fn mute(&self) {
+        unsafe { bindings::set_param(self.id, 0, 0.) };
+    }
+
+    pub fn unmute(&self) {
+        unsafe { bindings::set_param(self.id, 0, 1.) };
+    }
 }
 
 impl Node<Pause> {
@@ -287,6 +325,14 @@ impl Node<Pause> {
     pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
         m.modulate(self.id, 0, low, high);
     }
+
+    pub fn pause(&self) {
+        unsafe { bindings::set_param(self.id, 0, 0.) };
+    }
+
+    pub fn play(&self) {
+        unsafe { bindings::set_param(self.id, 0, 1.) };
+    }
 }
 
 impl Node<LowPass> {
@@ -294,12 +340,22 @@ impl Node<LowPass> {
     pub fn modulate_freq<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
         m.modulate(self.id, 0, low.0, high.0);
     }
+
+    /// Set the the cut-off frequency.
+    pub fn set_freq(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
+    }
 }
 
 impl Node<HighPass> {
     /// Modulate the cut-off frequency.
     pub fn modulate_freq<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
         m.modulate(self.id, 0, low.0, high.0);
+    }
+
+    /// Set the the cut-off frequency.
+    pub fn set_freq(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
     }
 }
 
@@ -311,14 +367,29 @@ impl Node<Clip> {
         m.modulate(self.id, 0, low, high);
     }
 
+    /// Set the the low cut amplitude and adjust the high amplitude to keep the gap.
+    pub fn set_both(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 0, val) };
+    }
+
     /// Modulate the low cut amplitude.
     pub fn modulate_low<M: Modulator>(&self, low: f32, high: f32, m: M) {
         m.modulate(self.id, 1, low, high);
     }
 
+    /// Set the the low cut amplitude.
+    pub fn set_low(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 1, val) };
+    }
+
     /// Modulate the high cut amplitude.
     pub fn modulate_high<M: Modulator>(&self, low: f32, high: f32, m: M) {
         m.modulate(self.id, 2, low, high);
+    }
+
+    /// Set the the high cut amplitude.
+    pub fn set_high(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 2, val) };
     }
 }
 

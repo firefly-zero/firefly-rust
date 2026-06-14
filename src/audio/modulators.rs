@@ -136,7 +136,7 @@ impl Modulator for SquareModulator {
 
 /// Sawtooth wave low-frequency oscillator.
 ///
-/// It looks like this: `🭿🭾🭿🭾🭿🭾🭿🭾`.
+/// It looks like this: `╱│╱│╱│╱│`.
 pub struct SawtoothModulator {
     pub period: Time,
 }
