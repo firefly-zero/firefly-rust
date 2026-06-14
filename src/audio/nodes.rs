@@ -50,6 +50,24 @@ pub struct Zero {}
 /// A marker for a node created by [`Node::add_file`].
 pub struct File {}
 
+/// A marker for nodes that can have sub-nodes.
+trait Parent {}
+impl Parent for Mix {}
+impl Parent for AllForOne {}
+impl Parent for Gain {}
+impl Parent for Loop {}
+impl Parent for Concat {}
+impl Parent for Pan {}
+impl Parent for Mute {}
+impl Parent for Pause {}
+impl Parent for TrackPosition {}
+impl Parent for LowPass {}
+impl Parent for HighPass {}
+impl Parent for TakeLeft {}
+impl Parent for TakeRight {}
+impl Parent for Swap {}
+impl Parent for Clip {}
+
 /// An audio node: a source, a sink, a filter, an effect, etc.
 pub struct Node<F> {
     id: u32,
@@ -60,7 +78,6 @@ pub struct Node<F> {
 /// The output audio node. Mixes all inputs and plays them on the device's speaker.
 pub const OUT: Node<Mix> = Node::new(0);
 
-#[expect(clippy::must_use_candidate)]
 impl<F> Node<F> {
     #[must_use]
     const fn new(id: u32) -> Self {
@@ -70,6 +87,14 @@ impl<F> Node<F> {
         }
     }
 
+    /// Reset the node state to how it was when it was just added.
+    pub fn reset(&self) {
+        unsafe { bindings::reset(self.id) }
+    }
+}
+
+#[expect(clippy::must_use_candidate, private_bounds)]
+impl<F: Parent> Node<F> {
     /// Add sine wave oscillator source (`∿`).
     pub fn add_sine(&self, f: Freq, phase: f32) -> Node<Sine> {
         let id = unsafe { bindings::add_sine(self.id, f.0, phase) };
@@ -208,11 +233,6 @@ impl<F> Node<F> {
     pub fn add_clip(&self, low: f32, high: f32) -> Node<Clip> {
         let id = unsafe { bindings::add_clip(self.id, low, high) };
         Node::new(id)
-    }
-
-    /// Reset the node state to how it was when it was just added.
-    pub fn reset(&self) {
-        unsafe { bindings::reset(self.id) }
     }
 
     /// Reset the node and all child nodes to the state to how it was when they were just added.
