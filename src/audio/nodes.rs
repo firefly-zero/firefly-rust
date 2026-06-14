@@ -297,6 +297,14 @@ impl Node<Triangle> {
     }
 }
 
+impl Node<File> {
+    /// Go to the specified timestamp in the file.
+    #[expect(clippy::cast_precision_loss)]
+    pub fn seek(&self, t: Time) {
+        unsafe { bindings::set_param(self.id, 0, t.0 as f32) };
+    }
+}
+
 impl Node<Gain> {
     /// Modulate the gain level.
     pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {

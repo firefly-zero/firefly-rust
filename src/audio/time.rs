@@ -1,5 +1,6 @@
 use super::*;
 
+#[derive(Clone, Copy)]
 pub struct Time(pub(super) u32);
 
 impl Time {
