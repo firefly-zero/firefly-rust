@@ -119,6 +119,36 @@ impl Modulator for SineModulator {
     }
 }
 
+/// Square wave low-frequency oscillator.
+///
+/// It looks like this: `🭿🭾🭿🭾🭿🭾🭿🭾`.
+pub struct SquareModulator {
+    pub period: Time,
+}
+
+impl Modulator for SquareModulator {
+    fn modulate(self, node_id: u32, param: u32, low: f32, high: f32) {
+        unsafe {
+            bindings::mod_square(node_id, param, low, high, self.period.0);
+        }
+    }
+}
+
+/// Sawtooth wave low-frequency oscillator.
+///
+/// It looks like this: `🭿🭾🭿🭾🭿🭾🭿🭾`.
+pub struct SawtoothModulator {
+    pub period: Time,
+}
+
+impl Modulator for SawtoothModulator {
+    fn modulate(self, node_id: u32, param: u32, low: f32, high: f32) {
+        unsafe {
+            bindings::mod_sawtooth(node_id, param, low, high, self.period.0);
+        }
+    }
+}
+
 mod bindings {
     #[link(wasm_import_module = "audio")]
     unsafe extern "C" {
@@ -130,10 +160,12 @@ mod bindings {
             start_at: u32,
             end_at: u32,
         );
-        pub(super) unsafe fn mod_hold(node_id: u32, param: u32, v1: f32, v2: f32, time: u32);
-        pub(super) unsafe fn mod_sine(node_id: u32, param: u32, freq: f32, low: f32, high: f32);
+        pub(super) unsafe fn mod_hold(id: u32, param: u32, low: f32, high: f32, time: u32);
+        pub(super) unsafe fn mod_sine(id: u32, param: u32, freq: f32, low: f32, high: f32);
+        pub(super) unsafe fn mod_square(id: u32, param: u32, low: f32, high: f32, period: u32);
+        pub(super) unsafe fn mod_sawtooth(id: u32, param: u32, low: f32, high: f32, period: u32);
         pub(super) unsafe fn mod_adsr(
-            node_id: u32,
+            id: u32,
             param: u32,
             low: f32,
             high: f32,
