@@ -2,53 +2,71 @@ use core::marker::PhantomData;
 
 use super::*;
 
-/// A marker for a specific node type. See [`Node::add_sine`].
+/// A marker for a node created by [`Node::add_sine`].
 pub struct Sine {}
-/// A marker for a specific node type. See [`Node::add_mix`].
+/// A marker for a node created by [`Node::add_mix`].
 pub struct Mix {}
-/// A marker for a specific node type. See [`Node::add_all_for_one`].
+/// A marker for a node created by [`Node::add_all_for_one`].
 pub struct AllForOne {}
-/// A marker for a specific node type. See [`Node::add_gain`].
+/// A marker for a node created by [`Node::add_gain`].
 pub struct Gain {}
-/// A marker for a specific node type. See [`Node::add_loop`].
+/// A marker for a node created by [`Node::add_loop`].
 pub struct Loop {}
-/// A marker for a specific node type. See [`Node::add_concat`].
+/// A marker for a node created by [`Node::add_concat`].
 pub struct Concat {}
-/// A marker for a specific node type. See [`Node::add_pan`].
+/// A marker for a node created by [`Node::add_pan`].
 pub struct Pan {}
-/// A marker for a specific node type. See [`Node::add_mute`].
+/// A marker for a node created by [`Node::add_mute`].
 pub struct Mute {}
-/// A marker for a specific node type. See [`Node::add_pause`].
+/// A marker for a node created by [`Node::add_pause`].
 pub struct Pause {}
-/// A marker for a specific node type. See [`Node::add_track_position`].
+/// A marker for a node created by [`Node::add_track_position`].
 pub struct TrackPosition {}
-/// A marker for a specific node type. See [`Node::add_low_pass`].
+/// A marker for a node created by [`Node::add_low_pass`].
 pub struct LowPass {}
-/// A marker for a specific node type. See [`Node::add_high_pass`].
+/// A marker for a node created by [`Node::add_high_pass`].
 pub struct HighPass {}
-/// A marker for a specific node type. See [`Node::add_take_left`].
+/// A marker for a node created by [`Node::add_take_left`].
 pub struct TakeLeft {}
-/// A marker for a specific node type. See [`Node::add_take_right`].
+/// A marker for a node created by [`Node::add_take_right`].
 pub struct TakeRight {}
-/// A marker for a specific node type. See [`Node::add_swap`].
+/// A marker for a node created by [`Node::add_swap`].
 pub struct Swap {}
-/// A marker for a specific node type. See [`Node::add_clip`].
+/// A marker for a node created by [`Node::add_clip`].
 pub struct Clip {}
-/// A marker for a specific node type. See [`Node::add_square`].
+/// A marker for a node created by [`Node::add_square`].
 pub struct Square {}
-/// A marker for a specific node type. See [`Node::add_sawtooth`].
+/// A marker for a node created by [`Node::add_sawtooth`].
 pub struct Sawtooth {}
-/// A marker for a specific node type. See [`Node::add_triangle`].
+/// A marker for a node created by [`Node::add_triangle`].
 pub struct Triangle {}
-/// A marker for a specific node type. See [`Node::add_noise`].
+/// A marker for a node created by [`Node::add_noise`].
 pub struct Noise {}
-/// A marker for a specific node type. See [`Node::add_empty`].
+/// A marker for a node created by [`Node::add_empty`].
 pub struct Empty {}
-/// A marker for a specific node type. See [`Node::add_zero`].
+/// A marker for a node created by [`Node::add_zero`].
 pub struct Zero {}
 
-/// A marker for a specific node type. See [`Node::add_file`].
+/// A marker for a node created by [`Node::add_file`].
 pub struct File {}
+
+/// A marker for nodes that can have sub-nodes.
+trait Parent {}
+impl Parent for Mix {}
+impl Parent for AllForOne {}
+impl Parent for Gain {}
+impl Parent for Loop {}
+impl Parent for Concat {}
+impl Parent for Pan {}
+impl Parent for Mute {}
+impl Parent for Pause {}
+impl Parent for TrackPosition {}
+impl Parent for LowPass {}
+impl Parent for HighPass {}
+impl Parent for TakeLeft {}
+impl Parent for TakeRight {}
+impl Parent for Swap {}
+impl Parent for Clip {}
 
 /// An audio node: a source, a sink, a filter, an effect, etc.
 pub struct Node<F> {
@@ -60,7 +78,6 @@ pub struct Node<F> {
 /// The output audio node. Mixes all inputs and plays them on the device's speaker.
 pub const OUT: Node<Mix> = Node::new(0);
 
-#[expect(clippy::must_use_candidate)]
 impl<F> Node<F> {
     #[must_use]
     const fn new(id: u32) -> Self {
@@ -70,6 +87,14 @@ impl<F> Node<F> {
         }
     }
 
+    /// Reset the node state to how it was when it was just added.
+    pub fn reset(&self) {
+        unsafe { bindings::reset(self.id) }
+    }
+}
+
+#[expect(clippy::must_use_candidate, private_bounds)]
+impl<F: Parent> Node<F> {
     /// Add sine wave oscillator source (`∿`).
     pub fn add_sine(&self, f: Freq, phase: f32) -> Node<Sine> {
         let id = unsafe { bindings::add_sine(self.id, f.0, phase) };
@@ -210,11 +235,6 @@ impl<F> Node<F> {
         Node::new(id)
     }
 
-    /// Reset the node state to how it was when it was just added.
-    pub fn reset(&self) {
-        unsafe { bindings::reset(self.id) }
-    }
-
     /// Reset the node and all child nodes to the state to how it was when they were just added.
     pub fn reset_all(&self) {
         unsafe { bindings::reset_all(self.id) }
@@ -231,43 +251,81 @@ impl<F> Node<F> {
 
 impl Node<Sine> {
     /// Modulate oscillation frequency.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
+    }
+
+    /// Set the oscillation frequency.
+    pub fn set(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
     }
 }
 
 impl Node<Square> {
     /// Modulate oscillation frequency.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
+    }
+
+    /// Set the oscillation frequency.
+    pub fn set(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
     }
 }
 
 impl Node<Sawtooth> {
     /// Modulate oscillation frequency.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
+    }
+
+    /// Set the oscillation frequency.
+    pub fn set(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
     }
 }
 
 impl Node<Triangle> {
     /// Modulate oscillation frequency.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
+    }
+
+    /// Set the oscillation frequency.
+    pub fn set(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
+    }
+}
+
+impl Node<File> {
+    /// Go to the specified timestamp in the file.
+    #[expect(clippy::cast_precision_loss)]
+    pub fn seek(&self, t: Time) {
+        unsafe { bindings::set_param(self.id, 0, t.0 as f32) };
     }
 }
 
 impl Node<Gain> {
     /// Modulate the gain level.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
+    }
+
+    /// Set the the gain level.
+    pub fn set(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 0, val) };
     }
 }
 
 impl Node<Pan> {
     /// Modulate the pan value (from 0. to 1.: 0. is only left, 1. is only right).
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
+    }
+
+    /// Set the the pan value (from 0. to 1.: 0. is only left, 1. is only right).
+    pub fn set(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 0, val) };
     }
 }
 
@@ -275,8 +333,16 @@ impl Node<Mute> {
     /// Modulate the muted state.
     ///
     /// Below 0.5 is muted, above is unmuted.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
+    }
+
+    pub fn mute(&self) {
+        unsafe { bindings::set_param(self.id, 0, 0.) };
+    }
+
+    pub fn unmute(&self) {
+        unsafe { bindings::set_param(self.id, 0, 1.) };
     }
 }
 
@@ -284,22 +350,40 @@ impl Node<Pause> {
     /// Modulate the paused state.
     ///
     /// Below 0.5 is paused, above is playing.
-    pub fn modulate<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
+    }
+
+    pub fn pause(&self) {
+        unsafe { bindings::set_param(self.id, 0, 0.) };
+    }
+
+    pub fn play(&self) {
+        unsafe { bindings::set_param(self.id, 0, 1.) };
     }
 }
 
 impl Node<LowPass> {
     /// Modulate the cut-off frequency.
-    pub fn modulate_freq<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate_freq<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
+    }
+
+    /// Set the the cut-off frequency.
+    pub fn set_freq(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
     }
 }
 
 impl Node<HighPass> {
     /// Modulate the cut-off frequency.
-    pub fn modulate_freq<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate_freq<M: Modulator>(&self, low: Freq, high: Freq, m: M) {
+        m.modulate(self.id, 0, low.0, high.0);
+    }
+
+    /// Set the the cut-off frequency.
+    pub fn set_freq(&self, val: Freq) {
+        unsafe { bindings::set_param(self.id, 0, val.0) };
     }
 }
 
@@ -307,18 +391,33 @@ impl Node<Clip> {
     /// Modulate the low cut amplitude and adjust the high amplitude to keep the gap.
     ///
     /// In other words, the difference between low and high cut points will stay the same.
-    pub fn modulate_both<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 0);
+    pub fn modulate_both<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 0, low, high);
+    }
+
+    /// Set the the low cut amplitude and adjust the high amplitude to keep the gap.
+    pub fn set_both(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 0, val) };
     }
 
     /// Modulate the low cut amplitude.
-    pub fn modulate_low<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 1);
+    pub fn modulate_low<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 1, low, high);
+    }
+
+    /// Set the the low cut amplitude.
+    pub fn set_low(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 1, val) };
     }
 
     /// Modulate the high cut amplitude.
-    pub fn modulate_high<M: Modulator>(&self, m: M) {
-        m.modulate(self.id, 2);
+    pub fn modulate_high<M: Modulator>(&self, low: f32, high: f32, m: M) {
+        m.modulate(self.id, 2, low, high);
+    }
+
+    /// Set the the high cut amplitude.
+    pub fn set_high(&self, val: f32) {
+        unsafe { bindings::set_param(self.id, 2, val) };
     }
 }
 
@@ -326,34 +425,35 @@ mod bindings {
     #[link(wasm_import_module = "audio")]
     unsafe extern "C" {
         // generators
-        pub(super) fn add_sine(parent_id: u32, freq: f32, phase: f32) -> u32;
-        pub(super) fn add_square(parent_id: u32, freq: f32, phase: f32) -> u32;
-        pub(super) fn add_sawtooth(parent_id: u32, freq: f32, phase: f32) -> u32;
-        pub(super) fn add_triangle(parent_id: u32, freq: f32, phase: f32) -> u32;
-        pub(super) fn add_noise(parent_id: u32, seed: i32) -> u32;
-        pub(super) fn add_empty(parent_id: u32) -> u32;
-        pub(super) fn add_zero(parent_id: u32) -> u32;
-        pub(super) fn add_file(parent: u32, ptr: u32, len: u32) -> u32;
+        pub(super) unsafe fn add_sine(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) unsafe fn add_square(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) unsafe fn add_sawtooth(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) unsafe fn add_triangle(parent_id: u32, freq: f32, phase: f32) -> u32;
+        pub(super) unsafe fn add_noise(parent_id: u32, seed: i32) -> u32;
+        pub(super) unsafe fn add_empty(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_zero(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_file(parent: u32, ptr: u32, len: u32) -> u32;
 
         // nodes
-        pub(super) fn add_mix(parent_id: u32) -> u32;
-        pub(super) fn add_all_for_one(parent_id: u32) -> u32;
-        pub(super) fn add_gain(parent_id: u32, lvl: f32) -> u32;
-        pub(super) fn add_loop(parent_id: u32) -> u32;
-        pub(super) fn add_concat(parent_id: u32) -> u32;
-        pub(super) fn add_pan(parent_id: u32, lvl: f32) -> u32;
-        pub(super) fn add_mute(parent_id: u32) -> u32;
-        pub(super) fn add_pause(parent_id: u32) -> u32;
-        pub(super) fn add_track_position(parent_id: u32) -> u32;
-        pub(super) fn add_low_pass(parent_id: u32, freq: f32, q: f32) -> u32;
-        pub(super) fn add_high_pass(parent_id: u32, freq: f32, q: f32) -> u32;
-        pub(super) fn add_take_left(parent_id: u32) -> u32;
-        pub(super) fn add_take_right(parent_id: u32) -> u32;
-        pub(super) fn add_swap(parent_id: u32) -> u32;
-        pub(super) fn add_clip(parent_id: u32, low: f32, high: f32) -> u32;
+        pub(super) unsafe fn add_mix(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_all_for_one(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_gain(parent_id: u32, lvl: f32) -> u32;
+        pub(super) unsafe fn add_loop(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_concat(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_pan(parent_id: u32, lvl: f32) -> u32;
+        pub(super) unsafe fn add_mute(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_pause(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_track_position(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_low_pass(parent_id: u32, freq: f32, q: f32) -> u32;
+        pub(super) unsafe fn add_high_pass(parent_id: u32, freq: f32, q: f32) -> u32;
+        pub(super) unsafe fn add_take_left(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_take_right(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_swap(parent_id: u32) -> u32;
+        pub(super) unsafe fn add_clip(parent_id: u32, low: f32, high: f32) -> u32;
 
-        pub(super) fn reset(node_id: u32);
-        pub(super) fn reset_all(node_id: u32);
-        pub(super) fn clear(node_id: u32);
+        pub(super) unsafe fn reset(node_id: u32);
+        pub(super) unsafe fn reset_all(node_id: u32);
+        pub(super) unsafe fn clear(node_id: u32);
+        pub(super) unsafe fn set_param(node_id: u32, param: u32, val: f32);
     }
 }
