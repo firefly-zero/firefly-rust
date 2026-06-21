@@ -200,14 +200,14 @@ impl<F: Parent> Node<F> {
     }
 
     /// Add lowpass filter node.
-    pub fn add_low_pass(&self, freq: f32, q: f32) -> Node<LowPass> {
-        let id = unsafe { bindings::add_low_pass(self.id, freq, q) };
+    pub fn add_low_pass(&self, freq: Freq, q: f32) -> Node<LowPass> {
+        let id = unsafe { bindings::add_low_pass(self.id, freq.0, q) };
         Node::new(id)
     }
 
     /// Add highpass filter node.
-    pub fn add_high_pass(&self, freq: f32, q: f32) -> Node<HighPass> {
-        let id = unsafe { bindings::add_high_pass(self.id, freq, q) };
+    pub fn add_high_pass(&self, freq: Freq, q: f32) -> Node<HighPass> {
+        let id = unsafe { bindings::add_high_pass(self.id, freq.0, q) };
         Node::new(id)
     }
 
