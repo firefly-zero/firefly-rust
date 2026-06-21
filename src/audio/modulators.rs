@@ -72,15 +72,15 @@ impl Modulator for HoldModulator {
 /// Most commonly used with [`Gain`].
 pub struct AdsrModulator {
     /// When the value reaches 1.
-    attack: Time,
+    pub attack: Time,
     /// When the value reaches `sustain_level`.
-    decay: Time,
+    pub decay: Time,
     /// Until when the value holds `sustain_level`.
-    sustain: Time,
+    pub sustain: Time,
     /// The value generated from `decay` until `sustain`.
-    sustain_level: f32,
+    pub sustain_level: f32,
     /// When the value drops to 0.
-    release: Time,
+    pub release: Time,
 }
 
 impl Modulator for AdsrModulator {
