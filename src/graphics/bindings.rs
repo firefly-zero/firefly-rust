@@ -99,6 +99,34 @@ unsafe extern "C" {
         sub_width: i32,
         sub_height: i32,
     );
+    pub(crate) unsafe fn draw_sub_tile(
+        ptr: u32,
+        len: u32,
+        // Screen area to fill.
+        x: i32,
+        y: i32,
+        w: i32,
+        h: i32,
+        // Image sub-region to use.
+        sub_x: i32,
+        sub_y: i32,
+        sub_width: i32,
+        sub_height: i32,
+    );
+    pub(crate) unsafe fn draw_nine_slice(
+        ptr: u32,
+        len: u32,
+        // Screen area to fill.
+        x: i32,
+        y: i32,
+        w: i32,
+        h: i32,
+        // The area of the middle square on the image.
+        mid_x: i32,
+        mid_y: i32,
+        mid_width: i32,
+        mid_height: i32,
+    );
     pub(crate) unsafe fn draw_image(ptr: u32, len: u32, x: i32, y: i32);
     pub(crate) unsafe fn set_canvas(ptr: u32, len: u32);
     pub(crate) unsafe fn unset_canvas();

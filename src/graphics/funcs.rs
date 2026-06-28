@@ -202,6 +202,56 @@ pub fn draw_sub_image(i: &SubImage, p: Point) {
     }
 }
 
+/// Tile the given screen area with the provided sub-image.
+pub fn draw_sub_tile(i: &SubImage, p: Point, s: Size) {
+    let ptr = i.raw.as_ptr();
+    let len = i.raw.len();
+    unsafe {
+        b::draw_sub_tile(
+            ptr as u32,
+            len as u32,
+            p.x,
+            p.y,
+            s.width,
+            s.height,
+            i.point.x,
+            i.point.y,
+            i.size.width,
+            i.size.height,
+        );
+    }
+}
+
+/// Fill the given area with the given 9-slice.
+///
+/// A 9-slice is used to tile an area with 9 sub-images: 4 corners,
+/// 4 edges, and 1 middle segment. It is useful for speech bubbles
+/// and other stylish boxes.
+///
+/// The whole image is the 9-slice. The sub-image is the center area of the 9-slice.
+///
+/// If the target area is bigger than the 9-slice segments,
+/// all the segments (except corners) are repeated ("tiled")
+/// without stretching or mirroring.
+pub fn draw_nine_slice(i: &SubImage, p: Point, s: Size) {
+    let ptr = i.raw.as_ptr();
+    let len = i.raw.len();
+    unsafe {
+        b::draw_nine_slice(
+            ptr as u32,
+            len as u32,
+            p.x,
+            p.y,
+            s.width,
+            s.height,
+            i.point.x,
+            i.point.y,
+            i.size.width,
+            i.size.height,
+        );
+    }
+}
+
 /// Set canvas to be used for all subsequent drawing operations.
 pub fn set_canvas<C: Canvas>(c: &C) {
     let raw = unsafe { c.as_bytes() };
