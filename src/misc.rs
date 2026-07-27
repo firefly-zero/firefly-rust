@@ -214,6 +214,27 @@ impl Default for Theme {
     }
 }
 
+/// A convenience macro for debug logging using [`log_debug`] function.
+///
+/// * When called without arguments, will print the current file name and line number.
+/// * When called with a string, just prints that string.
+/// * When called with multiple arguments, prints a string produced by [`format!`].
+#[macro_export]
+macro_rules! log_debug {
+    () => {
+        $crate::log_debug(concat!(file!(), ":", line!()));
+    };
+    ($f: literal) => {
+        $crate::log_debug($f);
+    };
+    ($f: expr) => {
+        $crate::log_debug(&$f);
+    };
+    ($f: literal, $( $a:expr ),* ) => {
+        $crate::log_debug(&alloc::format!($f, $( $a ),* ));
+    };
+}
+
 /// Log a debug message.
 pub fn log_debug(t: &str) {
     let ptr = t.as_ptr() as u32;
@@ -221,6 +242,25 @@ pub fn log_debug(t: &str) {
     unsafe {
         bindings::log_debug(ptr, len);
     }
+}
+
+/// A convenience macro for error logging using [`log_error`] function.
+///
+/// Equivalent to [`log_debug!`] but for errors.
+#[macro_export]
+macro_rules! log_error {
+    () => {
+        $crate::log_error(concat!(file!(), ":", line!()));
+    };
+    ($f: literal) => {
+        $crate::log_error($f);
+    };
+    ($f: expr) => {
+        $crate::log_error(&$f);
+    };
+    ($f: literal, $( $a:expr ),* ) => {
+        $crate::log_error(&alloc::format!($f, $( $a ),* ));
+    };
 }
 
 /// Log an error message.
