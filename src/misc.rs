@@ -214,6 +214,34 @@ impl Default for Theme {
     }
 }
 
+/// The same as the stdlib `dbg!` but prints using [`log_debug`].
+#[macro_export]
+macro_rules! dbg {
+    () => {
+        $crate::log_debug!(
+            "[{}:{}:{}]",
+            $crate::file!(),
+            $crate::line!(),
+            $crate::column!()
+        )
+    };
+    ($val:expr $(,)?) => {
+        match $val {
+            tmp => {
+                $crate::log_debug!(
+                    "[{}:{}:{}] {} = {:#?}",
+                    $crate::file!(),
+                    $crate::line!(),
+                    $crate::column!(),
+                    $crate::stringify!($val),
+                    &&tmp as &dyn $crate::fmt::Debug,
+                );
+                tmp
+            }
+        }
+    };
+}
+
 /// A convenience macro for debug logging using [`log_debug`] function.
 ///
 /// * When called without arguments, will print the current file name and line number.

@@ -50,7 +50,7 @@ static ALLOCATOR: talc::TalckWasm = unsafe { talc::TalckWasm::new_global() };
 #[allow(unused_variables)]
 fn handle_panic(info: &core::panic::PanicInfo) -> ! {
     #[cfg(all(feature = "alloc", feature = "panic-info"))]
-    if true {
+    {
         let msg = alloc::format!("{info}");
         log_error(&msg);
     }
