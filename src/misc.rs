@@ -1,3 +1,5 @@
+use core::time::Duration;
+
 use crate::*;
 
 /// System settings. Can be requested using [`get_settings`].
@@ -313,6 +315,13 @@ pub fn get_random() -> u32 {
     unsafe { bindings::get_random() }
 }
 
+// Get the time passed since the app was started.
+#[must_use]
+pub fn get_time() -> Duration {
+    let micros = unsafe { bindings::get_time() };
+    Duration::from_micros(micros)
+}
+
 /// Get the Peer's name.
 ///
 /// The name is guaranteed to be a valid ASCII string
@@ -387,6 +396,7 @@ mod bindings {
         pub(crate) unsafe fn log_error(ptr: u32, len: u32);
         pub(crate) unsafe fn set_seed(seed: u32);
         pub(crate) unsafe fn get_random() -> u32;
+        pub(crate) unsafe fn get_time() -> u64;
         pub(crate) unsafe fn get_name(idx: u32, ptr: u32) -> u32;
         pub(crate) unsafe fn get_settings(idx: u32) -> u64;
         pub(crate) unsafe fn restart();
