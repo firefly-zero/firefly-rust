@@ -43,7 +43,7 @@ extern crate alloc;
 
 #[cfg(all(target_family = "wasm", feature = "talc"))]
 #[global_allocator]
-static ALLOCATOR: talc::TalckWasm = unsafe { talc::TalckWasm::new_global() };
+static ALLOCATOR: talc::wasm::WasmDynamicTalc = talc::wasm::new_wasm_dynamic_allocator();
 
 #[cfg(all(not(test), not(feature = "std"), target_family = "wasm"))]
 #[panic_handler]
