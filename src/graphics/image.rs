@@ -12,13 +12,21 @@ pub struct ImageBuf {
 #[cfg(feature = "alloc")]
 impl ImageBuf {
     /// Create new empty image.
+    ///
+    /// The given `transp` color is used as the transparency color.
+    /// if [`Color::None`] is given, then the image will not have transparency
+    /// and it will be filled with [`Color::Black`] by default.
+    ///
+    /// Use [`set_canvas`] (or [`with_canvas`]) and the drawing functions
+    /// to fill the newly created image.
     #[must_use]
     #[expect(clippy::cast_sign_loss)]
-    pub fn new(s: Size) -> Self {
+    pub fn new(s: Size, transp: Color) -> Self {
         const HEADER_SIZE: usize = 4;
         let body_size = s.width * s.height / 2;
-        let mut raw = vec![0; HEADER_SIZE + body_size as usize];
-        prepare_slice(&mut raw, s.width);
+        let t = transp as u8 - 1;
+        let mut raw = vec![t; HEADER_SIZE + body_size as usize];
+        prepare_slice(&mut raw, s.width, t);
         Self {
             raw: raw.into_boxed_slice(),
         }
@@ -26,11 +34,11 @@ impl ImageBuf {
 }
 
 #[expect(clippy::cast_sign_loss)]
-const fn prepare_slice(raw: &mut [u8], width: i32) {
+const fn prepare_slice(raw: &mut [u8], width: i32, t: u8) {
     raw[0] = 0x22; // magic number
     raw[1] = width as u8; // width
     raw[2] = (width >> 8) as u8; // width
-    raw[3] = 255; // transparency
+    raw[3] = t; // transparency
 }
 
 #[cfg(feature = "alloc")]
@@ -60,16 +68,25 @@ impl<'a> ImageRef<'a> {
     ///
     /// Returns [`None`] if the slice is too small for the given image size.
     /// A bigger slice than needed is fine.
+    ///
+    /// The given `transp` color is used as the transparency color.
+    /// if [`Color::None`] is given, then the image will not have transparency
+    /// and it will be filled with [`Color::Black`] by default.
+    ///
+    /// Use [`set_canvas`] (or [`with_canvas`]) and the drawing functions
+    /// to fill the newly created image.
     #[must_use]
     #[expect(clippy::cast_sign_loss)]
-    pub fn new(s: Size, raw: &'a mut [u8]) -> Option<Self> {
+    pub fn new(s: Size, raw: &'a mut [u8], transp: Color) -> Option<Self> {
         const HEADER_SIZE: usize = 4;
         let body_size = s.width * s.height / 2;
         let exp_size = HEADER_SIZE + body_size as usize;
         if raw.len() < exp_size {
             return None;
         }
-        prepare_slice(raw, s.width);
+        let t = transp as u8 - 1;
+        raw.fill(t);
+        prepare_slice(raw, s.width, t);
         Some(Self {
             raw: &raw[..exp_size],
         })
