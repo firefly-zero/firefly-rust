@@ -1,6 +1,8 @@
 #[link(wasm_import_module = "graphics")]
 unsafe extern "C" {
     pub(crate) unsafe fn clear_screen(color: i32);
+    pub(crate) unsafe fn flip_x();
+    pub(crate) unsafe fn flip_y();
     pub(crate) unsafe fn set_color(index: i32, r: i32, g: i32, b: i32);
     pub(crate) unsafe fn draw_point(x: i32, y: i32, color: i32);
     pub(crate) unsafe fn draw_line(

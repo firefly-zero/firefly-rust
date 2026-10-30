@@ -7,6 +7,24 @@ pub fn clear_screen(c: Color) {
     }
 }
 
+/// Horizontally flip the image currently rendered on the screen.
+///
+/// Most commonly used together with [`set_canvas`] to flip images (sprites).
+pub fn flip_x() {
+    unsafe {
+        b::flip_x();
+    }
+}
+
+/// Vertically flip the image currently rendered on the screen.
+///
+/// Most commonly used together with [`set_canvas`] to flip images (sprites).
+pub fn flip_y() {
+    unsafe {
+        b::flip_y();
+    }
+}
+
 /// Set a color value in the palette.
 pub fn set_color(c: Color, v: RGB) {
     unsafe {
