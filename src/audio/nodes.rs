@@ -20,6 +20,8 @@ pub struct Pan {}
 pub struct Mute {}
 /// A marker for a node created by [`Node::add_pause`].
 pub struct Pause {}
+/// A marker for a node created by [`Node::add_peer`].
+pub struct Peer {}
 /// A marker for a node created by [`Node::add_track_position`].
 pub struct TrackPosition {}
 /// A marker for a node created by [`Node::add_low_pass`].
@@ -190,6 +192,16 @@ impl<F: Parent> Node<F> {
     /// Add node that can be paused using modulation.
     pub fn add_pause(&self) -> Node<Pause> {
         let id = unsafe { bindings::add_pause(self.id) };
+        Node::new(id)
+    }
+
+    /// Add node that plays child nodes only on the device of the given peer.
+    pub fn add_peer(&self, p: crate::Peer) -> Node<Peer> {
+        let id = if crate::get_me() == p {
+            unsafe { bindings::add_mix(self.id) }
+        } else {
+            unsafe { bindings::add_zero(self.id) }
+        };
         Node::new(id)
     }
 
