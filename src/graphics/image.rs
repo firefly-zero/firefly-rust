@@ -25,7 +25,8 @@ impl ImageBuf {
         const HEADER_SIZE: usize = 4;
         let body_size = s.width * s.height / 2;
         let t = transp as u8 - 1;
-        let mut raw = vec![t; HEADER_SIZE + body_size as usize];
+        let def = if t == 255 { 0 } else { t };
+        let mut raw = vec![def; HEADER_SIZE + body_size as usize];
         prepare_slice(&mut raw, s.width, t);
         Self {
             raw: raw.into_boxed_slice(),
