@@ -1,0 +1,31 @@
+name: check
+
+on:
+  push:
+    tags:
+      - "*"
+  pull_request:
+    branches: [ "main" ]
+
+
+jobs:
+  fmt:
+    name: check rustfmt
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: install rustfmt
+      run: rustup component add rustfmt
+    - name: Format
+      run: cargo fmt --check
+  check:
+    name: check build
+    runs-on: ubuntu-latest
+    env:
+      BUILD_CMD: cargo
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: run check build
+        shell: bash
+        run: cargo check --all-features
