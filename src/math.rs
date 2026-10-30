@@ -57,7 +57,7 @@ pub fn abs(x: f32) -> f32 {
 pub fn sqrt(x: f32) -> f32 {
     // https://github.com/tarcieri/micromath/blob/main/src/float/sqrt.rs
     if x >= 0. {
-        f32::from_bits((x.to_bits() + 0x3f80_0000) >> 1)
+        f32::from_bits(u32::midpoint(x.to_bits(), 0x3f80_0000))
     } else {
         f32::NAN
     }

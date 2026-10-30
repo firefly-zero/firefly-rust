@@ -2,7 +2,7 @@
 name = "firefly-rust"
 version = "0.16.0"
 edition = "2024"
-rust-version = "1.93.0"
+rust-version = "1.97.0"
 authors = ["Firefly Zero team"]
 description = "Rust SDK for making Firefly Zero games"
 repository = "https://github.com/firefly-zero/firefly-rust"

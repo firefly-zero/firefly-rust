@@ -88,19 +88,19 @@ impl Language {
     #[must_use]
     pub fn code_array(self) -> [u8; 2] {
         match self {
-            Self::English => [b'e', b'n'],
-            Self::Dutch => [b'n', b'l'],
-            Self::French => [b'f', b'r'],
-            Self::German => [b'd', b'e'],
-            Self::Italian => [b'i', b't'],
-            Self::Polish => [b'p', b'o'],
-            Self::Romanian => [b'r', b'o'],
-            Self::Russian => [b'r', b'u'],
-            Self::Spanish => [b'e', b's'],
-            Self::Swedish => [b's', b'v'],
-            Self::Turkish => [b't', b'r'],
-            Self::Ukrainian => [b'u', b'k'],
-            Self::TokiPona => [b't', b'p'],
+            Self::English => *b"en",
+            Self::Dutch => *b"nl",
+            Self::French => *b"fr",
+            Self::German => *b"de",
+            Self::Italian => *b"it",
+            Self::Polish => *b"po",
+            Self::Romanian => *b"ro",
+            Self::Russian => *b"ru",
+            Self::Spanish => *b"es",
+            Self::Swedish => *b"sv",
+            Self::Turkish => *b"tr",
+            Self::Ukrainian => *b"uk",
+            Self::TokiPona => *b"tp",
         }
     }
 
