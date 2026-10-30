@@ -28,7 +28,7 @@ impl FileBuf {
     /// This function allows bypassing type safety and constructing [`Image`]
     /// and [`Font`] in runtime. Don't do that. Relying on internal representation
     /// of file formats might make your app incompatible with future Firefly runtimes.
-    /// If you need to modify an in-memory image, use [`Canvas`] instead.
+    /// If you need to modify an in-memory image, use [`set_canvas`] instead.
     #[must_use]
     pub unsafe fn from_bytes(b: Box<[u8]>) -> Self {
         Self { raw: b }
@@ -103,7 +103,7 @@ impl<'a> FileRef<'a> {
     /// This function allows bypassing type safety and constructing [`Image`]
     /// and [`Font`] in runtime. Don't do that. Relying on internal representation
     /// of file formats might make your app incompatible with future Firefly runtimes.
-    /// If you need to modify an in-memory image, use [`Canvas`] instead.
+    /// If you need to modify an in-memory image, use [`set_canvas`] instead.
     #[must_use]
     pub unsafe fn from_bytes(b: &'a [u8]) -> Self {
         Self { raw: b }

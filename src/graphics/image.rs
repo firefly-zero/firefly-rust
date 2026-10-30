@@ -10,6 +10,30 @@ pub struct ImageBuf {
 }
 
 #[cfg(feature = "alloc")]
+impl ImageBuf {
+    /// Create new empty image.
+    #[must_use]
+    #[expect(clippy::cast_sign_loss)]
+    pub fn new(s: Size) -> Self {
+        const HEADER_SIZE: usize = 4;
+        let body_size = s.width * s.height / 2;
+        let mut raw = vec![0; HEADER_SIZE + body_size as usize];
+        prepare_slice(&mut raw, s.width);
+        Self {
+            raw: raw.into_boxed_slice(),
+        }
+    }
+}
+
+#[expect(clippy::cast_sign_loss)]
+const fn prepare_slice(raw: &mut [u8], width: i32) {
+    raw[0] = 0x22; // magic number
+    raw[1] = width as u8; // width
+    raw[2] = (width >> 8) as u8; // width
+    raw[3] = 255; // transparency
+}
+
+#[cfg(feature = "alloc")]
 impl Image for ImageBuf {
     unsafe fn as_bytes(&self) -> &[u8] {
         &self.raw
@@ -23,13 +47,6 @@ impl From<FileBuf> for ImageBuf {
     }
 }
 
-#[cfg(feature = "alloc")]
-impl From<CanvasBuf> for ImageBuf {
-    fn from(value: CanvasBuf) -> Self {
-        Self { raw: value.raw }
-    }
-}
-
 /// A loaded image file.
 ///
 /// Can be loaded as [`FileRef`] from ROM with [`load_file`]
@@ -39,13 +56,32 @@ pub struct ImageRef<'a> {
 }
 
 impl<'a> ImageRef<'a> {
+    /// Create new empty image using the given slice.
+    ///
+    /// Returns [`None`] if the slice is too small for the given image size.
+    /// A bigger slice than needed is fine.
+    #[must_use]
+    #[expect(clippy::cast_sign_loss)]
+    pub fn new(s: Size, raw: &'a mut [u8]) -> Option<Self> {
+        const HEADER_SIZE: usize = 4;
+        let body_size = s.width * s.height / 2;
+        let exp_size = HEADER_SIZE + body_size as usize;
+        if raw.len() < exp_size {
+            return None;
+        }
+        prepare_slice(raw, s.width);
+        Some(Self {
+            raw: &raw[..exp_size],
+        })
+    }
+
     /// Reinterpret raw bytes as an image.
     ///
     /// # Safety
     ///
     /// Using this function requires a good understanding of the internal
     /// Firefly Zero binary image format. In 99% cases, you should not construct
-    /// a raw image but instead load it from a [`File`] or generate using [`Canvas`].
+    /// a raw image but instead load it from a [`FileRef`] or generate using [`ImageRef::new`].
     #[must_use]
     pub unsafe fn from_bytes(raw: &'a [u8]) -> Self {
         Self { raw }
@@ -60,12 +96,6 @@ impl Image for ImageRef<'_> {
 
 impl<'a> From<FileRef<'a>> for ImageRef<'a> {
     fn from(value: FileRef<'a>) -> Self {
-        Self { raw: value.raw }
-    }
-}
-
-impl<'a> From<CanvasRef<'a>> for ImageRef<'a> {
-    fn from(value: CanvasRef<'a>) -> Self {
         Self { raw: value.raw }
     }
 }

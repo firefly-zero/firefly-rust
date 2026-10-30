@@ -252,9 +252,17 @@ pub fn draw_nine_slice(i: &SubImage, p: Point, s: Size) {
     }
 }
 
-/// Set canvas to be used for all subsequent drawing operations.
-pub fn set_canvas<C: Canvas>(c: &C) {
-    let raw = unsafe { c.as_bytes() };
+/// Run the function with all drawing operations being executed on the canvas.
+pub fn with_canvas<I: Image, F: FnOnce() -> R, R>(i: &I, f: F) -> R {
+    set_canvas(i);
+    let r = f();
+    unset_canvas();
+    r
+}
+
+/// Set the target image for all subsequent drawing operations.
+pub fn set_canvas<I: Image>(i: &I) {
+    let raw = unsafe { i.as_bytes() };
     let ptr = raw.as_ptr();
     let len = raw.len();
     unsafe {
@@ -262,7 +270,9 @@ pub fn set_canvas<C: Canvas>(c: &C) {
     }
 }
 
-/// Unset canvas set by [`set_canvas`]. All subsequent drawing operations will target frame buffer.
+/// Unset canvas set by [`set_canvas`].
+///
+/// All subsequent drawing operations will target the screen.
 pub fn unset_canvas() {
     unsafe {
         b::unset_canvas();

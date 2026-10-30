@@ -2,7 +2,6 @@
 
 mod angle;
 mod bindings;
-mod canvas;
 mod font;
 mod funcs;
 mod image;
@@ -11,7 +10,6 @@ mod size;
 mod types;
 
 pub use angle::*;
-pub use canvas::*;
 pub use font::*;
 pub use funcs::*;
 pub use image::*;
