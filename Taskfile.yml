@@ -36,6 +36,8 @@ tasks:
     desc: "run linters"
     cmds:
       - cargo clippy
+      - cargo check --all-features
+      - cargo fmt --check
   all:
     cmds:
       - task: format
